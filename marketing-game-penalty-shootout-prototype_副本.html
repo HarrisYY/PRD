@@ -936,7 +936,7 @@
       <h2 class="module-title">弹窗线稿 · 射进发券 / 射失 / 确认兑换 / My prize / Rules</h2>
       <div class="modals-row">
         <div>
-          <p class="state-label">射进 · 恭喜中奖（自动领取）</p>
+          <p class="state-label">射进 · 恭喜中奖（已领取）</p>
           <div class="modal-card" role="presentation">
             <div class="modal-head">
               <span class="modal-close" aria-hidden="true">×</span>
@@ -949,8 +949,14 @@
                 <div class="prize-card__thumb" aria-hidden="true"></div>
                 <div class="prize-card__main">
                   <p class="prize-card__title">明星射手奖励券 · 10 元无门槛优惠券 XXXXXXXXXXXXXXXXXXXX</p>
-                  <div class="prize-card__actions">
-                    <span class="fake-btn">立即领取</span>
+                  <p class="countdown">Ends in 3d 3h 45m 12s</p>
+                  <div class="mp-card__row promo-row">
+                    <span>CODE: 2KLJK90</span>
+                    <span class="fake-btn">Copy</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
+                    <span class="cart-icon" aria-label="购物车示意" role="img"></span>
+                    <span class="status-pill">已领取</span>
                   </div>
                 </div>
               </div>
@@ -1207,10 +1213,10 @@
                   <div class="prize-card__thumb" aria-hidden="true"></div>
                   <div class="prize-card__main">
                     <p class="prize-card__title" id="ix-win-prize-title">明星射手奖励券 · 10 元无门槛优惠券</p>
-                    <div class="prize-card__actions" id="ix-win-actions">
+                    <div class="prize-card__actions" id="ix-win-actions" hidden>
                       <button type="button" class="fake-btn ix-btn" id="ix-win-claim">立即领取</button>
                     </div>
-                    <div id="ix-win-after-claim" class="ix-win-after-claim" hidden>
+                    <div id="ix-win-after-claim" class="ix-win-after-claim">
                       <p class="countdown">Ends in 3d 3h 45m 12s</p>
                       <div class="mp-card__row promo-row">
                         <span id="ix-win-code-line">CODE: —</span>
@@ -1411,17 +1417,15 @@
       }
 
       function resetWinPrizeState() {
-        if (winAfterClaim) winAfterClaim.hidden = true;
-        if (winActions) winActions.hidden = false;
+        if (winAfterClaim) winAfterClaim.hidden = false;
+        if (winActions) winActions.hidden = true;
         if (winAutoNote) winAutoNote.hidden = false;
-        if (winClaimBtn) winClaimBtn.disabled = false;
       }
 
       function setWinPrizeClaimed() {
         if (winAfterClaim) winAfterClaim.hidden = false;
         if (winActions) winActions.hidden = true;
-        if (winAutoNote) winAutoNote.hidden = true;
-        showToast("领取成功");
+        if (winAutoNote) winAutoNote.hidden = false;
       }
 
       function pickPrize() {
@@ -1589,13 +1593,13 @@
           kicking = false;
           if (isWin) {
             goal.classList.add("ix-goal--flash");
-            resetWinPrizeState();
             var prizeName = pickPrize();
             winTitleEl.textContent = prizeName;
             var couponCode = randomCouponCode();
             if (winCopyBtn) winCopyBtn.setAttribute("data-code", couponCode);
             if (winCodeLine) winCodeLine.textContent = "CODE: " + couponCode;
-            statusEl.innerHTML = "<strong>进球！</strong> 已为您弹出中奖弹窗。";
+            resetWinPrizeState();
+            statusEl.innerHTML = "<strong>进球！</strong> 已为您弹出中奖弹窗（券已自动领取）。";
             openOvl(winOvl);
           } else {
             statusEl.textContent = "未进球，已弹出提示。";
