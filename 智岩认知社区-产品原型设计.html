@@ -1,0 +1,3363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智岩认知社区 APP - 产品原型设计</title>
+  <style>
+    :root {
+      --phone-width: 375px;
+      --phone-radius: 40px;
+      --screen-radius: 32px;
+      --status-bar-height: 44px;
+      --nav-bar-height: 44px;
+      --bottom-nav-height: 50px;
+      --safe-area-bottom: 34px;
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --bg-page: #f0f0f0;
+      --border-color: #eeeeee;
+      --accent-color: #007aff;
+      --danger-color: #ff3b30;
+      --success-color: #34c759;
+      --warning-color: #ff9500;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      padding: 32px 24px;
+      min-height: 100vh;
+    }
+
+    .page-title {
+      font-size: 28px; font-weight: 700;
+      text-align: center; margin-bottom: 8px;
+    }
+    .page-subtitle {
+      font-size: 14px; text-align: center;
+      color: var(--text-tertiary); margin-bottom: 40px;
+    }
+
+    .screen-group { margin-bottom: 48px; }
+    .group-title {
+      font-size: 20px; font-weight: 600;
+      margin-bottom: 20px; padding-left: 12px;
+      border-left: 4px solid var(--accent-color);
+    }
+    .screen-row {
+      display: flex; flex-wrap: wrap;
+      gap: 32px; justify-content: flex-start;
+    }
+
+    .phone-wrapper {
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .phone-frame {
+      width: var(--phone-width); min-height: 680px;
+      background: #ffffff;
+      border-radius: var(--phone-radius);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden; position: relative;
+    }
+    .phone-screen {
+      width: 100%; height: 100%;
+      border-radius: var(--screen-radius);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      background: var(--bg-secondary);
+    }
+    .phone-label {
+      margin-top: 12px; font-size: 13px;
+      color: var(--text-secondary); font-weight: 500;
+    }
+
+    .status-bar {
+      height: var(--status-bar-height);
+      padding: 14px 24px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--bg-primary); flex-shrink: 0;
+    }
+    .status-bar .time { font-size: 15px; font-weight: 600; }
+    .status-bar .icons { display: flex; align-items: center; gap: 6px; }
+    .status-bar .icons .signal { display: flex; gap: 1.5px; align-items: flex-end; }
+    .status-bar .icons .signal span { display: block; width: 3px; background: #1a1a1a; border-radius: 1px; }
+    .status-bar .icons .signal span:nth-child(1) { height: 4px; }
+    .status-bar .icons .signal span:nth-child(2) { height: 7px; }
+    .status-bar .icons .signal span:nth-child(3) { height: 10px; }
+    .status-bar .icons .signal span:nth-child(4) { height: 13px; }
+    .status-bar .icons .wifi {
+      width: 15px; height: 11px;
+      border: 2.5px solid #1a1a1a; border-radius: 50% 50% 0 0; border-bottom: none;
+    }
+    .status-bar .icons .battery {
+      width: 24px; height: 11px;
+      border: 1.5px solid #1a1a1a; border-radius: 2px;
+      position: relative; display: flex; align-items: center; padding: 1.5px;
+    }
+    .status-bar .icons .battery::after {
+      content: ""; position: absolute; right: -4px; top: 2.5px;
+      width: 2px; height: 5px; background: #1a1a1a; border-radius: 0 1px 1px 0;
+    }
+    .status-bar .icons .battery .battery-fill {
+      width: 70%; height: 100%; background: #1a1a1a; border-radius: 1px;
+    }
+
+    .search-bar {
+      padding: 8px 16px; background: var(--bg-primary); flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .search-input-wrap {
+      flex: 1; height: 36px; background: var(--bg-secondary);
+      border-radius: 18px; display: flex; align-items: center;
+      padding: 0 12px; gap: 8px; position: relative;
+    }
+    .search-icon {
+      width: 14px; height: 14px;
+      border: 2px solid #999; border-radius: 50%;
+      position: relative; flex-shrink: 0;
+    }
+    .search-icon::after {
+      content: ""; position: absolute; right: -5px; bottom: -5px;
+      width: 6px; height: 2px; background: #999; transform: rotate(45deg);
+    }
+    .search-text { font-size: 14px; color: var(--text-tertiary); }
+    .search-action {
+      font-size: 13px; color: var(--accent-color); white-space: nowrap;
+    }
+
+    .tab-bar {
+      display: flex; background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color); flex-shrink: 0;
+    }
+    .tab-item {
+      flex: 1; text-align: center; padding: 10px 0;
+      font-size: 14px; color: var(--text-secondary); position: relative;
+      white-space: nowrap;
+    }
+    .tab-item.active { color: var(--text-primary); font-weight: 600; }
+    .tab-item.active::after {
+      content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 24px; height: 2px; background: var(--text-primary); border-radius: 1px;
+    }
+
+    .content-area {
+      flex: 1; overflow-y: auto; background: var(--bg-secondary);
+    }
+
+    .content-card {
+      background: var(--bg-primary); margin-bottom: 8px; padding: 12px 16px;
+    }
+    .card-header {
+      display: flex; align-items: center; margin-bottom: 8px;
+    }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #ddd; flex-shrink: 0;
+    }
+    .avatar-sm { width: 24px; height: 24px; }
+    .avatar-dark { background: #333; }
+    .card-header .user-info { margin-left: 8px; flex: 1; }
+    .card-header .user-name { font-size: 14px; font-weight: 500; }
+    .card-header .user-tag { font-size: 11px; color: var(--text-tertiary); }
+    .card-header .time-label { font-size: 11px; color: var(--text-tertiary); margin-left: auto; }
+    .card-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+    .card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px; }
+    .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .tag {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 11px; font-weight: 500;
+    }
+    .tag-blue { background: #e8f0fe; color: #1a73e8; }
+    .tag-red { background: #fce8e6; color: #d93025; }
+    .tag-orange { background: #fef3e0; color: #e37400; }
+    .tag-green { background: #e6f4ea; color: #137333; }
+    .tag-gray { background: #f0f0f0; color: #666; }
+    .card-footer {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 12px; color: var(--text-tertiary);
+    }
+
+    .bottom-nav {
+      display: flex; background: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+      padding-bottom: var(--safe-area-bottom); flex-shrink: 0;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; padding: 6px 0 4px;
+      font-size: 10px; color: var(--text-tertiary); gap: 2px;
+    }
+    .nav-item.active { color: var(--text-primary); font-weight: 600; }
+    .nav-icon {
+      width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-square {
+      width: 20px; height: 20px;
+      border: 1.5px solid currentColor; border-radius: 4px;
+    }
+    .icon-circle {
+      width: 20px; height: 20px;
+      border: 1.5px solid currentColor; border-radius: 50%;
+    }
+    .icon-doc {
+      width: 16px; height: 20px;
+      border: 1.5px solid currentColor; border-radius: 2px;
+      position: relative;
+    }
+    .icon-doc::before {
+      content: ""; position: absolute; top: 5px; left: 3px;
+      width: 8px; height: 1.5px; background: currentColor;
+    }
+    .icon-doc::after {
+      content: ""; position: absolute; top: 9px; left: 3px;
+      width: 6px; height: 1.5px; background: currentColor;
+    }
+
+    .nav-bar {
+      height: var(--nav-bar-height); padding: 0 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-primary); position: relative; flex-shrink: 0;
+    }
+    .back-arrow {
+      position: absolute; left: 16px; top: 50%;
+      width: 10px; height: 10px;
+      border-left: 2px solid var(--text-primary);
+      border-bottom: 2px solid var(--text-primary);
+      transform: translateY(-50%) rotate(45deg);
+    }
+    .nav-title { font-size: 17px; font-weight: 600; }
+    .nav-right {
+      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      font-size: 14px; color: var(--accent-color);
+    }
+
+    .bottom-action-bar {
+      display: flex; align-items: center;
+      padding: 8px 16px; gap: 12px;
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+      padding-bottom: calc(8px + var(--safe-area-bottom));
+      flex-shrink: 0;
+    }
+    .action-input {
+      flex: 1; height: 36px; background: var(--bg-secondary);
+      border-radius: 18px; padding: 0 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      display: flex; align-items: center;
+    }
+
+    .image-placeholder {
+      background: #eee; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #bbb; font-size: 13px; position: relative; overflow: hidden;
+    }
+    .image-placeholder::before {
+      content: "";
+      width: 30px; height: 30px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      position: absolute;
+    }
+    .image-placeholder::after {
+      content: "";
+      position: absolute;
+      width: 0; height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 16px solid #ccc;
+      top: 50%; transform: translateY(-30%);
+    }
+
+    .msg-item {
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .msg-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #333; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 600;
+    }
+    .msg-body { flex: 1; }
+    .msg-sender { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .msg-sender-sub { font-size: 11px; color: var(--text-tertiary); }
+    .msg-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-top: 4px; }
+    .msg-time { font-size: 11px; color: var(--text-tertiary); flex-shrink: 0; }
+    .msg-highlight {
+      border: 2px solid var(--accent-color); border-radius: 8px;
+    }
+    .msg-quote {
+      background: var(--bg-secondary); padding: 6px 10px;
+      border-left: 3px solid #ddd; border-radius: 4px;
+      font-size: 12px; color: var(--text-tertiary); margin-top: 4px;
+    }
+
+    .lock-screen {
+      background: #f8f8f8; flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center;
+    }
+    .lock-time {
+      font-size: 72px; font-weight: 200; letter-spacing: 2px;
+      margin-top: 40px; margin-bottom: 40px;
+    }
+    .lock-notif {
+      width: calc(100% - 32px);
+      background: var(--bg-primary);
+      border-radius: 12px; padding: 12px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .lock-notif-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: #eee; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #999;
+    }
+    .lock-notif-body { flex: 1; }
+    .lock-notif-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .lock-notif-text { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+    .lock-notif-time { font-size: 10px; color: var(--text-tertiary); flex-shrink: 0; }
+
+    .points-hero {
+      background: var(--bg-primary); padding: 20px 16px 16px;
+    }
+    .points-balance {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .points-number {
+      font-size: 36px; font-weight: 700; display: flex; align-items: center; gap: 6px;
+    }
+    .points-number .coin-icon {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #333; display: inline-flex; align-items: center;
+      justify-content: center; color: #fff; font-size: 10px;
+    }
+    .my-exchange-btn {
+      font-size: 13px; color: var(--danger-color); font-weight: 500;
+    }
+    .points-detail-link {
+      font-size: 12px; color: var(--text-tertiary); margin-top: 4px;
+    }
+    .report-btn {
+      width: 100%; height: 44px; background: var(--bg-secondary);
+      border-radius: 22px; border: none; font-size: 15px; font-weight: 500;
+      color: var(--text-primary); margin-top: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .section-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 16px 8px; background: var(--bg-primary);
+      font-size: 15px; font-weight: 600;
+    }
+    .section-header .more { font-size: 12px; color: var(--text-tertiary); font-weight: 400; }
+
+    .task-item {
+      display: flex; align-items: center; padding: 10px 16px;
+      background: var(--bg-primary); gap: 10px;
+    }
+    .task-icon {
+      width: 32px; height: 32px; background: #eee;
+      border-radius: 4px; display: flex; align-items: center;
+      justify-content: center;
+    }
+    .task-icon .mail-icon {
+      width: 18px; height: 13px; border: 1.5px solid #999;
+      border-radius: 2px; position: relative;
+    }
+    .task-icon .mail-icon::after {
+      content: ""; position: absolute; top: -1px; left: 2px;
+      width: 0; height: 0;
+      border-left: 6px solid transparent; border-right: 6px solid transparent;
+      border-top: 5px solid #999;
+    }
+    .task-name { flex: 1; font-size: 14px; }
+    .task-points { font-size: 13px; color: var(--warning-color); font-weight: 500; margin-right: 8px; }
+    .task-action {
+      font-size: 12px; color: var(--accent-color); font-weight: 500;
+    }
+
+    .product-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      padding: 8px 16px;
+    }
+    .product-card {
+      background: var(--bg-primary); border-radius: 8px; overflow: hidden;
+    }
+    .product-img {
+      width: 100%; aspect-ratio: 1; background: #eee;
+      display: flex; align-items: center; justify-content: center;
+      color: #bbb; font-size: 12px;
+    }
+    .product-info { padding: 8px; }
+    .product-points {
+      font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 4px;
+      margin-bottom: 4px;
+    }
+    .product-points .coin-sm {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #333; display: inline-flex; align-items: center;
+      justify-content: center; color: #fff; font-size: 8px;
+    }
+    .product-name { font-size: 12px; color: var(--text-secondary); margin-bottom: 2px; }
+    .product-desc { font-size: 11px; color: var(--text-tertiary); margin-bottom: 6px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .exchange-btn {
+      width: 100%; height: 28px; background: var(--warning-color);
+      color: #fff; border: none; border-radius: 4px;
+      font-size: 12px; font-weight: 500;
+    }
+    .exchange-btn.disabled {
+      background: #ddd; color: #999;
+    }
+
+    .sort-bar {
+      display: flex; align-items: center; padding: 10px 16px;
+      background: var(--bg-primary); gap: 4px;
+      font-size: 13px; color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .sort-bar .sort-active { color: var(--text-primary); font-weight: 600; }
+    .sort-arrow { font-size: 10px; }
+    .sort-bar .sort-item { margin-right: 16px; display: flex; align-items: center; gap: 2px; }
+
+    .detail-img {
+      width: 100%; aspect-ratio: 4/3; background: #eee;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .detail-img .cross-line {
+      position: absolute; width: 100%; height: 100%;
+    }
+    .detail-img .cross-line::before,
+    .detail-img .cross-line::after {
+      content: ""; position: absolute;
+      width: 141%; height: 1px; background: #ccc;
+      top: 50%; left: -20%;
+    }
+    .detail-img .cross-line::before { transform: rotate(30deg); }
+    .detail-img .cross-line::after { transform: rotate(-30deg); }
+
+    .detail-points {
+      padding: 12px 16px; background: var(--bg-primary);
+      display: flex; align-items: center; gap: 6px;
+      font-size: 24px; font-weight: 700;
+    }
+    .detail-points .coin-md {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #333; display: inline-flex; align-items: center;
+      justify-content: center; color: #fff; font-size: 10px;
+    }
+    .detail-name {
+      padding: 0 16px 12px; background: var(--bg-primary);
+      font-size: 14px; color: var(--text-secondary);
+    }
+    .detail-section-title {
+      padding: 12px 16px 8px; background: var(--bg-primary);
+      font-size: 15px; font-weight: 600;
+    }
+    .detail-richtext {
+      padding: 0 16px 16px; background: var(--bg-primary);
+    }
+    .detail-richtext .richtext-placeholder {
+      width: 100%; height: 80px; background: #eee; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: #bbb;
+    }
+    .detail-bottom-btn {
+      padding: 12px 16px; padding-bottom: calc(12px + var(--safe-area-bottom));
+      background: var(--bg-primary); border-top: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+    .detail-bottom-btn .btn-primary {
+      width: 100%; height: 44px; background: var(--text-primary);
+      color: #fff; border: none; border-radius: 22px;
+      font-size: 16px; font-weight: 500;
+    }
+
+    .sku-selector {
+      padding: 12px 16px; background: var(--bg-primary);
+    }
+    .sku-label { font-size: 13px; color: var(--text-tertiary); margin-bottom: 6px; }
+    .sku-option {
+      display: inline-block; padding: 6px 12px;
+      border: 1px solid var(--border-color); border-radius: 4px;
+      font-size: 13px; margin-right: 8px; margin-bottom: 6px;
+    }
+    .sku-option.selected { border-color: var(--text-primary); font-weight: 500; }
+
+    .qty-selector {
+      display: flex; align-items: center; gap: 0;
+      padding: 12px 16px; background: var(--bg-primary);
+    }
+    .qty-label { font-size: 14px; font-weight: 500; flex: 1; }
+    .qty-btn {
+      width: 28px; height: 28px; border: 1px solid #ddd;
+      background: #fff; display: flex; align-items: center;
+      justify-content: center; font-size: 16px; color: #666;
+    }
+    .qty-value {
+      width: 36px; height: 28px; border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 500;
+    }
+
+    .success-page {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 40px 24px 24px; background: var(--bg-primary); flex: 1;
+    }
+    .success-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--success-color); display: flex;
+      align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .success-icon::after {
+      content: ""; width: 20px; height: 10px;
+      border-left: 3px solid #fff; border-bottom: 3px solid #fff;
+      transform: rotate(-45deg); margin-top: -4px;
+    }
+    .success-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .success-desc { font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 24px; line-height: 1.5; }
+
+    .success-product {
+      width: 100%; border: 1px solid var(--border-color); border-radius: 8px;
+      padding: 12px; display: flex; gap: 10px; align-items: center;
+      margin-bottom: 24px;
+    }
+    .success-product-img {
+      width: 60px; height: 60px; background: #eee; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .success-product-img .mail-icon-lg {
+      width: 28px; height: 20px; border: 2px solid #bbb; border-radius: 2px;
+    }
+    .success-product-info { flex: 1; }
+    .success-product-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .success-product-desc { font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px; }
+    .success-product-points { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .success-product-status {
+      font-size: 11px; color: var(--warning-color); font-weight: 500;
+      padding: 2px 6px; background: #fff8e6; border-radius: 3px;
+    }
+
+    .success-btns {
+      display: flex; gap: 12px; width: 100%; margin-top: auto;
+    }
+    .success-btns .btn {
+      flex: 1; height: 44px; border-radius: 22px;
+      font-size: 15px; font-weight: 500; border: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-outline {
+      background: #fff; border: 1px solid #ddd !important; color: var(--text-primary);
+    }
+    .btn-dark {
+      background: var(--text-primary); color: #fff;
+    }
+
+    .exchange-item {
+      padding: 12px 16px; background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .exchange-item-img {
+      width: 64px; height: 64px; background: #eee; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .exchange-item-info { flex: 1; }
+    .exchange-item-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .exchange-item-desc { font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px; }
+    .exchange-item-points { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .exchange-item-qty { font-size: 12px; color: var(--text-tertiary); }
+    .exchange-status {
+      font-size: 11px; font-weight: 500; padding: 2px 8px;
+      border-radius: 3px; flex-shrink: 0; align-self: flex-start;
+    }
+    .status-pending { background: #fff3e0; color: var(--warning-color); }
+    .status-ready { background: #e6f4ea; color: var(--success-color); }
+
+    .points-record {
+      padding: 12px 16px; background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .record-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 4px;
+    }
+    .record-title { font-size: 14px; font-weight: 500; }
+    .record-date { font-size: 12px; color: var(--text-tertiary); }
+    .record-desc { font-size: 12px; color: var(--text-tertiary); margin-bottom: 2px; }
+    .record-points { font-size: 15px; font-weight: 600; text-align: right; }
+    .record-points.positive { color: var(--success-color); }
+    .record-points.negative { color: var(--text-primary); }
+
+    .ai-search-input {
+      margin: 16px; padding: 16px;
+      background: var(--bg-primary); border-radius: 8px;
+      border: 1px solid var(--border-color);
+      min-height: 100px;
+    }
+    .ai-search-input .placeholder { font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .ai-search-btn {
+      margin: 0 16px; height: 40px;
+      background: var(--bg-secondary); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 500; color: var(--text-primary);
+    }
+
+    .chat-bubble {
+      margin: 12px 16px; padding: 12px 16px;
+      border-radius: 12px; font-size: 14px; line-height: 1.6;
+      max-width: 85%;
+    }
+    .chat-bubble.user {
+      background: #333; color: #fff; margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.ai {
+      background: var(--bg-primary); color: var(--text-primary);
+      border-bottom-left-radius: 4px;
+    }
+
+    .ai-ref-card {
+      margin: 8px 16px; padding: 10px 12px;
+      background: var(--bg-primary); border-radius: 8px;
+      border: 1px solid var(--border-color);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .ai-ref-icon {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--success-color); display: flex;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .ai-ref-icon::after {
+      content: ""; width: 8px; height: 4px;
+      border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+      transform: rotate(-45deg); margin-top: -2px;
+    }
+    .ai-ref-text { font-size: 13px; color: var(--text-primary); flex: 1; }
+    .ai-ref-arrow { font-size: 16px; color: var(--text-tertiary); }
+
+    .chat-content-tag {
+      display: inline-block; padding: 3px 10px;
+      border-radius: 12px; font-size: 12px; font-weight: 500;
+      margin-top: 4px;
+    }
+    .chat-tag-blue { background: #e8f0fe; color: #1a73e8; }
+    .chat-tag-orange { background: #fef3e0; color: #e37400; }
+
+    .chat-input-bar {
+      display: flex; align-items: center;
+      padding: 8px 16px; gap: 8px;
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+      padding-bottom: calc(8px + var(--safe-area-bottom));
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1; height: 36px; background: var(--bg-secondary);
+      border-radius: 18px; padding: 0 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      display: flex; align-items: center;
+      border: 1px solid var(--border-color);
+    }
+    .chat-send-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent-color); display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .chat-send-btn .send-arrow {
+      width: 0; height: 0;
+      border-left: 8px solid #fff;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      margin-left: 2px;
+    }
+
+    .source-panel {
+      background: #f0f0f0; width: 55%; position: absolute;
+      right: 0; top: 0; bottom: 0; z-index: 10;
+      border-left: 1px solid #ddd;
+      display: flex; flex-direction: column;
+    }
+    .source-panel-header {
+      padding: 10px 12px; font-size: 14px; font-weight: 600;
+      background: #e8e8e8; border-bottom: 1px solid #ddd;
+    }
+
+    .vbm-plan-card {
+      background: var(--bg-primary); margin-bottom: 8px; padding: 12px 16px;
+    }
+    .vbm-plan-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .vbm-plan-goal { font-size: 12px; color: var(--text-tertiary); margin-bottom: 10px; }
+    .vbm-stats {
+      display: flex; gap: 24px; margin-bottom: 8px;
+    }
+    .vbm-stat { text-align: center; }
+    .vbm-stat-value { font-size: 18px; font-weight: 700; }
+    .vbm-stat-label { font-size: 11px; color: var(--text-tertiary); }
+    .vbm-stat-value.highlight { color: var(--accent-color); }
+
+    .form-group {
+      padding: 0 16px; margin-bottom: 16px;
+    }
+    .form-label {
+      font-size: 14px; font-weight: 500; margin-bottom: 8px;
+    }
+    .form-label .required { color: var(--danger-color); }
+    .form-input {
+      width: 100%; height: 44px; border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 0 12px;
+      font-size: 14px; color: var(--text-tertiary);
+      display: flex; align-items: center;
+      background: #fff;
+    }
+    .form-select {
+      position: relative;
+    }
+    .form-select::after {
+      content: ""; position: absolute; right: 12px; top: 50%;
+      width: 8px; height: 8px;
+      border-right: 1.5px solid #999; border-bottom: 1.5px solid #999;
+      transform: translateY(-65%) rotate(45deg);
+    }
+    .form-submit {
+      margin: 24px 16px; height: 48px;
+      background: var(--text-primary); color: #fff;
+      border: none; border-radius: 24px;
+      font-size: 16px; font-weight: 500; width: calc(100% - 32px);
+    }
+
+    .badge-count {
+      position: absolute; top: -4px; right: -8px;
+      min-width: 16px; height: 16px; padding: 0 4px;
+      background: var(--danger-color); color: #fff;
+      border-radius: 8px; font-size: 10px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .vbm-banner {
+      margin: 12px 16px; padding: 14px 16px;
+      background: var(--bg-secondary); border-radius: 8px;
+      font-size: 13px; color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .tab-bar-scrollable {
+      display: flex; background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color); flex-shrink: 0;
+      overflow-x: auto; gap: 0;
+    }
+    .tab-bar-scrollable .tab-item {
+      flex: none; padding: 10px 12px; white-space: nowrap;
+    }
+
+    .vbm-detail-hero {
+      background: var(--bg-primary); padding: 16px;
+    }
+    .vbm-detail-user {
+      display: flex; align-items: center; margin-bottom: 14px;
+    }
+    .vbm-detail-user .user-info { margin-left: 10px; flex: 1; }
+    .vbm-detail-user .user-name { font-size: 15px; font-weight: 600; }
+    .vbm-detail-user .user-desc { font-size: 12px; color: var(--text-tertiary); }
+    .vbm-detail-title {
+      font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 6px;
+    }
+    .vbm-detail-goal {
+      font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5;
+    }
+
+    .progress-ring-wrap {
+      display: flex; align-items: center; gap: 24px;
+      padding: 16px 0;
+    }
+    .progress-ring {
+      width: 88px; height: 88px; position: relative; flex-shrink: 0;
+    }
+    .progress-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .progress-ring .ring-bg {
+      fill: none; stroke: #eee; stroke-width: 6;
+    }
+    .progress-ring .ring-fill {
+      fill: none; stroke: var(--accent-color); stroke-width: 6;
+      stroke-linecap: round;
+    }
+    .progress-ring .ring-label {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .ring-label .ring-value {
+      font-size: 22px; font-weight: 700; color: var(--accent-color);
+      display: block;
+    }
+    .ring-label .ring-text {
+      font-size: 11px; color: var(--text-tertiary);
+    }
+    .progress-stats-side {
+      display: flex; flex-direction: column; gap: 10px; flex: 1;
+    }
+    .progress-stat-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .progress-stat-row .stat-label {
+      font-size: 13px; color: var(--text-secondary);
+    }
+    .progress-stat-row .stat-value {
+      font-size: 15px; font-weight: 600;
+    }
+    .progress-stat-row .stat-bar-wrap {
+      flex: 1; height: 6px; background: #eee; border-radius: 3px;
+      margin: 0 12px; position: relative;
+    }
+    .progress-stat-row .stat-bar-fill {
+      height: 100%; border-radius: 3px; position: absolute; left: 0; top: 0;
+    }
+
+    .vbm-info-section {
+      background: var(--bg-primary); padding: 16px;
+      margin-top: 8px;
+    }
+    .vbm-info-title {
+      font-size: 15px; font-weight: 600; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .vbm-info-title .title-dot {
+      width: 4px; height: 14px; background: var(--accent-color);
+      border-radius: 2px;
+    }
+    .vbm-info-row {
+      display: flex; padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+    }
+    .vbm-info-row:last-child { border-bottom: none; }
+    .vbm-info-row .info-label {
+      width: 80px; color: var(--text-tertiary); flex-shrink: 0;
+    }
+    .vbm-info-row .info-value {
+      flex: 1; color: var(--text-primary);
+    }
+
+    .vbm-article-card {
+      display: flex; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+      align-items: flex-start;
+    }
+    .vbm-article-card:last-child { border-bottom: none; }
+    .vbm-article-seq {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--bg-secondary); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .vbm-article-body { flex: 1; }
+    .vbm-article-title {
+      font-size: 14px; font-weight: 500; margin-bottom: 4px;
+      line-height: 1.4; color: var(--text-primary);
+    }
+    .vbm-article-meta {
+      font-size: 12px; color: var(--text-tertiary);
+      display: flex; gap: 8px;
+    }
+    .vbm-article-tag {
+      display: inline-block; padding: 1px 6px; border-radius: 3px;
+      font-size: 10px; font-weight: 500;
+    }
+
+    .timeline-section {
+      background: var(--bg-primary); padding: 16px; margin-top: 8px;
+    }
+    .timeline-item {
+      display: flex; gap: 12px; position: relative;
+      padding-bottom: 20px;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-dot-col {
+      display: flex; flex-direction: column; align-items: center;
+      width: 16px; flex-shrink: 0;
+    }
+    .timeline-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 2px solid var(--accent-color);
+      background: #fff; flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .timeline-dot.filled { background: var(--accent-color); }
+    .timeline-line {
+      width: 2px; flex: 1; background: #e0e0e0;
+      margin-top: 2px;
+    }
+    .timeline-body { flex: 1; padding-top: 0; }
+    .timeline-date {
+      font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;
+    }
+    .timeline-text {
+      font-size: 14px; color: var(--text-primary); line-height: 1.5;
+    }
+    .timeline-sub {
+      font-size: 12px; color: var(--text-secondary); margin-top: 4px;
+      line-height: 1.5;
+    }
+    .timeline-progress-tag {
+      display: inline-block; padding: 2px 8px; border-radius: 10px;
+      font-size: 11px; font-weight: 500; margin-top: 4px;
+    }
+
+    .vbm-detail-bottom {
+      padding: 12px 16px;
+      padding-bottom: calc(12px + var(--safe-area-bottom));
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+      flex-shrink: 0;
+      display: flex; gap: 12px;
+    }
+    .vbm-detail-bottom .btn {
+      flex: 1; height: 44px; border-radius: 22px;
+      font-size: 15px; font-weight: 500; border: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .output-card {
+      background: var(--bg-secondary); border-radius: 8px;
+      padding: 12px; margin-top: 8px;
+    }
+    .output-card-title {
+      font-size: 13px; font-weight: 500; margin-bottom: 4px;
+    }
+    .output-card-desc {
+      font-size: 12px; color: var(--text-tertiary); line-height: 1.4;
+    }
+    .output-card-status {
+      display: inline-block; padding: 2px 8px; border-radius: 3px;
+      font-size: 11px; font-weight: 500; margin-top: 6px;
+    }
+
+    /* ===== 个人数据看板 ===== */
+    .profile-header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+      padding: 24px 16px 32px; position: relative; overflow: hidden;
+    }
+    .profile-header::before {
+      content: ""; position: absolute; top: -30px; right: -30px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .profile-header::after {
+      content: ""; position: absolute; bottom: -40px; left: -20px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+    }
+    .profile-avatar-row {
+      display: flex; align-items: center; gap: 14px; position: relative; z-index: 1;
+    }
+    .profile-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; color: #fff; font-weight: 700;
+      border: 3px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+    .profile-info { flex: 1; }
+    .profile-name {
+      font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px;
+    }
+    .profile-dept {
+      font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 6px;
+    }
+    .profile-level-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 12px;
+      background: linear-gradient(135deg, #ffd700, #ffb200);
+      font-size: 11px; font-weight: 600; color: #6b4c00;
+    }
+
+    .nameplate-section {
+      background: var(--bg-primary); padding: 16px; margin-top: -16px;
+      border-radius: 16px 16px 0 0; position: relative; z-index: 2;
+    }
+    .nameplate-card {
+      background: linear-gradient(135deg, #f8f4ee 0%, #f0e8d8 100%);
+      border-radius: 12px; padding: 20px; position: relative;
+      overflow: hidden; border: 1px solid #e8dcc8;
+    }
+    .nameplate-card::before {
+      content: ""; position: absolute; top: -20px; right: -20px;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(212,175,55,0.1);
+    }
+    .nameplate-year {
+      font-size: 11px; color: #b8960c; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .nameplate-title {
+      font-size: 18px; font-weight: 700; color: #5a4a1e;
+      margin-bottom: 4px;
+    }
+    .nameplate-subtitle {
+      font-size: 12px; color: #9a8a5a; margin-bottom: 12px;
+    }
+    .nameplate-stats {
+      display: flex; gap: 20px;
+    }
+    .nameplate-stat {
+      text-align: center;
+    }
+    .nameplate-stat-value {
+      font-size: 16px; font-weight: 700; color: #5a4a1e;
+    }
+    .nameplate-stat-label {
+      font-size: 10px; color: #9a8a5a; margin-top: 2px;
+    }
+    .nameplate-seal {
+      position: absolute; right: 16px; bottom: 12px;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 2px solid #d4af37; display: flex;
+      align-items: center; justify-content: center;
+      color: #d4af37; font-size: 10px; font-weight: 700;
+      transform: rotate(-15deg); opacity: 0.5;
+      text-align: center; line-height: 1.1;
+    }
+
+    .medal-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      padding: 4px 0;
+    }
+    .medal-item {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 12px 4px; background: var(--bg-secondary);
+      border-radius: 12px; position: relative;
+    }
+    .medal-item.locked { opacity: 0.4; }
+    .medal-icon {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 8px; font-size: 20px; position: relative;
+    }
+    .medal-icon .medal-ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid; opacity: 0.3;
+    }
+    .medal-name {
+      font-size: 11px; font-weight: 500; color: var(--text-primary);
+      text-align: center; margin-bottom: 2px;
+    }
+    .medal-desc {
+      font-size: 10px; color: var(--text-tertiary); text-align: center;
+    }
+    .medal-lock-icon {
+      position: absolute; top: 6px; right: 6px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #ccc; display: flex; align-items: center;
+      justify-content: center;
+    }
+    .medal-lock-icon::before {
+      content: ""; width: 6px; height: 4px;
+      border: 1.5px solid #fff; border-radius: 3px 3px 0 0;
+      border-bottom: none; position: absolute; top: 2px;
+    }
+    .medal-lock-icon::after {
+      content: ""; width: 5px; height: 4px;
+      background: #fff; border-radius: 1px;
+      position: absolute; bottom: 3px;
+    }
+
+    .exp-section {
+      background: var(--bg-primary); padding: 16px; margin-top: 8px;
+    }
+    .exp-overview {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+    }
+    .exp-total {
+      font-size: 32px; font-weight: 700; color: var(--accent-color);
+      line-height: 1;
+    }
+    .exp-total-label {
+      font-size: 12px; color: var(--text-tertiary); margin-top: 2px;
+    }
+    .exp-level-info { flex: 1; }
+    .exp-level-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .exp-level-tag {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+    }
+    .exp-next-level {
+      font-size: 11px; color: var(--text-tertiary);
+    }
+    .exp-bar-wrap {
+      width: 100%; height: 8px; background: #eee;
+      border-radius: 4px; overflow: hidden;
+    }
+    .exp-bar-fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, #007aff, #5ac8fa);
+    }
+
+    .exp-breakdown {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      margin-top: 12px;
+    }
+    .exp-card {
+      background: var(--bg-secondary); border-radius: 10px; padding: 12px;
+      position: relative; overflow: hidden;
+    }
+    .exp-card::after {
+      content: ""; position: absolute; top: -8px; right: -8px;
+      width: 32px; height: 32px; border-radius: 50%;
+      opacity: 0.08;
+    }
+    .exp-card-value {
+      font-size: 20px; font-weight: 700; margin-bottom: 2px;
+    }
+    .exp-card-label {
+      font-size: 11px; color: var(--text-tertiary);
+    }
+    .exp-card-sub {
+      font-size: 10px; color: var(--text-tertiary); margin-top: 4px;
+    }
+
+    .exp-history { margin-top: 16px; }
+    .exp-history-title {
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .exp-history-item {
+      display: flex; align-items: center; padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .exp-history-item:last-child { border-bottom: none; }
+    .exp-history-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      margin-right: 10px; flex-shrink: 0;
+    }
+    .exp-history-text {
+      flex: 1; font-size: 13px; color: var(--text-primary);
+    }
+    .exp-history-pts {
+      font-size: 13px; font-weight: 600; flex-shrink: 0;
+    }
+    .exp-history-date {
+      font-size: 11px; color: var(--text-tertiary);
+      margin-left: 8px; flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">智岩认知社区 APP - 产品原型设计</h1>
+  <p class="page-subtitle">移动端高保真原型 · 2026-05-13</p>
+
+  <!-- ========== 站内信 ========== -->
+  <div class="screen-group">
+    <h2 class="group-title">站内信</h2>
+    <div class="screen-row">
+
+      <!-- 页面 1：信息流 - 消息入口 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="search-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon"></span>
+                <span class="search-text">亚马逊销售V</span>
+              </div>
+              <div style="position:relative;">
+                <span class="search-action">listing优化秘籍</span>
+                <span style="position:absolute;top:-8px;right:-10px;min-width:18px;height:18px;padding:0 5px;background:#ff3b30;color:#fff;border-radius:9px;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;">99+</span>
+              </div>
+            </div>
+
+            <div class="tab-bar">
+              <div class="tab-item active">JPC</div>
+              <div class="tab-item">问答</div>
+              <div class="tab-item">分享</div>
+            </div>
+
+            <div class="content-area">
+              <div class="content-card">
+                <div class="card-header">
+                  <div class="avatar avatar-dark"></div>
+                  <div class="user-info">
+                    <div class="user-name">Harris</div>
+                    <div class="user-tag">[DP] 数字平台·产品</div>
+                  </div>
+                  <span class="time-label">3天前</span>
+                </div>
+                <div class="card-title">产品开发如何找到爆款产品</div>
+                <div class="card-desc">XXXXXXXXXXX，XXXXXXXXXXXXXXX XXXXXXXXXXXXXXX</div>
+                <div class="card-tags">
+                  <span class="tag tag-red">品P</span>
+                  <span class="tag tag-orange">品产品</span>
+                </div>
+                <div class="card-footer">
+                  <span>1300浏览</span>
+                  <span>60有用</span>
+                </div>
+              </div>
+
+              <div class="content-card">
+                <div class="card-header">
+                  <div class="avatar avatar-dark"></div>
+                  <div class="user-info">
+                    <div class="user-name">Harris</div>
+                    <div class="user-tag">[DP] 数字平台·产品</div>
+                  </div>
+                  <span class="time-label">3天前</span>
+                </div>
+                <div class="card-title">产品开发如何找到爆款产品</div>
+                <div class="card-desc">XXXXXXXXXXX，XXXXXXXXXXXXXXX XXXXXXXXXXXXXXX</div>
+                <div class="card-tags">
+                  <span class="tag tag-red">品P</span>
+                  <span class="tag tag-orange">品产品</span>
+                </div>
+                <div class="card-footer">
+                  <span>1300浏览</span>
+                  <span>60有用</span>
+                </div>
+              </div>
+
+              <div class="content-card">
+                <div class="card-header">
+                  <div class="avatar avatar-dark"></div>
+                  <div class="user-info">
+                    <div class="user-name">Harris</div>
+                    <div class="user-tag">[DP] 数字平台·产品</div>
+                  </div>
+                  <span class="time-label">3天前</span>
+                </div>
+                <div class="card-title">产品开发如何找到爆款产品</div>
+                <div class="card-desc">XXXXXXXXXXX，XXXXXXXXXXXXXXX</div>
+                <div class="card-tags">
+                  <span class="tag tag-red">品P</span>
+                  <span class="tag tag-orange">品产品</span>
+                </div>
+                <div class="card-footer">
+                  <span>1300浏览</span>
+                  <span>60有用</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bottom-nav">
+              <div class="nav-item active">
+                <div class="nav-icon"><div class="icon-square"></div></div>
+                <span>专业</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-doc"></div></div>
+                <span>发布</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-square"></div></div>
+                <span>CBDA</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-doc"></div></div>
+                <span>考试</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-circle"></div></div>
+                <span>课程</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">信息流 - 消息入口</div>
+      </div>
+
+      <!-- 页面 2：消息中心 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">消息</span>
+            </div>
+
+            <div class="tab-bar-scrollable">
+              <div class="tab-item active">全部</div>
+              <div class="tab-item">点赞</div>
+              <div class="tab-item">评论</div>
+              <div class="tab-item">收藏</div>
+              <div class="tab-item">回答</div>
+              <div class="tab-item">邀请回答</div>
+            </div>
+
+            <div class="content-area" style="background:var(--bg-primary);">
+              <div class="msg-item">
+                <div class="msg-icon">H</div>
+                <div class="msg-body">
+                  <div class="msg-sender">Harris <span class="msg-sender-sub">[DP] 数字平台·产品</span></div>
+                  <div class="msg-text" style="font-weight:600;color:var(--text-primary);">点赞了你的JPC非常有用</div>
+                </div>
+                <span class="msg-time">3天前</span>
+              </div>
+
+              <div class="msg-item">
+                <div class="msg-icon">H</div>
+                <div class="msg-body">
+                  <div class="msg-sender">Harris <span class="msg-sender-sub">[DP] 数字平台·产品</span></div>
+                  <div class="msg-text" style="font-weight:600;color:var(--text-primary);">评论了你：这篇文章简直太赞了！</div>
+                </div>
+                <span class="msg-time">3天前</span>
+              </div>
+
+              <div class="msg-item">
+                <div class="msg-icon">H</div>
+                <div class="msg-body">
+                  <div class="msg-sender">Harris <span class="msg-sender-sub">[DP] 数字平台·产品</span></div>
+                  <div class="msg-text">回复了你：感谢你对我的认可！</div>
+                  <div class="msg-quote">评论内容 XXXXXXXXXXXXXXX</div>
+                </div>
+                <span class="msg-time">3天前</span>
+              </div>
+
+              <div class="msg-item">
+                <div class="msg-icon">H</div>
+                <div class="msg-body">
+                  <div class="msg-sender">Harris <span class="msg-sender-sub">[DP] 数字平台·产品</span></div>
+                  <div class="msg-text" style="font-weight:600;color:var(--text-primary);">收藏了你的 JPC</div>
+                </div>
+                <span class="msg-time">3天前</span>
+              </div>
+
+              <div class="msg-item">
+                <div class="msg-icon">H</div>
+                <div class="msg-body">
+                  <div class="msg-sender">Harris <span class="msg-sender-sub">[DP] 数字平台·产品</span></div>
+                  <div class="msg-text">回答了你的提问：产品如何做亚马逊广告投放关键词 XXXXXXXXXXXXXXXXXXXXXXX...</div>
+                  <div class="msg-quote">提问标题 XXXXXXXXXXXXXXX</div>
+                </div>
+                <span class="msg-time">3天前</span>
+              </div>
+
+              <div class="msg-item msg-highlight">
+                <div class="msg-icon">H</div>
+                <div class="msg-body">
+                  <div class="msg-sender">Harris <span class="msg-sender-sub">[DP] 数字平台·产品</span></div>
+                  <div class="msg-text" style="font-weight:600;color:var(--text-primary);">真诚的邀请你回答他的提问</div>
+                  <div class="msg-quote">提问标题 XXXXXXXXXXXXXXXXXXXXXXX...</div>
+                </div>
+                <span class="msg-time">3天前</span>
+              </div>
+
+              <div class="msg-item">
+                <div class="msg-icon" style="background:#555;">!</div>
+                <div class="msg-body">
+                  <div class="msg-sender" style="font-weight:600;">内容审核通知</div>
+                  <div class="msg-text">亲爱的创作者，你由于 2026 年 6 月 3 日 17:23 发布的 JPC《标题 XXXXXXXXXXXXX》包含违反社区规定的关键词，请修改后重新提交发布。</div>
+                </div>
+                <span class="msg-time">3天前</span>
+              </div>
+
+              <div class="msg-item">
+                <div class="msg-icon" style="background:#555;">!</div>
+                <div class="msg-body">
+                  <div class="msg-sender" style="font-weight:600;">内容审核通知</div>
+                  <div class="msg-text">亲爱的创作者，你由于 2026 年 6 月 3 日 17:23 发布的 考题《考题名称 XXXXXXXXXXXXX》内容出错，该考题已作废，请修改后重新提交发布。</div>
+                </div>
+                <span class="msg-time">3天前</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">消息中心</div>
+      </div>
+
+      <!-- 页面 3：锁屏推送通知 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar" style="background:transparent;">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="lock-screen">
+              <div class="lock-time">09:26</div>
+
+              <div class="lock-notif">
+                <div class="lock-notif-icon">logo</div>
+                <div class="lock-notif-body">
+                  <div class="lock-notif-title">Harris 点赞你的 JPC</div>
+                  <div class="lock-notif-text">《JPC标题XXXXXXXXXXXXXXXX》</div>
+                </div>
+                <span class="lock-notif-time">3天前</span>
+              </div>
+
+              <div class="lock-notif">
+                <div class="lock-notif-icon">logo</div>
+                <div class="lock-notif-body">
+                  <div class="lock-notif-title">Harris 真诚的邀请你回答他的提问</div>
+                  <div class="lock-notif-text">《提问标题XXXXXXXXXXXXXXXX》</div>
+                </div>
+                <span class="lock-notif-time">3天前</span>
+              </div>
+
+              <div class="lock-notif">
+                <div class="lock-notif-icon">logo</div>
+                <div class="lock-notif-body">
+                  <div class="lock-notif-title">内容审核通知</div>
+                  <div class="lock-notif-text">你的 JPC《标题 XXXXXXXXXXXXX》包含违反社区规定关键词，请修改后重新提交发布。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">推送通知（锁屏）</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 积分兑换 ========== -->
+  <div class="screen-group">
+    <h2 class="group-title">积分兑换</h2>
+    <div class="screen-row">
+
+      <!-- 页面 1：我的积分 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">我的积分</span>
+            </div>
+
+            <div class="content-area">
+              <div class="points-hero">
+                <div class="points-balance">
+                  <div class="points-number">
+                    <span class="coin-icon">S</span> 4,560
+                  </div>
+                  <span class="my-exchange-btn">我的兑换</span>
+                </div>
+                <div class="points-detail-link">积分明细&gt;</div>
+                <div class="report-btn">提报积分</div>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <div class="section-header">
+                <span>做任务得积分</span>
+                <span class="more">全部任务&gt;</span>
+              </div>
+              <div class="task-item">
+                <div class="task-icon"><div class="mail-icon" style="width:18px;height:13px;border:1.5px solid #999;border-radius:2px;"></div></div>
+                <span class="task-name">发布一篇 JPC</span>
+                <span class="task-points">+100</span>
+                <span class="task-action">去完成</span>
+              </div>
+              <div class="task-item" style="border-bottom:1px solid var(--border-color);">
+                <div class="task-icon"><div class="mail-icon" style="width:18px;height:13px;border:1.5px solid #999;border-radius:2px;"></div></div>
+                <span class="task-name">发布一篇 分享</span>
+                <span class="task-points">+100</span>
+                <span class="task-action">去完成</span>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <div class="section-header">
+                <span>积分兑换</span>
+                <span class="more">热门兑换 ↕</span>
+              </div>
+              <div class="product-grid">
+                <div class="product-card">
+                  <div class="product-img">商品图片</div>
+                  <div class="product-info">
+                    <div class="product-points"><span class="coin-sm">S</span> 1000</div>
+                    <div class="product-name">Govee 盲盒 xxxxxxxx</div>
+                    <div class="product-desc">xxxxxxxxxxxxxxxxxxxxxxx</div>
+                    <button class="exchange-btn">立即兑换</button>
+                  </div>
+                </div>
+                <div class="product-card">
+                  <div class="product-img">商品图片</div>
+                  <div class="product-info">
+                    <div class="product-points"><span class="coin-sm">S</span> 1000</div>
+                    <div class="product-name">Govee 盲盒 xxxxxxxx</div>
+                    <div class="product-desc">xxxxxxxxxxxxxxxxxxxxxxx</div>
+                    <button class="exchange-btn">立即兑换</button>
+                  </div>
+                </div>
+                <div class="product-card">
+                  <div class="product-img">商品图片</div>
+                  <div class="product-info">
+                    <div class="product-points"><span class="coin-sm">S</span> 1000</div>
+                    <div class="product-name">Govee 盲盒 xxxxxxxx</div>
+                    <div class="product-desc">xxxxxxxxxxxxxxxxxxxxxxx</div>
+                    <button class="exchange-btn">立即兑换</button>
+                  </div>
+                </div>
+                <div class="product-card">
+                  <div class="product-img">商品图片</div>
+                  <div class="product-info">
+                    <div class="product-points"><span class="coin-sm">S</span> 1000</div>
+                    <div class="product-name">Govee 盲盒 xxxxxxxx</div>
+                    <div class="product-desc">xxxxxxxxxxxxxxxxxxxxxxx</div>
+                    <button class="exchange-btn">立即兑换</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">我的积分</div>
+      </div>
+
+      <!-- 页面 2：积分兑换列表 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">我的积分</span>
+            </div>
+
+            <div class="content-area">
+              <div style="padding:12px 16px;background:var(--bg-primary);border-bottom:1px solid var(--border-color);">
+                <div style="font-size:16px;font-weight:600;margin-bottom:4px;">积分兑换</div>
+                <div class="sort-bar" style="padding:8px 0;border:none;">
+                  <div class="sort-item sort-active">热门兑换优先</div>
+                </div>
+                <div style="font-size:12px;color:var(--text-tertiary);">积分从低到高<br>积分从高到低</div>
+              </div>
+
+              <div class="product-grid">
+                <div class="product-card">
+                  <div class="product-img">商品图片</div>
+                  <div class="product-info">
+                    <div class="product-points"><span class="coin-sm">S</span> 1000</div>
+                    <div class="product-name">Govee 盲盒 xxxxxxxx</div>
+                    <div class="product-desc">xxxxxxxxxxxxxxxxxxxxxxx</div>
+                    <button class="exchange-btn">立即兑换</button>
+                  </div>
+                </div>
+                <div class="product-card">
+                  <div class="product-img">商品图片</div>
+                  <div class="product-info">
+                    <div class="product-points"><span class="coin-sm">S</span> 1000</div>
+                    <div class="product-name">Govee 盲盒 xxxxxxxx</div>
+                    <div class="product-desc">xxxxxxxxxxxxxxxxxxxxxxx</div>
+                    <button class="exchange-btn disabled">已兑完</button>
+                  </div>
+                </div>
+                <div class="product-card">
+                  <div class="product-img">商品图片</div>
+                  <div class="product-info">
+                    <div class="product-points"><span class="coin-sm">S</span> 1000</div>
+                    <div class="product-name">Govee 盲盒 xxxxxxxx</div>
+                    <div class="product-desc">xxxxxxxxxxxxxxxxxxxxxxx</div>
+                    <button class="exchange-btn">立即兑换</button>
+                  </div>
+                </div>
+                <div class="product-card">
+                  <div class="product-img">商品图片</div>
+                  <div class="product-info">
+                    <div class="product-points"><span class="coin-sm">S</span> 1000</div>
+                    <div class="product-name">Govee 盲盒 xxxxxxxx</div>
+                    <div class="product-desc">xxxxxxxxxxxxxxxxxxxxxxx</div>
+                    <button class="exchange-btn">立即兑换</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">积分兑换列表</div>
+      </div>
+
+      <!-- 页面 3：兑换礼品详情 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">兑换礼品详情</span>
+            </div>
+
+            <div class="content-area">
+              <div class="detail-img" style="aspect-ratio:4/3;">
+                <div class="cross-line"></div>
+              </div>
+
+              <div class="detail-points">
+                <span class="coin-md">S</span> 1000
+              </div>
+              <div class="detail-name">govee 盲盒 XXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <div class="detail-section-title">详情介绍</div>
+              <div class="detail-richtext">
+                <div class="richtext-placeholder">富文本</div>
+              </div>
+            </div>
+
+            <div class="detail-bottom-btn">
+              <button class="btn-primary" style="width:100%;height:44px;background:var(--text-primary);color:#fff;border:none;border-radius:22px;font-size:16px;font-weight:500;">立即兑换</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">兑换礼品详情</div>
+      </div>
+
+      <!-- 页面 4：兑换礼品详情 - 选规格 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">兑换礼品详情</span>
+            </div>
+
+            <div class="content-area">
+              <div class="detail-img" style="aspect-ratio:1;">
+                <div class="cross-line"></div>
+              </div>
+
+              <div class="detail-points">
+                <span class="coin-md">S</span> 1000
+              </div>
+
+              <div style="padding:8px 16px;background:var(--bg-primary);">
+                <div style="font-size:13px;color:var(--text-tertiary);margin-bottom:6px;">请选择</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <span class="sku-option selected">Govee 盲盒 XXXXXXXX</span>
+                </div>
+                <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">xXXXXXXXXXXXXX</div>
+              </div>
+
+              <div class="detail-points" style="font-size:16px;padding-top:8px;">
+                <span class="coin-md">S</span> 1000
+              </div>
+
+              <div class="qty-selector">
+                <span class="qty-label">数量</span>
+                <div class="qty-btn">-</div>
+                <div class="qty-value">1</div>
+                <div class="qty-btn">+</div>
+              </div>
+            </div>
+
+            <div class="detail-bottom-btn">
+              <button class="btn-primary" style="width:100%;height:44px;background:var(--text-primary);color:#fff;border:none;border-radius:22px;font-size:16px;font-weight:500;">确定兑换</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">兑换礼品详情 - 选规格</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 积分兑换流程 ========== -->
+  <div class="screen-group">
+    <h2 class="group-title">积分兑换流程</h2>
+    <div class="screen-row">
+
+      <!-- 页面 1：兑换成功 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">兑换成功</span>
+            </div>
+
+            <div class="success-page">
+              <div class="success-icon"></div>
+              <div class="success-title">兑换成功</div>
+              <div class="success-desc">你的礼品兑换成功，请及时到 33 楼 HRBP 处领取礼品</div>
+
+              <div class="success-product">
+                <div class="success-product-img">
+                  <div style="width:28px;height:20px;border:2px solid #bbb;border-radius:2px;"></div>
+                </div>
+                <div class="success-product-info">
+                  <div class="success-product-name">Govee盲盒 XXXXXXXX</div>
+                  <div class="success-product-desc">xXXXXXXXXXXXXX</div>
+                  <div class="success-product-points"><span class="coin-sm" style="width:12px;height:12px;font-size:7px;">S</span> 1000</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="success-product-status">待领取</div>
+                  <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">X 2</div>
+                </div>
+              </div>
+
+              <div class="success-btns">
+                <button class="btn btn-outline">回到首页</button>
+                <button class="btn btn-dark">继续兑换</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">兑换成功</div>
+      </div>
+
+      <!-- 页面 2：我的兑换 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">我的兑换</span>
+            </div>
+
+            <div class="content-area" style="background:var(--bg-primary);">
+              <div class="exchange-item">
+                <div class="exchange-item-img">
+                  <div style="width:28px;height:20px;border:2px solid #bbb;border-radius:2px;"></div>
+                </div>
+                <div class="exchange-item-info">
+                  <div class="exchange-item-name">Govee盲盒 XXXXXXXX</div>
+                  <div class="exchange-item-desc">xXXXXXXXXXXXXX</div>
+                  <div class="exchange-item-points"><span class="coin-sm" style="width:12px;height:12px;font-size:7px;">S</span> 1000</div>
+                </div>
+                <div style="text-align:right;">
+                  <span class="exchange-status status-pending">待领取</span>
+                  <div class="exchange-item-qty" style="margin-top:4px;">X 2</div>
+                </div>
+              </div>
+
+              <div class="exchange-item">
+                <div class="exchange-item-img">
+                  <div style="width:28px;height:20px;border:2px solid #bbb;border-radius:2px;"></div>
+                </div>
+                <div class="exchange-item-info">
+                  <div class="exchange-item-name">Govee盲盒 XXXXXXXX</div>
+                  <div class="exchange-item-desc">xXXXXXXXXXXXXX</div>
+                  <div class="exchange-item-points"><span class="coin-sm" style="width:12px;height:12px;font-size:7px;">S</span> 1000</div>
+                </div>
+                <div style="text-align:right;">
+                  <span class="exchange-status status-ready">已领取</span>
+                  <div class="exchange-item-qty" style="margin-top:4px;">X 2</div>
+                </div>
+              </div>
+
+              <div class="exchange-item">
+                <div class="exchange-item-img">
+                  <div style="width:28px;height:20px;border:2px solid #bbb;border-radius:2px;"></div>
+                </div>
+                <div class="exchange-item-info">
+                  <div class="exchange-item-name">Govee盲盒 XXXXXXXX</div>
+                  <div class="exchange-item-desc">xXXXXXXXXXXXXX</div>
+                  <div class="exchange-item-points"><span class="coin-sm" style="width:12px;height:12px;font-size:7px;">S</span> 1000</div>
+                </div>
+                <div style="text-align:right;">
+                  <span class="exchange-status status-ready">已领取</span>
+                  <div class="exchange-item-qty" style="margin-top:4px;">X 2</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">我的兑换</div>
+      </div>
+
+      <!-- 页面 3：积分明细 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">积分明细</span>
+            </div>
+
+            <div class="tab-bar">
+              <div class="tab-item active">全部</div>
+              <div class="tab-item">获得</div>
+              <div class="tab-item">消耗</div>
+            </div>
+
+            <div class="content-area" style="background:var(--bg-primary);">
+              <div class="points-record">
+                <div class="record-header">
+                  <span class="record-title">发布 JPC</span>
+                  <span class="record-date">2026.4.3</span>
+                </div>
+                <div class="record-desc">亚马逊广告如何投放 XXXXXXXXXXXX</div>
+                <div class="record-points positive">+100</div>
+              </div>
+
+              <div class="points-record">
+                <div class="record-header">
+                  <span class="record-title">发布 JPC</span>
+                  <span class="record-date">2026.4.3</span>
+                </div>
+                <div class="record-desc">亚马逊广告如何投放 XXXXXXXXXXXX</div>
+                <div class="record-points positive">+100</div>
+              </div>
+
+              <div class="points-record">
+                <div class="record-header">
+                  <span class="record-title">积分兑换</span>
+                  <span class="record-date">2026.4.3</span>
+                </div>
+                <div class="record-desc">Govee盲盒 XXXXXXXXXXXX ×2</div>
+                <div class="record-points negative">-800</div>
+              </div>
+
+              <div class="points-record">
+                <div class="record-header">
+                  <span class="record-title">积分兑换</span>
+                  <span class="record-date">2026.4.3</span>
+                </div>
+                <div class="record-desc">Govee盲盒 XXXXXXXXXXXX ×2</div>
+                <div class="record-points negative">-800</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">积分明细</div>
+      </div>
+
+      <!-- 页面 4：全部任务 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">全部任务</span>
+            </div>
+
+            <div class="content-area" style="background:var(--bg-primary);">
+              <div class="task-item" style="padding:14px 16px;border-bottom:1px solid var(--border-color);">
+                <div class="task-icon"><div style="width:18px;height:13px;border:1.5px solid #999;border-radius:2px;"></div></div>
+                <span class="task-name">发布一篇 JPC</span>
+                <span class="task-points">+100</span>
+                <span class="task-action">去完成</span>
+              </div>
+
+              <div class="task-item" style="padding:14px 16px;border-bottom:1px solid var(--border-color);">
+                <div class="task-icon"><div style="width:18px;height:13px;border:1.5px solid #999;border-radius:2px;"></div></div>
+                <span class="task-name">发布一篇 分享</span>
+                <span class="task-points">+100</span>
+                <span class="task-action">去完成</span>
+              </div>
+
+              <div class="task-item" style="padding:14px 16px;border-bottom:1px solid var(--border-color);">
+                <div class="task-icon"><div style="width:18px;height:13px;border:1.5px solid #999;border-radius:2px;"></div></div>
+                <span class="task-name">发布一篇 分享</span>
+                <span class="task-points">+100</span>
+                <span class="task-action">去完成</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">全部任务</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== AI搜索 ========== -->
+  <div class="screen-group">
+    <h2 class="group-title">AI搜索</h2>
+    <div class="screen-row">
+
+      <!-- 页面 1：AI搜索输入 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <div style="display:flex;gap:16px;">
+                <span style="font-size:15px;font-weight:600;color:var(--text-primary);">AI搜</span>
+                <span style="font-size:15px;color:var(--text-tertiary);">直接搜</span>
+              </div>
+            </div>
+
+            <div class="content-area" style="background:var(--bg-primary);">
+              <div class="ai-search-input">
+                <div class="placeholder">如何帮我我打亚马逊广告？</div>
+              </div>
+              <div class="ai-search-btn">搜索</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">AI搜索 - 输入</div>
+      </div>
+
+      <!-- 页面 2：AI助手对话 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">智岩认知AI助手</span>
+            </div>
+
+            <div class="content-area" style="background:var(--bg-secondary);">
+              <div class="chat-bubble user">如何帮我打亚马逊广告？</div>
+
+              <div class="chat-bubble ai">
+                <div style="margin-bottom:8px;">亚马逊广告的投放方法有很多，我帮你整理一下投放的方法：</div>
+
+                <div class="ai-ref-card" style="margin:8px 0;border-radius:8px;">
+                  <div class="ai-ref-icon"></div>
+                  <span class="ai-ref-text">找到 5 篇相关内容</span>
+                  <span class="ai-ref-arrow">&gt;</span>
+                </div>
+
+                <div style="margin-top:8px;font-size:13px;color:var(--text-secondary);line-height:1.8;">
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br><br>
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+                  XXXXXXXXXXXXXXXXXX <span class="chat-content-tag chat-tag-blue">JPC</span><br><br>
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+                  XXXXXXXXXXXXXXXXXX <span class="chat-content-tag chat-tag-orange">问答</span><br><br>
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br><br>
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+                  XXXXXXXXXXXXXXXXXX <span class="chat-content-tag chat-tag-blue">JPC</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-input-bar">
+              <div class="chat-input">请输入</div>
+              <div class="chat-send-btn"><div class="send-arrow"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">AI助手 - 对话回答</div>
+      </div>
+
+      <!-- 页面 3：AI助手 - 内容来源 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen" style="position:relative;">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">智岩认知AI助手</span>
+            </div>
+
+            <div style="display:flex;flex:1;overflow:hidden;">
+              <div style="flex:1;background:var(--bg-secondary);overflow-y:auto;opacity:0.4;">
+                <div class="chat-bubble user" style="font-size:12px;">如何帮我打亚马逊广告？</div>
+              </div>
+
+              <div class="source-panel" style="position:relative;width:55%;flex-shrink:0;">
+                <div class="source-panel-header">内容来源</div>
+                <div style="flex:1;overflow-y:auto;padding:8px;">
+                  <div class="content-card" style="margin-bottom:8px;border-radius:8px;padding:10px;">
+                    <div class="card-header" style="margin-bottom:4px;">
+                      <div class="avatar avatar-dark" style="width:24px;height:24px;"></div>
+                      <div class="user-info" style="margin-left:6px;">
+                        <div class="user-name" style="font-size:12px;">Harris</div>
+                        <div class="user-tag" style="font-size:10px;">[DP] 数字平台·产品</div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-tertiary);margin-left:auto;">3天前</span>
+                    </div>
+                    <div class="card-title" style="font-size:13px;">产品开发如何找到爆款产品</div>
+                    <div class="card-desc" style="font-size:11px;">XXXXXXXXXXX，XXXXXXXX XXXXXXXXXXXXXXX</div>
+                    <div class="card-tags">
+                      <span class="tag tag-red" style="font-size:10px;padding:1px 6px;">品P</span>
+                      <span class="tag tag-orange" style="font-size:10px;padding:1px 6px;">品产品</span>
+                    </div>
+                    <div class="card-footer" style="font-size:10px;">
+                      <span>1300浏览</span>
+                      <span>60有用</span>
+                    </div>
+                  </div>
+
+                  <div class="content-card" style="margin-bottom:8px;border-radius:8px;padding:10px;">
+                    <div class="card-header" style="margin-bottom:4px;">
+                      <div class="avatar avatar-dark" style="width:24px;height:24px;"></div>
+                      <div class="user-info" style="margin-left:6px;">
+                        <div class="user-name" style="font-size:12px;">Harris</div>
+                        <div class="user-tag" style="font-size:10px;">[DP] 数字平台·产品</div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-tertiary);margin-left:auto;">3天前</span>
+                    </div>
+                    <div class="card-title" style="font-size:13px;">产品开发如何找到爆款产品</div>
+                    <div class="card-desc" style="font-size:11px;">XXXXXXXXXXX，XXXXXXXX XXXXXXXXXXXXXXX</div>
+                    <div class="card-tags">
+                      <span class="tag tag-red" style="font-size:10px;padding:1px 6px;">品P</span>
+                      <span class="tag tag-orange" style="font-size:10px;padding:1px 6px;">品产品</span>
+                    </div>
+                    <div class="card-footer" style="font-size:10px;">
+                      <span>1300浏览</span>
+                      <span>60有用</span>
+                    </div>
+                  </div>
+
+                  <div class="content-card" style="margin-bottom:8px;border-radius:8px;padding:10px;">
+                    <div class="card-header" style="margin-bottom:4px;">
+                      <div class="avatar avatar-dark" style="width:24px;height:24px;"></div>
+                      <div class="user-info" style="margin-left:6px;">
+                        <div class="user-name" style="font-size:12px;">Harris</div>
+                        <div class="user-tag" style="font-size:10px;">[DP] 数字平台·产品</div>
+                      </div>
+                      <span style="font-size:10px;color:var(--text-tertiary);margin-left:auto;">3天前</span>
+                    </div>
+                    <div class="card-title" style="font-size:13px;">产品开发如何找到爆款产品</div>
+                    <div class="card-desc" style="font-size:11px;">XXXXXXXXXXX，XXXXXXXX XXXXXXXXXXXXXXX</div>
+                    <div class="card-tags">
+                      <span class="tag tag-red" style="font-size:10px;padding:1px 6px;">品P</span>
+                      <span class="tag tag-orange" style="font-size:10px;padding:1px 6px;">品产品</span>
+                    </div>
+                    <div class="card-footer" style="font-size:10px;">
+                      <span>1300浏览</span>
+                      <span>60有用</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">AI助手 - 内容来源</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== VBM计划 ========== -->
+  <div class="screen-group">
+    <h2 class="group-title">VBM计划</h2>
+    <div class="screen-row">
+
+      <!-- 页面 1：VBM计划列表 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="search-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon"></span>
+                <span class="search-text">亚马逊销售V</span>
+              </div>
+              <div style="position:relative;">
+                <span class="search-action">listing优化秘籍</span>
+                <span style="position:absolute;top:-8px;right:-10px;min-width:18px;height:18px;padding:0 5px;background:#ff3b30;color:#fff;border-radius:9px;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;">99+</span>
+              </div>
+            </div>
+
+            <div class="tab-bar">
+              <div class="tab-item">JPC</div>
+              <div class="tab-item">问答</div>
+              <div class="tab-item">分享</div>
+              <div class="tab-item active">VBM计划</div>
+            </div>
+
+            <div class="content-area">
+              <div style="padding:16px;background:var(--bg-primary);margin-bottom:8px;">
+                <div style="font-size:16px;font-weight:600;margin-bottom:8px;">个人能力提升计划</div>
+                <div class="vbm-banner">评估现状，制定自己的提升计划</div>
+              </div>
+
+              <div class="vbm-plan-card">
+                <div class="card-header">
+                  <div class="avatar avatar-dark"></div>
+                  <div class="user-info">
+                    <div class="user-name">Harris</div>
+                    <div class="user-tag">[DP] 数字平台·产品</div>
+                  </div>
+                  <span class="time-label">3天前更新了进度</span>
+                </div>
+                <div class="vbm-plan-title">产品经理：竞品调研能力提升计划</div>
+                <div class="vbm-plan-goal">目标：输出更规范的竞品调研报告</div>
+                <div class="vbm-stats">
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">完成度</div>
+                    <div class="vbm-stat-value highlight">60%</div>
+                  </div>
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">JPC</div>
+                    <div class="vbm-stat-value">3 篇</div>
+                  </div>
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">分享</div>
+                    <div class="vbm-stat-value">2篇</div>
+                  </div>
+                </div>
+                <div class="card-tags">
+                  <span class="tag tag-red">品P</span>
+                  <span class="tag tag-orange">品产品</span>
+                </div>
+                <div class="card-footer">
+                  <span>1300浏览</span>
+                  <span>60有用</span>
+                </div>
+              </div>
+
+              <div class="vbm-plan-card">
+                <div class="card-header">
+                  <div class="avatar avatar-dark"></div>
+                  <div class="user-info">
+                    <div class="user-name">Harris</div>
+                    <div class="user-tag">[DP] 数字平台·产品</div>
+                  </div>
+                  <span class="time-label">3天前更新了进度</span>
+                </div>
+                <div class="vbm-plan-title">产品经理：竞品调研能力提升计划</div>
+                <div class="vbm-plan-goal">目标：输出更规范的竞品调研报告</div>
+                <div class="vbm-stats">
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">完成度</div>
+                    <div class="vbm-stat-value highlight">60%</div>
+                  </div>
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">JPC</div>
+                    <div class="vbm-stat-value">3 篇</div>
+                  </div>
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">分享</div>
+                    <div class="vbm-stat-value">2篇</div>
+                  </div>
+                </div>
+                <div class="card-tags">
+                  <span class="tag tag-red">品P</span>
+                  <span class="tag tag-orange">品产品</span>
+                </div>
+                <div class="card-footer">
+                  <span>1300浏览</span>
+                  <span>60有用</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bottom-nav">
+              <div class="nav-item active">
+                <div class="nav-icon"><div class="icon-square"></div></div>
+                <span>专业</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-doc"></div></div>
+                <span>发布</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-square"></div></div>
+                <span>CBDA</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-doc"></div></div>
+                <span>考试</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-circle"></div></div>
+                <span>课程</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">VBM计划列表</div>
+      </div>
+
+      <!-- 页面 2：创建能力提升计划 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">创建能力提升计划</span>
+            </div>
+
+            <div class="content-area" style="background:var(--bg-primary);padding-top:16px;">
+              <div class="form-group">
+                <div class="form-label"><span class="required">*</span>提升能力</div>
+                <div class="form-input form-select" style="position:relative;">
+                  竞品调研
+                  <span style="position:absolute;right:12px;top:50%;width:8px;height:8px;border-right:1.5px solid #999;border-bottom:1.5px solid #999;transform:translateY(-65%) rotate(45deg);"></span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="form-label"><span class="required">*</span>目标</div>
+                <div class="form-input" style="color:var(--text-tertiary);">请输入</div>
+              </div>
+
+              <div class="form-group">
+                <div class="form-label"><span class="required">*</span>目标 JPC篇数</div>
+                <div class="form-input" style="color:var(--text-tertiary);">请输入</div>
+              </div>
+
+              <div class="form-group">
+                <div class="form-label"><span class="required">*</span>目标 分享篇数</div>
+                <div class="form-input" style="color:var(--text-tertiary);">请输入</div>
+              </div>
+
+              <div class="form-group">
+                <div class="form-label"><span class="required">*</span>结果输出物</div>
+                <div class="form-input" style="color:var(--text-tertiary);">请输入</div>
+              </div>
+
+              <button class="form-submit">提交</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">创建能力提升计划</div>
+      </div>
+
+      <!-- 页面 3：VBM计划 Tab（含底部导航） -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="search-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon"></span>
+                <span class="search-text">亚马逊销售V</span>
+              </div>
+              <div style="position:relative;">
+                <span class="search-action">listing优化秘籍</span>
+                <span style="position:absolute;top:-8px;right:-10px;min-width:18px;height:18px;padding:0 5px;background:#ff3b30;color:#fff;border-radius:9px;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;">23</span>
+              </div>
+            </div>
+
+            <div class="tab-bar">
+              <div class="tab-item">JPC</div>
+              <div class="tab-item">问答</div>
+              <div class="tab-item">分享</div>
+              <div class="tab-item active">VBM计划</div>
+            </div>
+
+            <div class="content-area">
+              <div class="vbm-plan-card">
+                <div class="card-header">
+                  <div class="avatar avatar-dark"></div>
+                  <div class="user-info">
+                    <div class="user-name">Harris</div>
+                    <div class="user-tag">[DP] 数字平台·产品</div>
+                  </div>
+                  <span class="time-label">3天前更新了进度</span>
+                </div>
+                <div class="vbm-plan-title">产品经理：竞品调研能力提升计划</div>
+                <div class="vbm-plan-goal">目标：输出更规范的竞品调研报告</div>
+                <div class="vbm-stats">
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">完成度</div>
+                    <div class="vbm-stat-value highlight">60%</div>
+                  </div>
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">JPC</div>
+                    <div class="vbm-stat-value">3 篇</div>
+                  </div>
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">分享</div>
+                    <div class="vbm-stat-value">2篇</div>
+                  </div>
+                </div>
+                <div class="card-tags">
+                  <span class="tag tag-red">品P</span>
+                  <span class="tag tag-orange">品产品</span>
+                </div>
+                <div class="card-footer">
+                  <span>1300浏览</span>
+                  <span>60有用</span>
+                </div>
+              </div>
+
+              <div class="vbm-plan-card">
+                <div class="card-header">
+                  <div class="avatar avatar-dark"></div>
+                  <div class="user-info">
+                    <div class="user-name">Harris</div>
+                    <div class="user-tag">[DP] 数字平台·产品</div>
+                  </div>
+                  <span class="time-label">3天前第7次进度</span>
+                </div>
+                <div class="vbm-plan-title">产品经理：竞品调研能力提升计划</div>
+                <div class="vbm-plan-goal">目标：输出更规范的竞品调研报告</div>
+                <div class="vbm-stats">
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">完成度</div>
+                    <div class="vbm-stat-value highlight">60%</div>
+                  </div>
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">JPC</div>
+                    <div class="vbm-stat-value">3 篇</div>
+                  </div>
+                  <div class="vbm-stat">
+                    <div class="vbm-stat-label">分享</div>
+                    <div class="vbm-stat-value">2篇</div>
+                  </div>
+                </div>
+                <div class="card-tags">
+                  <span class="tag tag-red">品P</span>
+                  <span class="tag tag-orange">品产品</span>
+                </div>
+                <div class="card-footer">
+                  <span>1300浏览</span>
+                  <span>60有用</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bottom-nav">
+              <div class="nav-item active">
+                <div class="nav-icon"><div class="icon-square"></div></div>
+                <span>专业</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-doc"></div></div>
+                <span>发布</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-square"></div></div>
+                <span>CBDA</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-doc"></div></div>
+                <span>考试</span>
+              </div>
+              <div class="nav-item">
+                <div class="nav-icon"><div class="icon-circle"></div></div>
+                <span>课程</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">VBM计划 - 信息流</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 个人主页 ========== -->
+  <div class="screen-group">
+    <h2 class="group-title">个人主页</h2>
+    <div class="screen-row">
+
+      <!-- 页面 1：个人主页（合并总览） -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar" style="background:#1a1a1a;">
+              <span class="time" style="color:#fff;">18:00</span>
+              <span class="icons">
+                <span class="signal"><span style="background:#fff;"></span><span style="background:#fff;"></span><span style="background:#fff;"></span><span style="background:#fff;"></span></span>
+                <span class="wifi" style="border-color:#fff;"></span>
+                <span class="battery" style="border-color:#fff;"><span class="battery-fill" style="background:#fff;"></span></span>
+              </span>
+            </div>
+
+            <div class="profile-header">
+              <div class="profile-avatar-row">
+                <div class="profile-avatar">H</div>
+                <div class="profile-info">
+                  <div class="profile-name">Harris Wang</div>
+                  <div class="profile-dept">[DP] 数字平台·产品经理</div>
+                  <div class="profile-level-badge">&#9733; Lv.5 资深专家</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="nameplate-section">
+              <!-- 年度铭牌 -->
+              <div class="vbm-info-title" style="margin-bottom:12px;"><span class="title-dot"></span>2026 年度铭牌</div>
+              <div class="nameplate-card">
+                <div class="nameplate-year">&#9670; ANNUAL 2026 &#9670;</div>
+                <div class="nameplate-title">知识先锋</div>
+                <div class="nameplate-subtitle">年度优秀知识贡献者 · 连续 3 个季度评优</div>
+                <div class="nameplate-stats">
+                  <div class="nameplate-stat">
+                    <div class="nameplate-stat-value">28</div>
+                    <div class="nameplate-stat-label">发布 JPC</div>
+                  </div>
+                  <div class="nameplate-stat">
+                    <div class="nameplate-stat-value">15</div>
+                    <div class="nameplate-stat-label">分享文章</div>
+                  </div>
+                  <div class="nameplate-stat">
+                    <div class="nameplate-stat-value">1.2w</div>
+                    <div class="nameplate-stat-label">总浏览量</div>
+                  </div>
+                  <div class="nameplate-stat">
+                    <div class="nameplate-stat-value">860</div>
+                    <div class="nameplate-stat-label">获赞数</div>
+                  </div>
+                </div>
+                <div class="nameplate-seal">年度<br>认证</div>
+              </div>
+            </div>
+
+            <div style="height:8px;background:var(--bg-secondary);"></div>
+
+            <!-- 勋章概览 -->
+            <div style="background:var(--bg-primary);padding:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div class="vbm-info-title" style="margin:0;"><span class="title-dot"></span>我的勋章 <span style="font-size:12px;font-weight:400;color:var(--text-tertiary);">已获得 6/12</span></div>
+                <span style="font-size:12px;color:var(--accent-color);">全部 &gt;</span>
+              </div>
+              <div style="display:flex;gap:16px;overflow-x:auto;padding-bottom:4px;">
+                <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                  <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ffb200);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:6px;box-shadow:0 2px 8px rgba(255,215,0,0.3);">&#9998;</div>
+                  <span style="font-size:11px;font-weight:500;">创作达人</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                  <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#ff6b6b,#ee5a24);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:6px;box-shadow:0 2px 8px rgba(255,107,107,0.3);">&#128293;</div>
+                  <span style="font-size:11px;font-weight:500;">连续打卡</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                  <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:6px;box-shadow:0 2px 8px rgba(102,126,234,0.3);">&#127942;</div>
+                  <span style="font-size:11px;font-weight:500;">最佳回答</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                  <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#2ed573,#17b978);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:6px;box-shadow:0 2px 8px rgba(46,213,115,0.3);">&#11088;</div>
+                  <span style="font-size:11px;font-weight:500;">人气之星</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                  <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#45aaf2,#2d98da);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:6px;box-shadow:0 2px 8px rgba(69,170,242,0.3);">&#128218;</div>
+                  <span style="font-size:11px;font-weight:500;">学霸认证</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="height:8px;background:var(--bg-secondary);"></div>
+
+            <!-- 成长经验值 -->
+            <div class="exp-section">
+              <div class="vbm-info-title" style="margin-bottom:12px;"><span class="title-dot"></span>成长经验值</div>
+              <div class="exp-overview">
+                <div>
+                  <div class="exp-total">4,860</div>
+                  <div class="exp-total-label">总经验值</div>
+                </div>
+                <div class="exp-level-info">
+                  <div class="exp-level-row">
+                    <span class="exp-level-tag">Lv.5 资深专家</span>
+                    <span class="exp-next-level">距 Lv.6 还需 1,140</span>
+                  </div>
+                  <div class="exp-bar-wrap">
+                    <div class="exp-bar-fill" style="width:81%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-breakdown">
+                <div class="exp-card" style="border-left:3px solid var(--accent-color);">
+                  <div class="exp-card-value" style="color:var(--accent-color);">1,680</div>
+                  <div class="exp-card-label">发布 JPC</div>
+                  <div class="exp-card-sub">28 篇 × 60</div>
+                </div>
+                <div class="exp-card" style="border-left:3px solid var(--success-color);">
+                  <div class="exp-card-value" style="color:var(--success-color);">1,200</div>
+                  <div class="exp-card-label">分享文章</div>
+                  <div class="exp-card-sub">15 篇 × 80</div>
+                </div>
+                <div class="exp-card" style="border-left:3px solid var(--warning-color);">
+                  <div class="exp-card-value" style="color:var(--warning-color);">860</div>
+                  <div class="exp-card-label">获赞加成</div>
+                  <div class="exp-card-sub">860 赞 × 1</div>
+                </div>
+                <div class="exp-card" style="border-left:3px solid #764ba2;">
+                  <div class="exp-card-value" style="color:#764ba2;">1,120</div>
+                  <div class="exp-card-label">回答 & 互动</div>
+                  <div class="exp-card-sub">56 次 × 20</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="height:8px;background:var(--bg-secondary);"></div>
+
+            <!-- VBM 能力提升计划 -->
+            <div style="background:var(--bg-primary);padding:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div class="vbm-info-title" style="margin:0;"><span class="title-dot"></span>能力提升计划</div>
+                <span style="font-size:12px;color:var(--accent-color);">查看全部 &gt;</span>
+              </div>
+              <div style="background:var(--bg-secondary);border-radius:12px;padding:14px;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                  <div class="progress-ring" style="width:56px;height:56px;">
+                    <svg viewBox="0 0 88 88">
+                      <circle class="ring-bg" cx="44" cy="44" r="38"></circle>
+                      <circle class="ring-fill" cx="44" cy="44" r="38" stroke-dasharray="238.76" stroke-dashoffset="95.5"></circle>
+                    </svg>
+                    <div class="ring-label">
+                      <span class="ring-value" style="font-size:14px;">60%</span>
+                    </div>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:600;margin-bottom:3px;">竞品调研能力提升计划</div>
+                    <div style="font-size:12px;color:var(--text-tertiary);">输出更规范的竞品调研报告</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:12px;">
+                  <div style="flex:1;text-align:center;padding:6px 0;background:var(--bg-primary);border-radius:6px;">
+                    <div style="font-size:14px;font-weight:600;color:var(--accent-color);">3/5</div>
+                    <div style="font-size:10px;color:var(--text-tertiary);">JPC</div>
+                  </div>
+                  <div style="flex:1;text-align:center;padding:6px 0;background:var(--bg-primary);border-radius:6px;">
+                    <div style="font-size:14px;font-weight:600;color:var(--success-color);">2/3</div>
+                    <div style="font-size:10px;color:var(--text-tertiary);">分享</div>
+                  </div>
+                  <div style="flex:1;text-align:center;padding:6px 0;background:var(--bg-primary);border-radius:6px;">
+                    <div style="font-size:14px;font-weight:600;color:var(--warning-color);">1/2</div>
+                    <div style="font-size:10px;color:var(--text-tertiary);">输出物</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">个人主页</div>
+      </div>
+
+      <!-- 页面 2：能力提升计划详情 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">计划详情</span>
+              <span class="nav-right" style="font-size:13px;">编辑</span>
+            </div>
+
+            <div class="content-area">
+              <!-- 计划概览卡 -->
+              <div style="background:linear-gradient(135deg,#007aff 0%,#5ac8fa 100%);padding:20px 16px;color:#fff;position:relative;overflow:hidden;">
+                <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
+                <div style="position:absolute;bottom:-30px;left:20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.05);"></div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;position:relative;z-index:1;">
+                  <div class="avatar avatar-dark" style="width:36px;height:36px;border:2px solid rgba(255,255,255,0.3);"></div>
+                  <div>
+                    <div style="font-size:14px;font-weight:600;">Harris Wang</div>
+                    <div style="font-size:11px;opacity:0.7;">[DP] 数字平台·产品经理</div>
+                  </div>
+                  <span style="margin-left:auto;font-size:11px;opacity:0.6;">创建于 2026.3.15</span>
+                </div>
+                <div style="font-size:17px;font-weight:700;margin-bottom:4px;position:relative;z-index:1;">竞品调研能力提升计划</div>
+                <div style="font-size:12px;opacity:0.8;position:relative;z-index:1;">目标：输出更规范的竞品调研报告，系统性提升竞品分析方法论与实操能力</div>
+              </div>
+
+              <!-- 进度环 + 指标 -->
+              <div style="background:var(--bg-primary);padding:16px;">
+                <div class="progress-ring-wrap" style="padding:0;">
+                  <div class="progress-ring">
+                    <svg viewBox="0 0 88 88">
+                      <circle class="ring-bg" cx="44" cy="44" r="38"></circle>
+                      <circle class="ring-fill" cx="44" cy="44" r="38" stroke-dasharray="238.76" stroke-dashoffset="95.5"></circle>
+                    </svg>
+                    <div class="ring-label">
+                      <span class="ring-value">60%</span>
+                      <span class="ring-text">完成度</span>
+                    </div>
+                  </div>
+                  <div class="progress-stats-side">
+                    <div class="progress-stat-row">
+                      <span class="stat-label">JPC</span>
+                      <div class="stat-bar-wrap">
+                        <div class="stat-bar-fill" style="width:60%;background:var(--accent-color);"></div>
+                      </div>
+                      <span class="stat-value">3<span style="font-size:12px;font-weight:400;color:var(--text-tertiary);">/5 篇</span></span>
+                    </div>
+                    <div class="progress-stat-row">
+                      <span class="stat-label">分享</span>
+                      <div class="stat-bar-wrap">
+                        <div class="stat-bar-fill" style="width:67%;background:var(--success-color);"></div>
+                      </div>
+                      <span class="stat-value">2<span style="font-size:12px;font-weight:400;color:var(--text-tertiary);">/3 篇</span></span>
+                    </div>
+                    <div class="progress-stat-row">
+                      <span class="stat-label">输出物</span>
+                      <div class="stat-bar-wrap">
+                        <div class="stat-bar-fill" style="width:50%;background:var(--warning-color);"></div>
+                      </div>
+                      <span class="stat-value">1<span style="font-size:12px;font-weight:400;color:var(--text-tertiary);">/2 份</span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <!-- 计划信息 -->
+              <div class="vbm-info-section">
+                <div class="vbm-info-title"><span class="title-dot"></span>计划信息</div>
+                <div class="vbm-info-row">
+                  <span class="info-label">提升能力</span>
+                  <span class="info-value">竞品调研</span>
+                </div>
+                <div class="vbm-info-row">
+                  <span class="info-label">目标</span>
+                  <span class="info-value">输出更规范的竞品调研报告</span>
+                </div>
+                <div class="vbm-info-row">
+                  <span class="info-label">JPC 篇数</span>
+                  <span class="info-value">目标 5 篇，已完成 3 篇</span>
+                </div>
+                <div class="vbm-info-row">
+                  <span class="info-label">分享篇数</span>
+                  <span class="info-value">目标 3 篇，已完成 2 篇</span>
+                </div>
+                <div class="vbm-info-row">
+                  <span class="info-label">结果输出物</span>
+                  <span class="info-value">竞品调研方法论文档</span>
+                </div>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <!-- 关联 JPC -->
+              <div class="vbm-info-section">
+                <div class="vbm-info-title"><span class="title-dot"></span>关联 JPC <span style="font-size:12px;font-weight:400;color:var(--text-tertiary);margin-left:4px;">3/5</span></div>
+                <div class="vbm-article-card">
+                  <div class="vbm-article-seq">1</div>
+                  <div class="vbm-article-body">
+                    <div class="vbm-article-title">竞品调研的 5 个核心步骤</div>
+                    <div class="vbm-article-meta">
+                      <span>2026.3.20</span>
+                      <span>850浏览</span>
+                      <span>32有用</span>
+                    </div>
+                  </div>
+                  <span class="vbm-article-tag tag-green" style="align-self:center;">已发布</span>
+                </div>
+                <div class="vbm-article-card">
+                  <div class="vbm-article-seq">2</div>
+                  <div class="vbm-article-body">
+                    <div class="vbm-article-title">如何利用 Jungle Scout 做竞品数据分析</div>
+                    <div class="vbm-article-meta">
+                      <span>2026.4.2</span>
+                      <span>1200浏览</span>
+                      <span>58有用</span>
+                    </div>
+                  </div>
+                  <span class="vbm-article-tag tag-green" style="align-self:center;">已发布</span>
+                </div>
+                <div class="vbm-article-card">
+                  <div class="vbm-article-seq">3</div>
+                  <div class="vbm-article-body">
+                    <div class="vbm-article-title">从 Review 分析看竞品的优劣势</div>
+                    <div class="vbm-article-meta">
+                      <span>2026.4.18</span>
+                      <span>630浏览</span>
+                      <span>27有用</span>
+                    </div>
+                  </div>
+                  <span class="vbm-article-tag tag-green" style="align-self:center;">已发布</span>
+                </div>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <!-- 关联分享 -->
+              <div class="vbm-info-section">
+                <div class="vbm-info-title"><span class="title-dot"></span>关联分享 <span style="font-size:12px;font-weight:400;color:var(--text-tertiary);margin-left:4px;">2/3</span></div>
+                <div class="vbm-article-card">
+                  <div class="vbm-article-seq">1</div>
+                  <div class="vbm-article-body">
+                    <div class="vbm-article-title">竞品调研方法分享 — 以 Home &amp; Kitchen 品类为例</div>
+                    <div class="vbm-article-meta">
+                      <span>2026.3.28</span>
+                      <span>960浏览</span>
+                      <span>41有用</span>
+                    </div>
+                  </div>
+                  <span class="vbm-article-tag tag-green" style="align-self:center;">已发布</span>
+                </div>
+                <div class="vbm-article-card">
+                  <div class="vbm-article-seq">2</div>
+                  <div class="vbm-article-body">
+                    <div class="vbm-article-title">我的竞品分析工具箱推荐</div>
+                    <div class="vbm-article-meta">
+                      <span>2026.4.10</span>
+                      <span>780浏览</span>
+                      <span>35有用</span>
+                    </div>
+                  </div>
+                  <span class="vbm-article-tag tag-green" style="align-self:center;">已发布</span>
+                </div>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <!-- 结果输出物 -->
+              <div class="vbm-info-section">
+                <div class="vbm-info-title"><span class="title-dot"></span>结果输出物 <span style="font-size:12px;font-weight:400;color:var(--text-tertiary);margin-left:4px;">1/2</span></div>
+                <div class="output-card">
+                  <div class="output-card-title">竞品调研方法论 V1.0</div>
+                  <div class="output-card-desc">包含竞品筛选、数据采集、Review 分析、定价策略对比等完整方法论</div>
+                  <span class="output-card-status" style="background:#e6f4ea;color:#137333;">已提交</span>
+                </div>
+                <div class="output-card">
+                  <div class="output-card-title">Q2 竞品分析报告</div>
+                  <div class="output-card-desc">针对 Top 10 竞品的季度分析报告</div>
+                  <span class="output-card-status" style="background:#fef3e0;color:#e37400;">进行中</span>
+                </div>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <!-- 进度时间线 -->
+              <div class="timeline-section">
+                <div class="vbm-info-title" style="margin-bottom:16px;"><span class="title-dot"></span>进度动态</div>
+
+                <div class="timeline-item">
+                  <div class="timeline-dot-col">
+                    <div class="timeline-dot filled"></div>
+                    <div class="timeline-line"></div>
+                  </div>
+                  <div class="timeline-body">
+                    <div class="timeline-date">2026.4.18</div>
+                    <div class="timeline-text">发布了 JPC</div>
+                    <div class="timeline-sub">《从 Review 分析看竞品的优劣势》</div>
+                    <span class="timeline-progress-tag" style="background:#e8f0fe;color:#1a73e8;">完成度 → 60%</span>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-dot-col">
+                    <div class="timeline-dot filled"></div>
+                    <div class="timeline-line"></div>
+                  </div>
+                  <div class="timeline-body">
+                    <div class="timeline-date">2026.4.10</div>
+                    <div class="timeline-text">发布了分享</div>
+                    <div class="timeline-sub">《我的竞品分析工具箱推荐》</div>
+                    <span class="timeline-progress-tag" style="background:#e6f4ea;color:#137333;">完成度 → 50%</span>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-dot-col">
+                    <div class="timeline-dot filled"></div>
+                    <div class="timeline-line"></div>
+                  </div>
+                  <div class="timeline-body">
+                    <div class="timeline-date">2026.4.5</div>
+                    <div class="timeline-text">提交了结果输出物</div>
+                    <div class="timeline-sub">竞品调研方法论 V1.0</div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-dot-col">
+                    <div class="timeline-dot filled"></div>
+                    <div class="timeline-line"></div>
+                  </div>
+                  <div class="timeline-body">
+                    <div class="timeline-date">2026.4.2</div>
+                    <div class="timeline-text">发布了 JPC</div>
+                    <div class="timeline-sub">《如何利用 Jungle Scout 做竞品数据分析》</div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-dot-col">
+                    <div class="timeline-dot filled"></div>
+                    <div class="timeline-line"></div>
+                  </div>
+                  <div class="timeline-body">
+                    <div class="timeline-date">2026.3.28</div>
+                    <div class="timeline-text">发布了分享</div>
+                    <div class="timeline-sub">《竞品调研方法分享 — 以 Home &amp; Kitchen 品类为例》</div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-dot-col">
+                    <div class="timeline-dot filled"></div>
+                    <div class="timeline-line"></div>
+                  </div>
+                  <div class="timeline-body">
+                    <div class="timeline-date">2026.3.20</div>
+                    <div class="timeline-text">发布了 JPC</div>
+                    <div class="timeline-sub">《竞品调研的 5 个核心步骤》</div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-dot-col">
+                    <div class="timeline-dot"></div>
+                  </div>
+                  <div class="timeline-body">
+                    <div class="timeline-date">2026.3.15</div>
+                    <div class="timeline-text">创建了计划</div>
+                    <div class="timeline-sub">竞品调研能力提升计划</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="vbm-detail-bottom">
+              <button class="btn btn-outline">分享计划</button>
+              <button class="btn btn-dark">更新进度</button>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">能力提升计划详情</div>
+      </div>
+
+      <!-- 页面 3：勋章墙 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">我的勋章</span>
+            </div>
+
+            <div class="content-area" style="background:var(--bg-secondary);padding:16px;">
+              <!-- 勋章统计 -->
+              <div style="display:flex;justify-content:center;gap:32px;padding:16px 0 20px;background:var(--bg-primary);border-radius:12px;margin-bottom:16px;">
+                <div style="text-align:center;">
+                  <div style="font-size:28px;font-weight:700;color:var(--accent-color);">6</div>
+                  <div style="font-size:12px;color:var(--text-tertiary);">已获得</div>
+                </div>
+                <div style="width:1px;background:#eee;"></div>
+                <div style="text-align:center;">
+                  <div style="font-size:28px;font-weight:700;color:var(--text-tertiary);">6</div>
+                  <div style="font-size:12px;color:var(--text-tertiary);">待解锁</div>
+                </div>
+                <div style="width:1px;background:#eee;"></div>
+                <div style="text-align:center;">
+                  <div style="font-size:28px;font-weight:700;color:var(--warning-color);">2</div>
+                  <div style="font-size:12px;color:var(--text-tertiary);">稀有勋章</div>
+                </div>
+              </div>
+
+              <!-- 已获得勋章 -->
+              <div style="font-size:14px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+                <span style="width:4px;height:14px;background:var(--accent-color);border-radius:2px;display:inline-block;"></span>
+                已获得
+              </div>
+              <div class="medal-grid">
+                <div class="medal-item">
+                  <div class="medal-icon" style="background:linear-gradient(135deg,#fff8e1,#ffecb3);">
+                    <span style="font-size:24px;">&#9998;</span>
+                    <div class="medal-ring" style="border-color:#ffd700;"></div>
+                  </div>
+                  <div class="medal-name">创作达人</div>
+                  <div class="medal-desc">发布 20+ JPC</div>
+                </div>
+                <div class="medal-item">
+                  <div class="medal-icon" style="background:linear-gradient(135deg,#ffebee,#ffcdd2);">
+                    <span style="font-size:24px;">&#128293;</span>
+                    <div class="medal-ring" style="border-color:#ff6b6b;"></div>
+                  </div>
+                  <div class="medal-name">连续打卡</div>
+                  <div class="medal-desc">连续 30 天活跃</div>
+                </div>
+                <div class="medal-item">
+                  <div class="medal-icon" style="background:linear-gradient(135deg,#ede7f6,#d1c4e9);">
+                    <span style="font-size:24px;">&#127942;</span>
+                    <div class="medal-ring" style="border-color:#764ba2;"></div>
+                  </div>
+                  <div class="medal-name">最佳回答</div>
+                  <div class="medal-desc">回答被采纳 10+</div>
+                </div>
+                <div class="medal-item">
+                  <div class="medal-icon" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);">
+                    <span style="font-size:24px;">&#11088;</span>
+                    <div class="medal-ring" style="border-color:#2ed573;"></div>
+                  </div>
+                  <div class="medal-name">人气之星</div>
+                  <div class="medal-desc">单篇获赞 100+</div>
+                </div>
+                <div class="medal-item">
+                  <div class="medal-icon" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);">
+                    <span style="font-size:24px;">&#128218;</span>
+                    <div class="medal-ring" style="border-color:#45aaf2;"></div>
+                  </div>
+                  <div class="medal-name">学霸认证</div>
+                  <div class="medal-desc">考试成绩 Top 5%</div>
+                </div>
+                <div class="medal-item">
+                  <div class="medal-icon" style="background:linear-gradient(135deg,#fce4ec,#f8bbd0);">
+                    <span style="font-size:24px;">&#128591;</span>
+                    <div class="medal-ring" style="border-color:#e91e63;"></div>
+                  </div>
+                  <div class="medal-name">热心助人</div>
+                  <div class="medal-desc">帮助 50+ 同事</div>
+                </div>
+              </div>
+
+              <!-- 待解锁勋章 -->
+              <div style="font-size:14px;font-weight:600;margin:16px 0 10px;display:flex;align-items:center;gap:6px;">
+                <span style="width:4px;height:14px;background:#ccc;border-radius:2px;display:inline-block;"></span>
+                待解锁
+              </div>
+              <div class="medal-grid">
+                <div class="medal-item locked">
+                  <div class="medal-lock-icon"></div>
+                  <div class="medal-icon" style="background:#f0f0f0;">
+                    <span style="font-size:24px;">&#128142;</span>
+                  </div>
+                  <div class="medal-name">知识大师</div>
+                  <div class="medal-desc">发布 50+ JPC</div>
+                </div>
+                <div class="medal-item locked">
+                  <div class="medal-lock-icon"></div>
+                  <div class="medal-icon" style="background:#f0f0f0;">
+                    <span style="font-size:24px;">&#127775;</span>
+                  </div>
+                  <div class="medal-name">全能之星</div>
+                  <div class="medal-desc">集齐全部能力标签</div>
+                </div>
+                <div class="medal-item locked">
+                  <div class="medal-lock-icon"></div>
+                  <div class="medal-icon" style="background:#f0f0f0;">
+                    <span style="font-size:24px;">&#128081;</span>
+                  </div>
+                  <div class="medal-name">影响力领袖</div>
+                  <div class="medal-desc">总浏览量 5w+</div>
+                </div>
+                <div class="medal-item locked">
+                  <div class="medal-lock-icon"></div>
+                  <div class="medal-icon" style="background:#f0f0f0;">
+                    <span style="font-size:24px;">&#127891;</span>
+                  </div>
+                  <div class="medal-name">导师资格</div>
+                  <div class="medal-desc">培养 3+ 新人</div>
+                </div>
+                <div class="medal-item locked">
+                  <div class="medal-lock-icon"></div>
+                  <div class="medal-icon" style="background:#f0f0f0;">
+                    <span style="font-size:24px;">&#128640;</span>
+                  </div>
+                  <div class="medal-name">极速成长</div>
+                  <div class="medal-desc">30 天升 2 级</div>
+                </div>
+                <div class="medal-item locked">
+                  <div class="medal-lock-icon"></div>
+                  <div class="medal-icon" style="background:#f0f0f0;">
+                    <span style="font-size:24px;">&#129351;</span>
+                  </div>
+                  <div class="medal-name">年度冠军</div>
+                  <div class="medal-desc">年度排名第 1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">勋章墙</div>
+      </div>
+
+      <!-- 页面 3：成长经验值详情 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">18:00</span>
+              <span class="icons">
+                <span class="signal"><span></span><span></span><span></span><span></span></span>
+                <span class="wifi"></span>
+                <span class="battery"><span class="battery-fill"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar">
+              <div class="back-arrow"></div>
+              <span class="nav-title">成长经验值</span>
+            </div>
+
+            <div class="content-area">
+              <!-- 经验值总览卡 -->
+              <div style="background:linear-gradient(135deg,#007aff,#5ac8fa);padding:20px 16px 24px;color:#fff;">
+                <div style="text-align:center;margin-bottom:16px;">
+                  <div style="font-size:40px;font-weight:700;letter-spacing:1px;">4,860</div>
+                  <div style="font-size:13px;opacity:0.8;margin-top:2px;">总经验值</div>
+                </div>
+                <div style="display:flex;justify-content:center;gap:6px;align-items:center;margin-bottom:12px;">
+                  <span style="padding:3px 10px;border-radius:12px;background:rgba(255,255,255,0.2);font-size:12px;font-weight:600;">Lv.5 资深专家</span>
+                  <span style="font-size:16px;">→</span>
+                  <span style="padding:3px 10px;border-radius:12px;background:rgba(255,255,255,0.15);font-size:12px;">Lv.6 首席专家</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.2);height:8px;border-radius:4px;overflow:hidden;">
+                  <div style="width:81%;height:100%;background:#fff;border-radius:4px;"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;opacity:0.7;">
+                  <span>4,860 / 6,000</span>
+                  <span>还需 1,140 经验值</span>
+                </div>
+              </div>
+
+              <!-- 经验值构成 -->
+              <div style="background:var(--bg-primary);padding:16px;">
+                <div class="vbm-info-title" style="margin-bottom:12px;"><span class="title-dot"></span>经验值构成</div>
+                <div class="exp-breakdown">
+                  <div class="exp-card" style="border-left:3px solid var(--accent-color);">
+                    <div class="exp-card-value" style="color:var(--accent-color);">1,680</div>
+                    <div class="exp-card-label">发布 JPC</div>
+                    <div class="exp-card-sub">28 篇 × 60 经验</div>
+                  </div>
+                  <div class="exp-card" style="border-left:3px solid var(--success-color);">
+                    <div class="exp-card-value" style="color:var(--success-color);">1,200</div>
+                    <div class="exp-card-label">分享文章</div>
+                    <div class="exp-card-sub">15 篇 × 80 经验</div>
+                  </div>
+                  <div class="exp-card" style="border-left:3px solid var(--warning-color);">
+                    <div class="exp-card-value" style="color:var(--warning-color);">860</div>
+                    <div class="exp-card-label">获赞加成</div>
+                    <div class="exp-card-sub">860 赞 × 1 经验</div>
+                  </div>
+                  <div class="exp-card" style="border-left:3px solid #764ba2;">
+                    <div class="exp-card-value" style="color:#764ba2;">1,120</div>
+                    <div class="exp-card-label">回答 & 互动</div>
+                    <div class="exp-card-sub">56 次 × 20 经验</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <!-- 等级规则 -->
+              <div style="background:var(--bg-primary);padding:16px;">
+                <div class="vbm-info-title" style="margin-bottom:12px;"><span class="title-dot"></span>等级体系</div>
+
+                <div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
+                  <span style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#e0e0e0,#bdbdbd);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-right:10px;">1</span>
+                  <span style="font-size:13px;flex:1;">初学者</span>
+                  <span style="font-size:12px;color:var(--text-tertiary);">0 - 500</span>
+                </div>
+                <div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
+                  <span style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#a5d6a7,#66bb6a);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-right:10px;">2</span>
+                  <span style="font-size:13px;flex:1;">入门玩家</span>
+                  <span style="font-size:12px;color:var(--text-tertiary);">500 - 1,200</span>
+                </div>
+                <div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
+                  <span style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#90caf9,#42a5f5);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-right:10px;">3</span>
+                  <span style="font-size:13px;flex:1;">进阶能手</span>
+                  <span style="font-size:12px;color:var(--text-tertiary);">1,200 - 2,400</span>
+                </div>
+                <div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
+                  <span style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#ce93d8,#ab47bc);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-right:10px;">4</span>
+                  <span style="font-size:13px;flex:1;">专业人士</span>
+                  <span style="font-size:12px;color:var(--text-tertiary);">2,400 - 4,000</span>
+                </div>
+                <div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);background:#f0f7ff;margin:0 -16px;padding-left:16px;padding-right:16px;border-radius:6px;">
+                  <span style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#007aff,#5ac8fa);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-right:10px;">5</span>
+                  <span style="font-size:13px;flex:1;font-weight:600;color:var(--accent-color);">资深专家 ← 当前</span>
+                  <span style="font-size:12px;color:var(--accent-color);">4,000 - 6,000</span>
+                </div>
+                <div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
+                  <span style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#ffd54f,#ffb300);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-right:10px;">6</span>
+                  <span style="font-size:13px;flex:1;color:var(--text-tertiary);">首席专家</span>
+                  <span style="font-size:12px;color:var(--text-tertiary);">6,000 - 10,000</span>
+                </div>
+                <div style="display:flex;align-items:center;padding:8px 0;">
+                  <span style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#ff8a65,#e53935);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-right:10px;">7</span>
+                  <span style="font-size:13px;flex:1;color:var(--text-tertiary);">传奇大师</span>
+                  <span style="font-size:12px;color:var(--text-tertiary);">10,000+</span>
+                </div>
+              </div>
+
+              <div style="height:8px;background:var(--bg-secondary);"></div>
+
+              <!-- 最近经验值变动 -->
+              <div style="background:var(--bg-primary);padding:16px;">
+                <div class="vbm-info-title" style="margin-bottom:8px;"><span class="title-dot"></span>最近经验值记录</div>
+                <div class="exp-history-item">
+                  <div class="exp-history-dot" style="background:var(--accent-color);"></div>
+                  <div class="exp-history-text">发布 JPC《竞品调研方法》</div>
+                  <div class="exp-history-pts" style="color:var(--success-color);">+60</div>
+                  <div class="exp-history-date">05.12</div>
+                </div>
+                <div class="exp-history-item">
+                  <div class="exp-history-dot" style="background:var(--success-color);"></div>
+                  <div class="exp-history-text">分享《工具箱推荐》</div>
+                  <div class="exp-history-pts" style="color:var(--success-color);">+80</div>
+                  <div class="exp-history-date">05.10</div>
+                </div>
+                <div class="exp-history-item">
+                  <div class="exp-history-dot" style="background:var(--warning-color);"></div>
+                  <div class="exp-history-text">获赞 × 12</div>
+                  <div class="exp-history-pts" style="color:var(--success-color);">+12</div>
+                  <div class="exp-history-date">05.09</div>
+                </div>
+                <div class="exp-history-item">
+                  <div class="exp-history-dot" style="background:#764ba2;"></div>
+                  <div class="exp-history-text">回答问题 × 3</div>
+                  <div class="exp-history-pts" style="color:var(--success-color);">+60</div>
+                  <div class="exp-history-date">05.08</div>
+                </div>
+                <div class="exp-history-item">
+                  <div class="exp-history-dot" style="background:var(--accent-color);"></div>
+                  <div class="exp-history-text">发布 JPC《Review 分析》</div>
+                  <div class="exp-history-pts" style="color:var(--success-color);">+60</div>
+                  <div class="exp-history-date">05.06</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">成长经验值详情</div>
+      </div>
+
+      <!-- 页面 4：年度铭牌详情 -->
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="status-bar" style="background:#1a1a1a;">
+              <span class="time" style="color:#fff;">18:00</span>
+              <span class="icons">
+                <span class="signal"><span style="background:#fff;"></span><span style="background:#fff;"></span><span style="background:#fff;"></span><span style="background:#fff;"></span></span>
+                <span class="wifi" style="border-color:#fff;"></span>
+                <span class="battery" style="border-color:#fff;"><span class="battery-fill" style="background:#fff;"></span></span>
+              </span>
+            </div>
+
+            <div class="nav-bar" style="background:#1a1a1a;">
+              <div class="back-arrow" style="border-color:#fff;"></div>
+              <span class="nav-title" style="color:#fff;">年度铭牌</span>
+              <span class="nav-right" style="color:rgba(255,255,255,0.7);font-size:13px;">分享</span>
+            </div>
+
+            <div class="content-area" style="background:linear-gradient(180deg,#1a1a1a 0%,#2c2c2c 40%,#3a3a3a 100%);">
+              <!-- 铭牌主体 -->
+              <div style="padding:24px 20px;display:flex;flex-direction:column;align-items:center;">
+                <!-- 金色铭牌卡 -->
+                <div style="width:100%;background:linear-gradient(145deg,#f8f0dd 0%,#eeddb5 30%,#e8d5a0 70%,#dfc98a 100%);border-radius:16px;padding:28px 24px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+                  <div style="position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(212,175,55,0.12);"></div>
+                  <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(212,175,55,0.08);"></div>
+
+                  <div style="text-align:center;position:relative;z-index:1;">
+                    <div style="font-size:10px;letter-spacing:3px;color:#b8960c;font-weight:600;margin-bottom:12px;">&#9670; ANNUAL AWARD 2026 &#9670;</div>
+
+                    <!-- 头像 -->
+                    <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;font-weight:700;border:3px solid #d4af37;box-shadow:0 4px 16px rgba(212,175,55,0.3);">H</div>
+
+                    <div style="font-size:22px;font-weight:800;color:#4a3a0a;margin-bottom:2px;">Harris Wang</div>
+                    <div style="font-size:12px;color:#8a7a4a;margin-bottom:16px;">[DP] 数字平台·产品经理</div>
+
+                    <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,#d4af37,transparent);margin:0 auto 16px;"></div>
+
+                    <div style="font-size:28px;font-weight:800;color:#6b4c00;letter-spacing:4px;margin-bottom:4px;">知识先锋</div>
+                    <div style="font-size:12px;color:#9a8a5a;margin-bottom:20px;">年度优秀知识贡献者 · 连续 3 个季度评优</div>
+
+                    <div style="display:flex;justify-content:center;gap:24px;">
+                      <div style="text-align:center;">
+                        <div style="font-size:20px;font-weight:700;color:#5a4a1e;">28</div>
+                        <div style="font-size:10px;color:#9a8a5a;">发布 JPC</div>
+                      </div>
+                      <div style="width:1px;background:rgba(212,175,55,0.3);"></div>
+                      <div style="text-align:center;">
+                        <div style="font-size:20px;font-weight:700;color:#5a4a1e;">15</div>
+                        <div style="font-size:10px;color:#9a8a5a;">分享文章</div>
+                      </div>
+                      <div style="width:1px;background:rgba(212,175,55,0.3);"></div>
+                      <div style="text-align:center;">
+                        <div style="font-size:20px;font-weight:700;color:#5a4a1e;">1.2w</div>
+                        <div style="font-size:10px;color:#9a8a5a;">总浏览量</div>
+                      </div>
+                      <div style="width:1px;background:rgba(212,175,55,0.3);"></div>
+                      <div style="text-align:center;">
+                        <div style="font-size:20px;font-weight:700;color:#5a4a1e;">860</div>
+                        <div style="font-size:10px;color:#9a8a5a;">获赞数</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 历史铭牌 -->
+                <div style="width:100%;margin-top:24px;">
+                  <div style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:12px;">历史铭牌</div>
+
+                  <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:12px;">
+                    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#c0c0c0,#a8a8a8);display:flex;align-items:center;justify-content:center;">
+                      <span style="font-size:14px;">&#127941;</span>
+                    </div>
+                    <div style="flex:1;">
+                      <div style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.9);">知识新锐</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.4);">2025 年度 · 新人最佳贡献</div>
+                    </div>
+                    <span style="font-size:13px;color:rgba(255,255,255,0.3);">2025</span>
+                  </div>
+
+                  <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:12px;">
+                    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#cd7f32,#a0522d);display:flex;align-items:center;justify-content:center;">
+                      <span style="font-size:14px;">&#127942;</span>
+                    </div>
+                    <div style="flex:1;">
+                      <div style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.9);">潜力之星</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.4);">2024 年度 · 成长速度最快</div>
+                    </div>
+                    <span style="font-size:13px;color:rgba(255,255,255,0.3);">2024</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">年度铭牌详情</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
