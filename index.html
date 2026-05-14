@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>营销活动 · 点球大战 · 产品原型（静态线稿）</title>
+  <style>
+    :root {
+      --page-bg: #f0f0f0;
+      --shell-bg: #4a4a4a;
+      --shell-fg: #f0f0f0;
+      --canvas-bg: #d4d4d4;
+      --canvas-fg: #333333;
+      --modal-bg: #ffffff;
+      --modal-border: #bfbfbf;
+      --text-main: #1a1a1a;
+      --text-sub: #666666;
+      --status-red: #e02020;
+      --countdown-blue: #1677ff;
+      --promo-orange: #ff7a45;
+      --btn-gray: #e0e0e0;
+      --btn-gray-text: #333333;
+      --pitch-strip: #c8c8c8;
+      --ball-dark: #2a2a2a;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--page-bg);
+      color: var(--text-main);
+    }
+
+    .prototype-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .module {
+      margin-bottom: 40px;
+    }
+
+    .module-title {
+      margin: 0 0 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-sub);
+      letter-spacing: 0.02em;
+    }
+
+    .main-states-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .main-state-col {
+      flex: 1 1 360px;
+      min-width: 280px;
+    }
+
+    .state-label {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .game-activity-shell {
+      background: var(--shell-bg);
+      color: var(--shell-fg);
+      padding: 28px 24px 32px;
+      border-radius: 4px;
+    }
+
+    .game-activity-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .game-activity-header h1 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .game-activity-header .subtitle {
+      margin: 0 0 14px;
+      font-size: 13px;
+      font-weight: 400;
+      opacity: 0.92;
+      line-height: 1.5;
+    }
+
+    .header-actions {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      font-size: 13px;
+    }
+
+    .fake-link {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .game-canvas {
+      width: 88%;
+      max-width: 640px;
+      min-height: 280px;
+      margin: 0 auto;
+      background: var(--canvas-bg);
+      color: var(--canvas-fg);
+      border-radius: 2px;
+      padding: 14px 12px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .login-hint-bar {
+      font-size: 11px;
+      color: var(--text-sub);
+      text-align: center;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      background: #ececec;
+      border-radius: 2px;
+      line-height: 1.45;
+    }
+
+    .attempts-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .attempts-block {
+      flex: 1;
+      min-width: 120px;
+      background: #e4e4e4;
+      padding: 8px 10px;
+      border-radius: 2px;
+      border: 1px solid #b0b0b0;
+      line-height: 1.45;
+    }
+
+    .attempts-block strong {
+      display: block;
+      font-size: 11px;
+      color: var(--text-sub);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .exchange-zone {
+      flex: 1;
+      min-width: 140px;
+      background: #e8e8e8;
+      padding: 8px 10px;
+      border-radius: 2px;
+      border: 1px dashed #8c8c8c;
+      line-height: 1.45;
+    }
+
+    .exchange-zone .zone-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .exchange-zone .fake-btn {
+      margin-top: 8px;
+    }
+
+    .penalty-scene {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 4px;
+    }
+
+    .pitch-label {
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .goal-frame {
+      width: 72%;
+      max-width: 260px;
+      height: 100px;
+      border: 3px solid #555;
+      border-bottom: none;
+      background: linear-gradient(to bottom, #b8b8b8 0%, var(--pitch-strip) 40%);
+      position: relative;
+    }
+
+    .goal-net {
+      position: absolute;
+      inset: 6px 8px 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 5px,
+        rgba(0, 0, 0, 0.06) 5px,
+        rgba(0, 0, 0, 0.06) 6px
+      );
+    }
+
+    .penalty-mark-line {
+      width: 2px;
+      height: 28px;
+      background: #777;
+    }
+
+    .penalty-spot-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .ball {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #666, var(--ball-dark));
+      border: 2px solid #111;
+      margin-top: 6px;
+    }
+
+    .kick-row {
+      margin-top: auto;
+      padding-top: 16px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .kick-row .fake-btn {
+      padding: 10px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      border: 1px solid #bdbdbd;
+    }
+
+    .kick-note {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin: 8px 0 0;
+      line-height: 1.45;
+    }
+
+    /* —— 弹窗通用（对齐黄金案例）—— */
+    .modal-card {
+      background: var(--modal-bg);
+      border: 1px solid var(--modal-border);
+      border-radius: 4px;
+      max-width: 420px;
+      padding: 0 0 16px;
+    }
+
+    .modal-card--wide {
+      max-width: 440px;
+    }
+
+    .modal-head {
+      position: relative;
+      padding: 18px 40px 12px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--text-sub);
+      user-select: none;
+    }
+
+    .modal-title {
+      margin: 0;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .modal-body {
+      padding: 16px 20px 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-main);
+    }
+
+    .win-lead {
+      margin: 0 0 14px;
+    }
+
+    .auto-claim-note {
+      font-size: 12px;
+      color: var(--countdown-blue);
+      font-weight: 600;
+      margin: 0 0 10px;
+    }
+
+    .prize-card {
+      border: 1px solid var(--modal-border);
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+      margin-bottom: 16px;
+    }
+
+    .prize-card__thumb {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #c8c8c8 0%, #a8a8a8 100%);
+      border-radius: 2px;
+    }
+
+    .prize-card__main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .prize-card__title {
+      margin: 0 0 auto;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .prize-card__actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .fake-btn {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 12px;
+      background: var(--btn-gray);
+      color: var(--btn-gray-text);
+      border-radius: 2px;
+    }
+
+    .rules-block {
+      padding: 0 20px;
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .rules-block h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .rules-block p {
+      margin: 0 0 6px;
+    }
+
+    .prize-list {
+      max-height: 420px;
+      overflow-y: auto;
+      padding: 12px 16px 8px;
+    }
+
+    .mp-card {
+      border: 1px solid var(--modal-border);
+      padding: 10px 10px 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .mp-card__thumb {
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      background: #c4c4c4;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+      line-height: 1.15;
+      padding: 4px;
+    }
+
+    .mp-card__thumb--product {
+      background: linear-gradient(135deg, #b8b8b8, #909090);
+      font-size: 0;
+    }
+
+    .mp-card__body {
+      flex: 1;
+      min-width: 0;
+      font-size: 12px;
+    }
+
+    .mp-card__title {
+      margin: 0 0 6px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .mp-card__row {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 8px;
+    }
+
+    .countdown {
+      color: var(--countdown-blue);
+      font-weight: 600;
+    }
+
+    .promo-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      color: var(--promo-orange);
+      font-weight: 600;
+    }
+
+    .mp-card__footer-actions {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-icon {
+      width: 28px;
+      height: 24px;
+      border: 2px solid #888;
+      border-radius: 2px 2px 4px 4px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .cart-icon::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: 2px;
+      right: 2px;
+      height: 4px;
+      border: 2px solid #888;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .status-pill {
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-left: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--status-red);
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+
+    .muted {
+      color: var(--text-sub);
+      font-weight: 400;
+    }
+
+    .rules-modal-body p {
+      margin: 0 0 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    .tier-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin: 10px 0;
+    }
+
+    .tier-table th,
+    .tier-table td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .tier-table th {
+      background: #f5f5f5;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .modals-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px 24px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .modals-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .modals-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .modals-row > div {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .modals-row .modal-card {
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modals-row .modal-card--wide {
+      max-width: none;
+    }
+
+    .modals-row .modal-head {
+      flex-shrink: 0;
+    }
+
+    .modals-row .modal-body {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    .modals-row .modal-card > .prize-list {
+      flex: 1 1 auto;
+      min-height: 0;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    .modals-row .rules-block {
+      flex-shrink: 0;
+    }
+
+    .modals-row .modal-confirm-actions {
+      margin-top: auto;
+      flex-shrink: 0;
+    }
+
+    .modals-row .modal-body.rules-modal-body {
+      overflow-y: auto;
+    }
+
+    .modal-confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 20px 16px;
+    }
+
+    .miss-face {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 12px;
+      background: #e8e8e8;
+      border-radius: 50%;
+      border: 1px solid var(--modal-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #888;
+    }
+
+    .miss-body {
+      margin: 0;
+      text-align: center;
+      padding: 0 20px 12px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    /* —— 底部：可交互演示（仅作用于 #ix-app）—— */
+    #ix-app {
+      --ix-z: 50;
+    }
+
+    #ix-app .ix-root {
+      position: relative;
+      max-width: 440px;
+      margin: 0 auto;
+      border-radius: 8px;
+      overflow: visible;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+      isolation: isolate;
+      min-height: 480px;
+    }
+
+    #ix-app .ix-hint {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin: 0 0 12px;
+      line-height: 1.5;
+    }
+
+    #ix-app .ix-status {
+      font-size: 11px;
+      color: #444;
+      margin-top: 8px;
+      min-height: 2.6em;
+    }
+
+    #ix-app .ix-status strong {
+      color: var(--countdown-blue);
+    }
+
+    #ix-app button {
+      font: inherit;
+    }
+
+    #ix-app .ix-nav-link {
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    #ix-app .ix-btn {
+      cursor: pointer;
+    }
+
+    #ix-app .ix-ball {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #666, var(--ball-dark));
+      border: 2px solid #111;
+      margin-top: 6px;
+      transform-origin: 50% 50%;
+    }
+
+    #ix-app .ix-scene.ix-anim-goal .ix-ball {
+      animation: ixKickGoal 0.9s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+    }
+
+    #ix-app .ix-scene.ix-anim-miss .ix-ball {
+      animation: ixKickMiss 0.85s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+    }
+
+    #ix-app .ix-goal--flash::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(22, 119, 255, 0.25);
+      pointer-events: none;
+      animation: ixGoalFlash 0.5s ease-out;
+    }
+
+    @keyframes ixKickGoal {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(0, -148px) scale(0.48);
+        opacity: 0.88;
+      }
+    }
+
+    @keyframes ixKickMiss {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      100% {
+        transform: translate(110px, 36px) rotate(52deg);
+        opacity: 0.65;
+      }
+    }
+
+    @keyframes ixGoalFlash {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    #ix-app .goal-frame {
+      position: relative;
+    }
+
+    #ix-app .ix-ovl {
+      position: absolute;
+      inset: 0;
+      z-index: var(--ix-z);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px 12px 24px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.48);
+      box-sizing: border-box;
+    }
+
+    #ix-app .ix-ovl[hidden] {
+      display: none !important;
+    }
+
+    #ix-app .ix-ovl-card {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 8px;
+    }
+
+    #ix-app .ix-ovl-card--wide {
+      max-width: 420px;
+    }
+
+    #ix-app .modal-close.ix-close {
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      font: inherit;
+      line-height: 1;
+    }
+
+    #ix-app .ix-toast {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: calc(var(--ix-z) + 1);
+      background: #333;
+      color: #fff;
+      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 4px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    #ix-app .ix-toast.ix-toast--show {
+      opacity: 1;
+    }
+
+    #ix-app .ix-confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 20px 16px;
+    }
+
+    #ix-app .ix-win-after-claim {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e8e8e8;
+    }
+
+    #ix-app .ix-win-after-claim[hidden] {
+      display: none !important;
+    }
+
+    #ix-app #ix-win-actions[hidden] {
+      display: none !important;
+    }
+
+    #ix-app .ix-win-after-claim__foot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    #ix-app .ix-ex-lead {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="prototype-page">
+    <section class="module">
+      <h2 class="module-title">主组件 · 待踢球（未登录 / 已登录 两态）</h2>
+      <div class="main-states-row">
+        <div class="main-state-col">
+          <p class="state-label">状态 1 · 待踢球 · 未登录</p>
+          <div class="game-activity-shell">
+            <header class="game-activity-header">
+              <h1>点球大战 · 一击即中领好券</h1>
+              <p class="subtitle">
+                进入活动页即可看到球门与罚球点足球。须<strong>登录</strong>后方可踢球、兑换次数与领奖；射进则<strong>立即弹出优惠券并自动领取</strong>，射失无奖（谢谢惠顾 / 再接再厉），有余次数可再踢。
+              </p>
+              <div class="header-actions">
+                <span class="fake-link">Myprize</span>
+                <span class="fake-link">Rules</span>
+              </div>
+            </header>
+            <section class="game-canvas" aria-label="未登录 · 点球场景示意">
+              <div class="login-hint-bar">
+                当前为未登录态：可浏览活动场景，参与踢球、积分兑换次数等功能需在登录后开放。
+              </div>
+              <div class="attempts-row">
+                <div class="attempts-block">
+                  <strong>今日参与次数</strong>
+                  登录后可查看免费次数与已用/剩余次数示意<br />
+                  额外次数：登录后可在门框旁使用积分兑换
+                </div>
+                <div class="exchange-zone">
+                  <div class="zone-title">门框旁 · 兑换次数区</div>
+                  登录后消耗 <strong>100 积分</strong> 可兑换今日额外 1 次机会（未登录仅作版式示意）<br />
+                  <span class="fake-btn">兑换 1 次</span>
+                </div>
+              </div>
+              <div class="penalty-scene">
+                <span class="pitch-label">点球区示意</span>
+                <div class="goal-frame" aria-hidden="true">
+                  <div class="goal-net"></div>
+                </div>
+                <div class="penalty-spot-row">
+                  <div class="penalty-mark-line"></div>
+                  <div class="ball" aria-hidden="true"></div>
+                </div>
+                <div class="kick-row">
+                  <span class="fake-btn">登录去踢球</span>
+                  <p class="kick-note">
+                    点击后进入登录流程（原型为静态展示，无真实跳转）。登录成功返回活动页后，主按钮切换为「立即踢球」。
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+        <div class="main-state-col">
+          <p class="state-label">状态 2 · 待踢球 · 已登录</p>
+          <div class="game-activity-shell">
+            <header class="game-activity-header">
+              <h1>点球大战 · 一击即中领好券</h1>
+              <p class="subtitle">
+                与状态 1 版式一致。已登录用户展示今日次数与积分兑换区，主操作按钮为「立即踢球」。
+              </p>
+              <div class="header-actions">
+                <span class="fake-link">Myprize</span>
+                <span class="fake-link">Rules</span>
+              </div>
+            </header>
+            <section class="game-canvas" aria-label="已登录 · 点球场景与操作区">
+              <div class="login-hint-bar">
+                您已登录，可直接踢球；射进即时发券并自动领取。
+              </div>
+              <div class="attempts-row">
+                <div class="attempts-block">
+                  <strong>今日参与次数</strong>
+                  免费：每日默认 <strong>1 次</strong>（示意 剩余 1 / 1）<br />
+                  额外：每日可通过积分再换 <strong>1 次</strong>
+                </div>
+                <div class="exchange-zone">
+                  <div class="zone-title">门框旁 · 兑换次数区</div>
+                  消耗 <strong>100 积分</strong> 兑换今日额外 1 次踢球机会<br />
+                  <span class="fake-btn">兑换 1 次</span>
+                </div>
+              </div>
+              <div class="penalty-scene">
+                <span class="pitch-label">点球区示意</span>
+                <div class="goal-frame" aria-hidden="true">
+                  <div class="goal-net"></div>
+                </div>
+                <div class="penalty-spot-row">
+                  <div class="penalty-mark-line"></div>
+                  <div class="ball" aria-hidden="true"></div>
+                </div>
+                <div class="kick-row">
+                  <span class="fake-btn">立即踢球</span>
+                  <p class="kick-note">
+                    每次射进：即时发券并自动领取。射失：无券；若仍有今日参与次数可直接再踢。
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="module">
+      <h2 class="module-title">弹窗线稿 · 射进发券 / 射失 / 确认兑换 / My prize / Rules</h2>
+      <div class="modals-row">
+        <div>
+          <p class="state-label">射进 · 恭喜中奖（自动领取）</p>
+          <div class="modal-card" role="presentation">
+            <div class="modal-head">
+              <span class="modal-close" aria-hidden="true">×</span>
+              <h3 class="modal-title">恭喜中奖</h3>
+            </div>
+            <div class="modal-body">
+              <p class="win-lead">点球命中！以下为本次获得的优惠券（已自动领取至账户，无需手动点击）。</p>
+              <p class="auto-claim-note">已自动领取</p>
+              <div class="prize-card">
+                <div class="prize-card__thumb" aria-hidden="true"></div>
+                <div class="prize-card__main">
+                  <p class="prize-card__title">明星射手奖励券 · 10 元无门槛优惠券 XXXXXXXXXXXXXXXXXXXX</p>
+                  <div class="prize-card__actions">
+                    <span class="fake-btn">立即领取</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="rules-block">
+              <h4>Rules:</h4>
+              <p>
+                无门槛券可能在部分商品、品类不可用，请以券面、结算提示及完整活动条款为准。XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="state-label">射失 · 谢谢惠顾（无奖励 · 可再参与示意）</p>
+          <div class="modal-card" role="presentation">
+            <div class="modal-head">
+              <span class="modal-close" aria-hidden="true">×</span>
+              <h3 class="modal-title">谢谢惠顾</h3>
+            </div>
+            <div class="modal-body">
+              <div class="miss-face" aria-hidden="true">×</div>
+              <p class="miss-body">
+                本次点球未进，暂无奖励（未中奖档：<strong>再接再厉</strong>）。若您仍有今日参与次数，可返回活动页再次尝试。
+              </p>
+            </div>
+            <div class="rules-block">
+              <h4>提示:</h4>
+              <p>可与 Toast、空状态等形态二选一或组合；本处为弹窗线稿静态展示。</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="state-label">积分兑换 · 确认兑换弹窗</p>
+          <div class="modal-card" role="presentation">
+            <div class="modal-head">
+              <span class="modal-close" aria-hidden="true">×</span>
+              <h3 class="modal-title">确认兑换</h3>
+            </div>
+            <div class="modal-body">
+              <p class="win-lead">
+                用户在门框旁「兑换次数区」点击「兑换 1 次」后，先弹出本确认窗。确定消耗
+                <strong>100 积分</strong> 兑换 <strong>1 次</strong>踢球机会吗？<br />
+                兑换成功后次数立即到账，积分即时扣减；取消则不扣积分、不增加次数。XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              </p>
+            </div>
+            <div class="modal-confirm-actions">
+              <span class="fake-btn">取消</span>
+              <span class="fake-btn">确认兑换</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="state-label">我的获奖弹窗</p>
+          <div class="modal-card modal-card--wide" role="presentation">
+            <div class="modal-head">
+              <span class="modal-close" aria-hidden="true">×</span>
+              <h3 class="modal-title">My prize</h3>
+            </div>
+            <div class="prize-list">
+              <article class="mp-card">
+                <div class="mp-card__thumb mp-card__thumb--product" aria-hidden="true"></div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">传奇点球王惊喜券 · 免费产品 XXXXXXXXXXXXXXXXXXXX</p>
+                  <div class="mp-card__footer-actions">
+                    <span class="fake-btn">立即领取</span>
+                  </div>
+                </div>
+                <div class="status-pill">未领取</div>
+              </article>
+
+              <article class="mp-card">
+                <div class="mp-card__thumb mp-card__thumb--product" aria-hidden="true"></div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">传奇点球王惊喜券 · 免费产品 XXXXXXXXXXXXXXXXXXXX</p>
+                  <p class="countdown">Ends in 3d 3h 45m 12s</p>
+                  <div class="mp-card__row promo-row">
+                    <span>CODE: 2KLJK90</span>
+                    <span class="fake-btn">Copy</span>
+                  </div>
+                  <div class="mp-card__footer-actions">
+                    <span class="cart-icon" aria-label="购物车示意" role="img"></span>
+                  </div>
+                </div>
+                <div class="status-pill">已领取</div>
+              </article>
+
+              <article class="mp-card">
+                <div class="mp-card__thumb">¥3<br />券</div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">替补球员 · 3 元无门槛优惠券 XXXXXXXXXXXX</p>
+                  <div class="mp-card__footer-actions">
+                    <span class="fake-btn">立即领取</span>
+                  </div>
+                </div>
+                <div class="status-pill">未领取</div>
+              </article>
+
+              <article class="mp-card">
+                <div class="mp-card__thumb">¥5<br />券</div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">主力射手奖励券 · 5 元无门槛优惠券 XXXXXXXXXXXX</p>
+                  <p class="countdown">Ends in 3d 3h 45m 12s</p>
+                  <div class="mp-card__row promo-row">
+                    <span>CODE: GKDLASD</span>
+                    <span class="fake-btn">Copy</span>
+                  </div>
+                </div>
+                <div class="status-pill">已领取</div>
+              </article>
+
+              <article class="mp-card">
+                <div class="mp-card__thumb">¥10<br />券</div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">明星射手奖励券 · 10 元无门槛 XXXXXXXXXXXX</p>
+                  <p class="muted">你的优惠券已过期</p>
+                  <div class="mp-card__row promo-row">
+                    <span>CODE: XXXXXXXX</span>
+                    <span class="fake-btn">Copy</span>
+                  </div>
+                </div>
+                <div class="status-pill">已过期</div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="state-label">规则弹窗</p>
+          <div class="modal-card" role="presentation">
+            <div class="modal-head">
+              <span class="modal-close" aria-hidden="true">×</span>
+              <h3 class="modal-title">Rules</h3>
+            </div>
+            <div class="modal-body rules-modal-body">
+              <p>
+                <strong>1. 参与资格</strong>
+                用户必须登录后方可进行点球游戏、积分兑换次数及领取/使用活动奖励。XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              </p>
+              <p>
+                <strong>2. 玩法流程</strong>
+                进入活动页即可看到点球大战场景（球门、罚球区足球）。点击「开始踢球」后若判定射进，则立即弹出对应等级优惠券并<strong>自动领取</strong>；若射失则无券，展示未中奖/谢谢惠顾类反馈，不发放奖励。无需累计进球次数，踢中即得，强调即时满足感。
+              </p>
+              <p>
+                <strong>3. 参与次数</strong>
+                每日默认 <strong>1 次</strong>免费参与机会，无额外门槛。每日还可通过消耗 <strong>100 积分</strong>，在球门旁「兑换次数区」兑换 <strong>额外 1 次</strong>机会：点击「兑换」后先弹出<strong>确认兑换</strong>弹窗，用户确认后再扣减积分并增加次数；取消则不扣积分（示意上限；实际上线以配置为准）。次数用尽当日不可再踢。
+              </p>
+              <p><strong>4. 奖励等级（示意）</strong></p>
+              <table class="tier-table">
+                <thead>
+                  <tr>
+                    <th>等级 / 结果</th>
+                    <th>奖励内容</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>未中奖</td>
+                    <td>谢谢惠顾 / 再接再厉，无优惠券</td>
+                  </tr>
+                  <tr>
+                    <td>替补球员</td>
+                    <td>3 元无门槛券</td>
+                  </tr>
+                  <tr>
+                    <td>主力射手</td>
+                    <td>5 元无门槛券</td>
+                  </tr>
+                  <tr>
+                    <td>明星射手</td>
+                    <td>10 元无门槛券</td>
+                  </tr>
+                  <tr>
+                    <td>传奇点球王</td>
+                    <td>免费产品惊喜券（适用 SKU 以活动配置为准）</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>
+                <strong>5. 无门槛券使用范围</strong>
+                各档无门槛优惠券可能在部分商品、品类、渠道不可用；不可用范围以券面说明、结算页提示及本活动条款为准。XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              </p>
+              <p>
+                <strong>6. 其他</strong>
+                XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ix-app" class="module">
+      <h2 class="module-title">可交互演示 · 主界面与弹窗合并（踢球动画 · 中奖自动弹窗）</h2>
+      <p class="ix-hint">
+        本区块为<strong>可交互原型</strong>：点击「立即踢球」播放射门动画，结束后随机判定射进或射失；射进将<strong>自动弹出</strong>恭喜中奖弹窗（券已自动领取示意）。Myprize / Rules
+        可打开对应弹窗；× 关闭。积分兑换需先弹出<strong>确认兑换</strong>，确认后扣减积分并增加次数。弹窗层仅覆盖下方灰色演示框，不影响上方静态线稿。兑换次数、积分与结果为前端模拟数据。
+      </p>
+      <div class="ix-root">
+        <div class="game-activity-shell">
+          <header class="game-activity-header">
+            <h1>点球大战 · 可交互版</h1>
+            <p class="subtitle">射进即时发券并自动领取；射失谢谢惠顾。每日 1 次免费 + 积分可换额外次数（演示数据）。</p>
+            <div class="header-actions">
+              <button type="button" class="ix-nav-link fake-link" id="ix-open-myprize">Myprize</button>
+              <button type="button" class="ix-nav-link fake-link" id="ix-open-rules">Rules</button>
+            </div>
+          </header>
+          <section class="game-canvas" aria-label="点球可交互区">
+            <div class="login-hint-bar">演示为<strong>已登录</strong>态；积分与次数均为本地模拟。</div>
+            <div class="attempts-row">
+              <div class="attempts-block">
+                <strong>今日参与次数</strong>
+                剩余：<strong id="ix-attempts-num">2</strong> 次（含免费 + 示意赠送）<br />
+                积分余额：<strong id="ix-points-num">500</strong>
+              </div>
+              <div class="exchange-zone">
+                <div class="zone-title">门框旁 · 兑换次数区</div>
+                消耗 <strong>100 积分</strong> 兑换 <strong>1 次</strong>踢球机会<br />
+                <button type="button" class="fake-btn ix-btn" id="ix-exchange">兑换 1 次</button>
+              </div>
+            </div>
+            <div class="penalty-scene">
+              <span class="pitch-label">点球区 · 踢球动画</span>
+              <div class="goal-frame ix-goal" id="ix-goal" aria-hidden="true">
+                <div class="goal-net"></div>
+              </div>
+              <div class="penalty-spot-row ix-scene" id="ix-scene">
+                <div class="penalty-mark-line"></div>
+                <div class="ix-ball" id="ix-ball" aria-hidden="true"></div>
+              </div>
+              <div class="kick-row">
+                <button type="button" class="fake-btn ix-btn" id="ix-kick">立即踢球</button>
+                <p class="kick-note">动画结束后自动弹出结果弹窗。次数为 0 时按钮不可用。</p>
+                <p class="ix-status" id="ix-status" aria-live="polite"></p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="ix-ovl" id="ix-ovl-win" hidden role="dialog" aria-modal="true" aria-labelledby="ix-win-title">
+          <div class="modal-card ix-ovl-card" role="document">
+            <div class="modal-head">
+              <button type="button" class="modal-close ix-close" aria-label="关闭">×</button>
+              <h3 class="modal-title" id="ix-win-title">恭喜中奖</h3>
+            </div>
+            <div class="modal-body">
+              <p class="win-lead">点球命中！优惠券已自动领取至账户（演示）。</p>
+              <p class="auto-claim-note" id="ix-win-auto-note">已自动领取</p>
+              <div id="ix-win-prize-wrap">
+                <div class="prize-card">
+                  <div class="prize-card__thumb" aria-hidden="true"></div>
+                  <div class="prize-card__main">
+                    <p class="prize-card__title" id="ix-win-prize-title">明星射手奖励券 · 10 元无门槛优惠券</p>
+                    <div class="prize-card__actions" id="ix-win-actions">
+                      <button type="button" class="fake-btn ix-btn" id="ix-win-claim">立即领取</button>
+                    </div>
+                    <div id="ix-win-after-claim" class="ix-win-after-claim" hidden>
+                      <p class="countdown">Ends in 3d 3h 45m 12s</p>
+                      <div class="mp-card__row promo-row">
+                        <span id="ix-win-code-line">CODE: —</span>
+                        <button type="button" class="fake-btn ix-btn ix-copy" id="ix-win-copy" data-code="">Copy</button>
+                      </div>
+                      <div class="ix-win-after-claim__foot">
+                        <span class="cart-icon" aria-label="购物车示意" role="img"></span>
+                        <span class="status-pill">已领取</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="rules-block">
+              <h4>Rules:</h4>
+              <p>无门槛券部分商品不可用，详见券面与活动条款。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ix-ovl" id="ix-ovl-miss" hidden role="dialog" aria-modal="true" aria-labelledby="ix-miss-title">
+          <div class="modal-card ix-ovl-card" role="document">
+            <div class="modal-head">
+              <button type="button" class="modal-close ix-close" aria-label="关闭">×</button>
+              <h3 class="modal-title" id="ix-miss-title">谢谢惠顾</h3>
+            </div>
+            <div class="modal-body">
+              <div class="miss-face" aria-hidden="true">×</div>
+              <p class="miss-body">
+                本次点球未进，暂无奖励（<strong>再接再厉</strong>）。若仍有次数，关闭后可再试。
+              </p>
+            </div>
+            <div class="rules-block">
+              <h4>提示:</h4>
+              <p>演示随机结果，实际活动以服务端判定为准。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ix-ovl" id="ix-ovl-myprize" hidden role="dialog" aria-modal="true" aria-labelledby="ix-mp-title">
+          <div class="modal-card modal-card--wide ix-ovl-card ix-ovl-card--wide" role="document">
+            <div class="modal-head">
+              <button type="button" class="modal-close ix-close" aria-label="关闭">×</button>
+              <h3 class="modal-title" id="ix-mp-title">My prize</h3>
+            </div>
+            <div class="prize-list">
+              <article class="mp-card">
+                <div class="mp-card__thumb mp-card__thumb--product" aria-hidden="true"></div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">传奇点球王惊喜券 · 免费产品</p>
+                  <div class="mp-card__footer-actions">
+                    <span class="fake-btn">立即领取</span>
+                  </div>
+                </div>
+                <div class="status-pill">未领取</div>
+              </article>
+              <article class="mp-card">
+                <div class="mp-card__thumb mp-card__thumb--product" aria-hidden="true"></div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">传奇点球王惊喜券 · 免费产品</p>
+                  <p class="countdown">Ends in 3d 3h 45m 12s</p>
+                  <div class="mp-card__row promo-row">
+                    <span>CODE: 2KLJK90</span>
+                    <button type="button" class="fake-btn ix-btn ix-copy" data-code="2KLJK90">Copy</button>
+                  </div>
+                  <div class="mp-card__footer-actions">
+                    <span class="cart-icon" aria-label="购物车示意" role="img"></span>
+                  </div>
+                </div>
+                <div class="status-pill">已领取</div>
+              </article>
+              <article class="mp-card">
+                <div class="mp-card__thumb">¥3<br />券</div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">替补球员 · 3 元无门槛优惠券</p>
+                  <div class="mp-card__footer-actions">
+                    <span class="fake-btn">立即领取</span>
+                  </div>
+                </div>
+                <div class="status-pill">未领取</div>
+              </article>
+              <article class="mp-card">
+                <div class="mp-card__thumb">¥5<br />券</div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">主力射手奖励券 · 5 元无门槛优惠券</p>
+                  <p class="countdown">Ends in 3d 3h 45m 12s</p>
+                  <div class="mp-card__row promo-row">
+                    <span>CODE: GKDLASD</span>
+                    <button type="button" class="fake-btn ix-btn ix-copy" data-code="GKDLASD">Copy</button>
+                  </div>
+                </div>
+                <div class="status-pill">已领取</div>
+              </article>
+              <article class="mp-card">
+                <div class="mp-card__thumb">¥10<br />券</div>
+                <div class="mp-card__body">
+                  <p class="mp-card__title">明星射手奖励券 · 10 元无门槛</p>
+                  <p class="muted">你的优惠券已过期</p>
+                  <div class="mp-card__row promo-row">
+                    <span>CODE: XXXXXXXX</span>
+                    <button type="button" class="fake-btn ix-btn ix-copy" data-code="XXXXXXXX">Copy</button>
+                  </div>
+                </div>
+                <div class="status-pill">已过期</div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div class="ix-ovl" id="ix-ovl-rules" hidden role="dialog" aria-modal="true" aria-labelledby="ix-rules-title">
+          <div class="modal-card ix-ovl-card" role="document">
+            <div class="modal-head">
+              <button type="button" class="modal-close ix-close" aria-label="关闭">×</button>
+              <h3 class="modal-title" id="ix-rules-title">Rules</h3>
+            </div>
+            <div class="modal-body rules-modal-body">
+              <p>
+                <strong>1. 参与资格</strong> 须登录参与游戏、兑换次数与领奖。
+              </p>
+              <p>
+                <strong>2. 玩法</strong> 点击踢球后判定射进或射失；射进弹出优惠券并<strong>自动领取</strong>；射失无奖励。
+              </p>
+              <p>
+                <strong>3. 次数</strong> 每日 1 次免费；可消耗 <strong>100 积分</strong> 兑换额外次数（以活动规则为准）。
+              </p>
+              <p><strong>4. 奖等</strong> 未中奖 / 3 元 / 5 元 / 10 元无门槛 / 传奇免费产品券。</p>
+              <p>
+                <strong>5. 无门槛券</strong> 部分商品、品类不可用，以券面与结算提示为准。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ix-ovl" id="ix-ovl-ex-confirm" hidden role="dialog" aria-modal="true" aria-labelledby="ix-ex-title">
+          <div class="modal-card ix-ovl-card" role="document">
+            <div class="modal-head">
+              <button type="button" class="modal-close ix-close" aria-label="关闭">×</button>
+              <h3 class="modal-title" id="ix-ex-title">确认兑换</h3>
+            </div>
+            <div class="modal-body">
+              <p class="win-lead ix-ex-lead">
+                确定消耗 <strong>100 积分</strong> 兑换 <strong>1 次</strong>踢球机会吗？<br />
+                兑换成功后次数立即到账，积分将即时扣减（演示数据）。
+              </p>
+            </div>
+            <div class="ix-confirm-actions">
+              <button type="button" class="fake-btn ix-btn" id="ix-ex-cancel">取消</button>
+              <button type="button" class="fake-btn ix-btn" id="ix-ex-ok">确认兑换</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="ix-toast" class="ix-toast" role="status"></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (function () {
+      var root = document.getElementById("ix-app");
+      if (!root) return;
+
+      var attemptsEl = document.getElementById("ix-attempts-num");
+      var pointsEl = document.getElementById("ix-points-num");
+      var statusEl = document.getElementById("ix-status");
+      var scene = document.getElementById("ix-scene");
+      var ball = document.getElementById("ix-ball");
+      var goal = document.getElementById("ix-goal");
+      var kickBtn = document.getElementById("ix-kick");
+      var exBtn = document.getElementById("ix-exchange");
+      var toast = document.getElementById("ix-toast");
+      var winOvl = document.getElementById("ix-ovl-win");
+      var missOvl = document.getElementById("ix-ovl-miss");
+      var mpOvl = document.getElementById("ix-ovl-myprize");
+      var rulesOvl = document.getElementById("ix-ovl-rules");
+      var exConfirmOvl = document.getElementById("ix-ovl-ex-confirm");
+      var winTitleEl = document.getElementById("ix-win-prize-title");
+      var winActions = document.getElementById("ix-win-actions");
+      var winAfterClaim = document.getElementById("ix-win-after-claim");
+      var winAutoNote = document.getElementById("ix-win-auto-note");
+      var winCodeLine = document.getElementById("ix-win-code-line");
+      var winCopyBtn = document.getElementById("ix-win-copy");
+      var winClaimBtn = document.getElementById("ix-win-claim");
+
+      var attempts = 2;
+      var points = 500;
+      var kicking = false;
+
+      var prizes = [
+        { title: "替补球员 · 3 元无门槛优惠券", weight: 3 },
+        { title: "主力射手奖励券 · 5 元无门槛优惠券", weight: 3 },
+        { title: "明星射手奖励券 · 10 元无门槛优惠券", weight: 2 },
+        { title: "传奇点球王惊喜券 · 免费产品", weight: 1 },
+      ];
+
+      function randomCouponCode() {
+        return "WIN" + Math.random().toString(36).substring(2, 8).toUpperCase();
+      }
+
+      function resetWinPrizeState() {
+        if (winAfterClaim) winAfterClaim.hidden = true;
+        if (winActions) winActions.hidden = false;
+        if (winAutoNote) winAutoNote.hidden = false;
+        if (winClaimBtn) winClaimBtn.disabled = false;
+      }
+
+      function setWinPrizeClaimed() {
+        if (winAfterClaim) winAfterClaim.hidden = false;
+        if (winActions) winActions.hidden = true;
+        if (winAutoNote) winAutoNote.hidden = true;
+        showToast("领取成功");
+      }
+
+      function pickPrize() {
+        var t = 0;
+        for (var i = 0; i < prizes.length; i++) t += prizes[i].weight;
+        var r = Math.random() * t;
+        var c = 0;
+        for (var j = 0; j < prizes.length; j++) {
+          c += prizes[j].weight;
+          if (r < c) return prizes[j].title;
+        }
+        return prizes[0].title;
+      }
+
+      function syncUI() {
+        var modalOpen = anyOvlOpen();
+        attemptsEl.textContent = String(attempts);
+        pointsEl.textContent = String(points);
+        kickBtn.disabled = attempts <= 0 || kicking || modalOpen;
+        exBtn.disabled = points < 100 || kicking || modalOpen;
+        kickBtn.style.opacity = kickBtn.disabled ? "0.55" : "1";
+        exBtn.style.opacity = exBtn.disabled ? "0.55" : "1";
+      }
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add("ix-toast--show");
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(function () {
+          toast.classList.remove("ix-toast--show");
+        }, 1600);
+      }
+
+      function openOvl(el) {
+        el.hidden = false;
+      }
+
+      function closeAllOvl() {
+        [winOvl, missOvl, mpOvl, rulesOvl, exConfirmOvl].forEach(function (el) {
+          el.hidden = true;
+        });
+        resetWinPrizeState();
+      }
+
+      function anyOvlOpen() {
+        return ![winOvl, missOvl, mpOvl, rulesOvl, exConfirmOvl].every(function (el) {
+          return el.hidden;
+        });
+      }
+
+      function resetBallAnim() {
+        scene.classList.remove("ix-anim-goal", "ix-anim-miss");
+        goal.classList.remove("ix-goal--flash");
+        void ball.offsetWidth;
+      }
+
+      document.getElementById("ix-open-myprize").addEventListener("click", function () {
+        closeAllOvl();
+        openOvl(mpOvl);
+        syncUI();
+      });
+      document.getElementById("ix-open-rules").addEventListener("click", function () {
+        closeAllOvl();
+        openOvl(rulesOvl);
+        syncUI();
+      });
+
+      root.querySelectorAll(".ix-ovl .ix-close").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var ovl = btn.closest(".ix-ovl");
+          ovl.hidden = true;
+          if (ovl === winOvl) resetWinPrizeState();
+          resetBallAnim();
+          statusEl.textContent = "";
+          syncUI();
+        });
+      });
+
+      root.querySelectorAll(".ix-ovl").forEach(function (ovl) {
+        ovl.addEventListener("click", function (e) {
+          if (e.target === ovl) {
+            ovl.hidden = true;
+            if (ovl === winOvl) resetWinPrizeState();
+            resetBallAnim();
+            statusEl.textContent = "";
+            syncUI();
+          }
+        });
+      });
+
+      exBtn.addEventListener("click", function () {
+        if (kicking || anyOvlOpen()) return;
+        if (points < 100) {
+          showToast("积分不足");
+          return;
+        }
+        openOvl(exConfirmOvl);
+        syncUI();
+      });
+
+      document.getElementById("ix-ex-cancel").addEventListener("click", function () {
+        exConfirmOvl.hidden = true;
+        syncUI();
+      });
+
+      document.getElementById("ix-ex-ok").addEventListener("click", function () {
+        if (points < 100) {
+          exConfirmOvl.hidden = true;
+          showToast("积分不足");
+          syncUI();
+          return;
+        }
+        points -= 100;
+        attempts += 1;
+        exConfirmOvl.hidden = true;
+        showToast("已兑换 1 次机会");
+        syncUI();
+      });
+
+      document.getElementById("ix-win-claim").addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (!winAfterClaim || winAfterClaim.hidden === false) return;
+        setWinPrizeClaimed();
+      });
+
+      root.querySelectorAll(".ix-copy").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var code = b.getAttribute("data-code") || "";
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(
+              function () {
+                showToast("已复制 " + code);
+              },
+              function () {
+                showToast("复制失败");
+              }
+            );
+          } else {
+            showToast("CODE: " + code);
+          }
+        });
+      });
+
+      kickBtn.addEventListener("click", function () {
+        if (kicking || anyOvlOpen()) return;
+        if (attempts <= 0) {
+          showToast("今日次数已用完");
+          return;
+        }
+        kicking = true;
+        attempts -= 1;
+        syncUI();
+        resetBallAnim();
+        statusEl.innerHTML = "射门中…";
+
+        var isWin = Math.random() < 0.58;
+
+        if (isWin) {
+          scene.classList.add("ix-anim-goal");
+        } else {
+          scene.classList.add("ix-anim-miss");
+        }
+
+        window.setTimeout(function () {
+          kicking = false;
+          if (isWin) {
+            goal.classList.add("ix-goal--flash");
+            resetWinPrizeState();
+            var prizeName = pickPrize();
+            winTitleEl.textContent = prizeName;
+            var couponCode = randomCouponCode();
+            if (winCopyBtn) winCopyBtn.setAttribute("data-code", couponCode);
+            if (winCodeLine) winCodeLine.textContent = "CODE: " + couponCode;
+            statusEl.innerHTML = "<strong>进球！</strong> 已为您弹出中奖弹窗。";
+            openOvl(winOvl);
+          } else {
+            statusEl.textContent = "未进球，已弹出提示。";
+            openOvl(missOvl);
+          }
+          syncUI();
+        }, 900);
+      });
+
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key !== "Escape" || !anyOvlOpen()) return;
+        closeAllOvl();
+        resetBallAnim();
+        statusEl.textContent = "";
+        syncUI();
+      });
+
+      syncUI();
+    })();
+  </script>
+</body>
+</html>
