@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>加价换购活动组件产品需求文档 PRD</title>
+  <style>
+    :root {
+      --header-height: 52px;
+      --header-bg: #2c3e50;
+      --sidebar-bg: #34495e;
+      --sidebar-text: #ecf0f1;
+      --sidebar-active-bg: #ffffff;
+      --sidebar-active-text: #111111;
+      --page-bg: #f4f6f9;
+      --card-bg: #ffffff;
+      --card-border: #e0e4ea;
+      --table-header-bg: #eef2f7;
+      --accent: #4a90d9;
+      --accent-dark: #2f6fae;
+      --accent-border: #c5d4e8;
+      --highlight-bg: #fff8e6;
+      --highlight-border: #f0c040;
+      --success-bg: #edf8f1;
+      --success-text: #16703b;
+      --danger-bg: #fdecea;
+      --danger-text: #c0392b;
+      --muted: #666666;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding-top: var(--header-height);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.65;
+      color: #222;
+      background: var(--page-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      min-height: var(--header-height);
+      display: flex;
+      align-items: center;
+      background: var(--header-bg);
+      color: #fff;
+      padding: 10px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .layout {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    .sidebar {
+      flex: 0 0 20%;
+      min-width: 190px;
+      max-width: 280px;
+      background: var(--sidebar-bg);
+    }
+
+    .sidebar nav {
+      position: sticky;
+      top: var(--header-height);
+      max-height: calc(100vh - var(--header-height));
+      overflow-y: auto;
+      width: 100%;
+      padding: 16px 0;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 11px 20px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      font-size: 14px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar a.active {
+      background: var(--sidebar-active-bg);
+      color: var(--sidebar-active-text);
+      border-left-color: var(--accent);
+    }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px 56px;
+      scroll-padding-top: calc(var(--header-height) + 16px);
+    }
+
+    .card[id] {
+      scroll-margin-top: calc(var(--header-height) + 16px);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 20px 24px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #111;
+    }
+
+    .sub-block {
+      margin-bottom: 18px;
+    }
+
+    .sub-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .sub-block h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .sub-block h4 {
+      margin: 14px 0 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .body-text {
+      margin: 0 0 10px;
+    }
+
+    .body-text:last-child {
+      margin-bottom: 0;
+    }
+
+    .meta-table,
+    .test-table,
+    .flow-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .meta-table th,
+    .meta-table td,
+    .test-table th,
+    .test-table td,
+    .flow-table th,
+    .flow-table td {
+      border: 1px solid #d8d8d8;
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .meta-table th,
+    .test-table th,
+    .flow-table th {
+      background: var(--table-header-bg);
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .highlight {
+      padding: 12px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--highlight-border);
+      background: var(--highlight-bg);
+      font-size: 14px;
+      margin: 10px 0;
+    }
+
+    .tag-p0,
+    .tag-p1,
+    .tag-info,
+    .tag-ok {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tag-p0 {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .tag-p1 {
+      background: #fff2df;
+      color: #b45f00;
+    }
+
+    .tag-info {
+      background: #eaf3ff;
+      color: #2f6fae;
+    }
+
+    .tag-ok {
+      background: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .fold {
+      border: 1px solid #dfe5ee;
+      border-radius: 8px;
+      background: #fbfcfe;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+
+    .fold summary {
+      cursor: pointer;
+      padding: 11px 14px;
+      font-weight: 600;
+      background: #f3f6fa;
+      user-select: none;
+    }
+
+    .fold-body {
+      padding: 12px 14px 14px;
+    }
+
+    .prototype-zone {
+      margin: 12px 0 20px;
+      padding: 18px;
+      border: 1px dashed #b7c4d6;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .prototype-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) minmax(360px, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      margin: 0 auto;
+      border: 1px solid #d4d4d4;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .phone-top {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-bottom: 1px solid #e5e5e5;
+      color: #111;
+      font-size: 18px;
+    }
+
+    .hero {
+      padding: 24px 22px 22px;
+      background: #6b6b6b;
+      color: #fff;
+      text-align: center;
+    }
+
+    .hero h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.95;
+    }
+
+    .zone-title {
+      margin: 18px 0 10px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .scene {
+      height: 108px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 14px 0;
+      border: 2px solid #f1f1f1;
+      background:
+        linear-gradient(25deg, transparent 49%, #d0d0d0 50%, transparent 51%),
+        linear-gradient(155deg, transparent 49%, #d0d0d0 50%, transparent 51%),
+        #fbfbfb;
+      color: #333;
+      font-size: 13px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      color: #222;
+    }
+
+    .product-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .carousel-row {
+      position: relative;
+    }
+
+    .product-card {
+      position: relative;
+      background: #fff;
+      border: 1px solid #d7d7d7;
+      border-radius: 4px;
+      padding: 10px 8px 8px;
+      text-align: left;
+      color: #222;
+    }
+
+    .product-art {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #2e8cff, #f5d142 45%, #222 46%, #111);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .product-card.compact .product-art {
+      height: 56px;
+    }
+
+    .discount-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #777;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1.05;
+      text-align: center;
+    }
+
+    .product-name {
+      min-height: 28px;
+      font-size: 10px;
+      line-height: 1.35;
+      color: #333;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 6px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .old-price {
+      color: #999;
+      font-size: 10px;
+      text-decoration: line-through;
+      font-weight: 400;
+    }
+
+    .buy-btn {
+      width: 100%;
+      margin-top: 6px;
+      border: 0;
+      border-radius: 12px;
+      background: #bcc4cc;
+      color: #fff;
+      font-size: 10px;
+      padding: 4px 6px;
+      cursor: pointer;
+    }
+
+    .addon-section {
+      position: relative;
+      margin: 16px -22px -22px;
+      padding: 16px 22px 24px;
+      background: #707070;
+    }
+
+    .addon-section h4 {
+      margin: 0 0 6px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .addon-section .subtitle {
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      z-index: 5;
+    }
+
+    .arrow.left {
+      left: -14px;
+    }
+
+    .arrow.right {
+      right: -14px;
+    }
+
+    .rules-card {
+      background: #ffc400;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      color: #111;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .rules-card h4 {
+      margin: 0 0 8px;
+    }
+
+    .admin-panel,
+    .logic-panel {
+      border: 1px solid #dce3ec;
+      border-radius: 8px;
+      background: #fff;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .admin-panel h4,
+    .logic-panel h4 {
+      margin: 0 0 12px;
+      font-size: 15px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .form-row label {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-inline {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 8px;
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      height: 38px;
+      border: 1px solid #bfc7d1;
+      border-radius: 6px;
+      padding: 0 10px;
+      background: #fff;
+      font: inherit;
+    }
+
+    .checkbox-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .hint {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .preview-box {
+      border: 1px solid #d8e4f2;
+      background: #f7fbff;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .modal-demo {
+      position: relative;
+      min-height: 210px;
+      border-radius: 8px;
+      background: linear-gradient(rgba(0,0,0,0.36), rgba(0,0,0,0.36)), #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    .modal {
+      width: min(340px, 100%);
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+      text-align: center;
+    }
+
+    .modal h4 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .modal p {
+      margin: 0 0 12px;
+      color: #555;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .primary-btn,
+    .ghost-btn {
+      border-radius: 18px;
+      padding: 8px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .ghost-btn {
+      border: 1px solid #cfd6df;
+      background: #fff;
+      color: #333;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .tabs button {
+      border: 1px solid #ccd6e2;
+      background: #fff;
+      border-radius: 16px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    .tabs button.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    ul,
+    ol {
+      padding-left: 20px;
+      margin: 8px 0 0;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    code {
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: #f1f3f6;
+      color: #334;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    @media (max-width: 1024px) {
+      .prototype-grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 0;
+      }
+
+      .top-bar {
+        position: static;
+      }
+
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        flex: none;
+        max-width: none;
+        width: 100%;
+      }
+
+      .sidebar nav {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 12px;
+      }
+
+      .sidebar a {
+        flex: 1 1 auto;
+        min-width: 120px;
+        text-align: center;
+        border-left: none;
+        border-radius: 6px;
+      }
+
+      .sidebar a.active {
+        border-left: none;
+      }
+
+      .main {
+        padding: 16px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .form-row,
+      .form-inline {
+        grid-template-columns: 1fr;
+      }
+
+      .product-grid.three {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">加价换购活动组件产品需求文档 PRD</header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav id="side-nav" aria-label="文档章节">
+        <a href="#section-overview" class="active">需求概述</a>
+        <a href="#section-background">项目背景</a>
+        <a href="#section-current">当前逻辑说明</a>
+        <a href="#section-requirement">需求逻辑说明</a>
+        <a href="#section-test">测试用例场景</a>
+        <a href="#section-risk">风险评估</a>
+      </nav>
+    </aside>
+
+    <main class="main" id="main-content">
+      <section class="card" id="section-overview" tabindex="-1">
+        <h2>需求概述</h2>
+        <table class="meta-table">
+          <thead>
+            <tr>
+              <th>需求名称</th>
+              <th>所属模块</th>
+              <th>需求提出人</th>
+              <th>上线时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>加价换购活动组件</td>
+              <td>营销插件 / 活动页组件 / 购物车促销</td>
+              <td>运营增长团队</td>
+              <td>6 月 25 日</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="highlight">
+          本需求新增一种活动页营销组件：用户先在 A 区选购主商品，再在 B 区以指定“到手价”换购加价商品。后台营销插件需要支持 BOGO 场景下的“按到手价”折扣形式，并支持配置是否排除 A+B 重复商品。
+        </div>
+      </section>
+
+      <section class="card" id="section-background" tabindex="-1">
+        <h2>项目背景</h2>
+        <div class="sub-block">
+          <h3>为什么做</h3>
+          <p class="body-text">当前活动页常用满减、折扣、优惠券等促销形式，对客单价提升和搭配销售的引导有限。运营希望在促销页中提供“主商品 + 加价换购商品”的组合场景，让用户在购买 A 区商品后，以更明确的低价权益购买 B 区商品。</p>
+          <p class="body-text">截图中的组件框架已经定义前台活动呈现方式：顶部活动标题和场景图，A 区主商品，B 区多个换购价区块，例如 <code>Upgrade for $14</code>、<code>Upgrade for $44</code>；后台则需要在营销插件中补齐“按到手价”折扣口径。</p>
+        </div>
+        <div class="sub-block">
+          <h3>解决什么问题</h3>
+          <ul>
+            <li>解决运营无法在同一活动页表达“购买指定主商品后，以固定到手价换购指定商品”的问题。</li>
+            <li>解决后台只能按固定金额或百分比折扣配置，无法直接录入 B 区商品最终成交价的问题。</li>
+            <li>解决 A 区和 B 区商品重复时，活动规则不清晰、购物车优惠命中不稳定的问题。</li>
+            <li>提升活动页搭配购买效率，减少用户对换购门槛、换购价和可参与商品的理解成本。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card" id="section-current" tabindex="-1">
+        <h2>当前逻辑说明</h2>
+        <div class="sub-block">
+          <h3>前台活动组件现状</h3>
+          <p class="body-text">活动页已有商品卡片、场景图、标题文案、横向商品列表等基础展示能力，但缺少“先选 A 区商品，再换购 B 区商品”的分区规则表达，也没有对不同换购价档进行聚合展示。</p>
+        </div>
+        <div class="sub-block">
+          <h3>后台营销插件现状</h3>
+          <p class="body-text">BOGO 折扣配置中的“折扣额”下拉项当前包含“固定金额”“百分比”等折扣口径；若运营希望让 B 区商品最终以 $14 或 $44 成交，需要手动倒算优惠金额。该方式不利于多商品、多币种、多原价商品混排场景。</p>
+        </div>
+        <div class="highlight">
+          当前截图中明确要求：<strong>BOGO 折扣额下拉流新增“按到手价”</strong>；选择后，后面的输入框录入金额，实际为固定金额折扣，折扣力度为“现金-到手价”。
+        </div>
+      </section>
+
+      <section class="card" id="section-requirement" tabindex="-1">
+        <h2>需求逻辑说明</h2>
+        <div class="sub-block">
+          <h3>需求原型设计</h3>
+          <div class="prototype-zone" role="region" aria-label="加价换购活动组件原型">
+            <div class="prototype-grid">
+              <div class="phone" aria-label="前台移动端活动页原型">
+                <div class="phone-top">‹</div>
+                <div class="hero">
+                  <h3>大标题 XXXXXXXXXX</h3>
+                  <p>小标题 XXXXXXXXXXXXXXXXXXXXXX</p>
+                  <div class="zone-title">A区 XXXXXX</div>
+                  <div class="scene">场景图</div>
+                  <div class="product-grid">
+                    <div class="product-card">
+                      <span class="discount-badge">$15<br>OFF</span>
+                      <div class="product-art">TV SET</div>
+                      <div class="product-name">Govee XXXXXXXXXXXXXXXX XXXXXXXXXX</div>
+                      <div class="price-row">$59.00 <span class="old-price">$79.00</span></div>
+                      <button class="buy-btn" data-modal="cart">🛒 | Shop Now</button>
+                    </div>
+                    <div class="product-card">
+                      <span class="discount-badge">$15<br>OFF</span>
+                      <div class="product-art">TV SET</div>
+                      <div class="product-name">Govee XXXXXXXXXXXXXXXX XXXXXXXXXX</div>
+                      <div class="price-row">$59.00 <span class="old-price">$79.00</span></div>
+                      <button class="buy-btn" data-modal="cart">🛒 | Shop Now</button>
+                    </div>
+                  </div>
+                  <div class="addon-section">
+                    <h4>加价换购区</h4>
+                    <p class="subtitle">Upgrade for $14</p>
+                    <div class="carousel-row" aria-label="Upgrade for $14 商品轮播">
+                      <span class="arrow left">‹</span>
+                      <span class="arrow right">›</span>
+                      <div class="product-grid three">
+                        <div class="product-card compact">
+                          <span class="discount-badge">$15<br>OFF</span>
+                          <div class="product-art">TV SET</div>
+                          <div class="product-name">Govee XXXXXX XXXXXXXXXX</div>
+                          <div class="price-row">$14.00 <span class="old-price">$29.00</span></div>
+                          <button class="buy-btn" data-modal="addon">🛒 | Shop Now</button>
+                        </div>
+                        <div class="product-card compact">
+                          <span class="discount-badge">$15<br>OFF</span>
+                          <div class="product-art">TV SET</div>
+                          <div class="product-name">Govee XXXXXX XXXXXXXXXX</div>
+                          <div class="price-row">$14.00 <span class="old-price">$29.00</span></div>
+                          <button class="buy-btn" data-modal="addon">🛒 | Shop Now</button>
+                        </div>
+                        <div class="product-card compact">
+                          <span class="discount-badge">$15<br>OFF</span>
+                          <div class="product-art">TV SET</div>
+                          <div class="product-name">Govee XXXXXX XXXXXXXXXX</div>
+                          <div class="price-row">$14.00 <span class="old-price">$29.00</span></div>
+                          <button class="buy-btn" data-modal="addon">🛒 | Shop Now</button>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="subtitle" style="margin-top:18px;">Upgrade for $44</p>
+                    <div class="carousel-row" aria-label="Upgrade for $44 商品轮播">
+                      <span class="arrow left">‹</span>
+                      <span class="arrow right">›</span>
+                      <div class="product-grid three">
+                        <div class="product-card compact">
+                          <span class="discount-badge">$35<br>OFF</span>
+                          <div class="product-art">TV SET</div>
+                          <div class="product-name">Govee XXXXXX XXXXXXXXXX</div>
+                          <div class="price-row">$44.00 <span class="old-price">$79.00</span></div>
+                          <button class="buy-btn" data-modal="addon">🛒 | Shop Now</button>
+                        </div>
+                        <div class="product-card compact">
+                          <span class="discount-badge">$35<br>OFF</span>
+                          <div class="product-art">TV SET</div>
+                          <div class="product-name">Govee XXXXXX XXXXXXXXXX</div>
+                          <div class="price-row">$44.00 <span class="old-price">$79.00</span></div>
+                          <button class="buy-btn" data-modal="addon">🛒 | Shop Now</button>
+                        </div>
+                        <div class="product-card compact">
+                          <span class="discount-badge">$35<br>OFF</span>
+                          <div class="product-art">TV SET</div>
+                          <div class="product-name">Govee XXXXXX XXXXXXXXXX</div>
+                          <div class="price-row">$44.00 <span class="old-price">$79.00</span></div>
+                          <button class="buy-btn" data-modal="addon">🛒 | Shop Now</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="rules-card">
+                  <h4>营销规则</h4>
+                  <p>1. 在 A 区加购任意一个产品，可以在 B 区加价换购。</p>
+                  <p>2. 在 A 区价格产品后，在 B 区 2 个模板可加价：<strong>$14</strong> 或 <strong>$44</strong>，奖金获得 B 区梯度内任意一件产品。</p>
+                  <p>3. 营销方式：BOGO；折扣形式：<strong>按到手价</strong>。</p>
+                </div>
+
+                <div class="admin-panel" aria-label="后台营销插件配置原型">
+                  <h4>后台配置原型：BOGO 折扣额调整</h4>
+                  <div class="form-row">
+                    <label for="discountType">折扣额</label>
+                    <div class="form-inline">
+                      <select id="discountType">
+                        <option value="final" selected>按到手价</option>
+                        <option value="fixed">固定金额</option>
+                        <option value="percent">百分比</option>
+                      </select>
+                      <input id="discountValue" type="number" value="14" min="0" step="0.01" aria-label="折扣值" />
+                    </div>
+                  </div>
+                  <p class="hint" id="discountHint">选择“按到手价”时，输入框录入 B 区商品最终到手价，例如 14 表示 B 区商品成交价为 $14。</p>
+                  <div class="form-row">
+                    <label>组合</label>
+                    <div>
+                      <select aria-label="组合类型">
+                        <option>A 区任意商品 + B 区指定商品</option>
+                        <option>A 区指定集合 + B 区指定集合</option>
+                      </select>
+                      <label class="checkbox-line">
+                        <input type="checkbox" checked />
+                        是否排除 A+A 重复商品
+                      </label>
+                    </div>
+                  </div>
+                  <div class="preview-box" id="discountPreview">
+                    B 区商品原价 $29，录入到手价 $14，系统计算折扣金额为 $15，并在购物车中以固定金额折扣执行。
+                  </div>
+                </div>
+
+                <div class="logic-panel">
+                  <h4>交互状态示例</h4>
+                  <div class="tabs" role="tablist">
+                    <button class="active" data-tab="normal">可换购</button>
+                    <button data-tab="empty">未加购 A 区</button>
+                    <button data-tab="duplicate">重复商品</button>
+                  </div>
+                  <div class="tab-panel active" id="tab-normal">
+                    <p class="body-text"><span class="tag-ok">命中</span> 用户已加购 A 区商品，点击 B 区商品可加入购物车，结算时按 $14 或 $44 到手价优惠。</p>
+                  </div>
+                  <div class="tab-panel" id="tab-empty">
+                    <p class="body-text"><span class="tag-p1">提醒</span> 用户未加购 A 区商品时，点击 B 区按钮提示“请先选择 A 区商品后再换购”。</p>
+                  </div>
+                  <div class="tab-panel" id="tab-duplicate">
+                    <p class="body-text"><span class="tag-p0">拦截</span> 勾选“是否排除 A+A 重复商品”后，同一 SKU 不允许同时作为主商品和换购商品命中。</p>
+                  </div>
+                </div>
+
+                <div class="modal-demo" id="modalDemo">
+                  <div class="modal">
+                    <h4>加价换购提示</h4>
+                    <p id="modalCopy">点击原型中的 Shop Now 可查看不同交互提示。</p>
+                    <div class="modal-actions">
+                      <button class="primary-btn" type="button" data-modal="addon">加入换购商品</button>
+                      <button class="ghost-btn" type="button" data-modal="cart">查看购物车</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-block">
+          <h3>核心功能</h3>
+          <table class="flow-table">
+            <thead>
+              <tr>
+                <th>功能点</th>
+                <th>需求说明</th>
+                <th>优先级</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A 区主商品展示</td>
+                <td>支持配置 A 区标题、商品集合、商品卡片信息、价格、原价、折扣角标、Shop Now 按钮；A 区商品为换购资格商品。</td>
+                <td><span class="tag-p0">P0</span></td>
+              </tr>
+              <tr>
+                <td>B 区换购价档展示</td>
+                <td>支持多个 B 区模板，每个模板独立配置标题文案，例如 Upgrade for $14、Upgrade for $44；每个模板展示对应换购商品列表。</td>
+                <td><span class="tag-p0">P0</span></td>
+              </tr>
+              <tr>
+                <td>按到手价折扣形式</td>
+                <td>BOGO 折扣额下拉新增“按到手价”。运营录入金额后，系统以“商品当前售价 - 到手价”计算固定金额折扣，并在结算优惠中执行。</td>
+                <td><span class="tag-p0">P0</span></td>
+              </tr>
+              <tr>
+                <td>A+B 资格校验</td>
+                <td>用户购物车中至少存在 1 件 A 区商品时，B 区商品可享受换购价；若不存在 A 区商品，则 B 区商品以常规价格加入或提示先购 A 区，具体以店铺配置为准。</td>
+                <td><span class="tag-p0">P0</span></td>
+              </tr>
+              <tr>
+                <td>重复商品排除</td>
+                <td>后台支持配置“是否排除 A+A 重复商品”。开启后，同一 SKU 不可同时作为资格商品和换购商品参与同一笔优惠。</td>
+                <td><span class="tag-p1">P1</span></td>
+              </tr>
+              <tr>
+                <td>活动规则说明</td>
+                <td>页面右侧或规则弹窗展示活动规则，明确购买 A 区任意商品后，可在 B 区按指定到手价换购。</td>
+                <td><span class="tag-p1">P1</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-block">
+          <h3>非核心功能</h3>
+          <ul>
+            <li>组件支持上传场景图、维护主标题/副标题、配置背景色和商品卡片展示数量。</li>
+            <li>商品列表在移动端支持横向滑动或分页箭头；桌面端可按组件容器宽度自适应展示。</li>
+            <li>支持在 B 区商品卡片上展示折扣角标，角标金额可自动由原价与到手价计算，也可由运营手动覆盖。</li>
+            <li>支持活动规则在页面卡片和弹窗两种形态中展示。</li>
+          </ul>
+        </div>
+
+        <div class="sub-block">
+          <h3>不做的功能</h3>
+          <ul>
+            <li>本期不支持多件 A 区商品叠加解锁多件 B 区商品的阶梯倍增逻辑。</li>
+            <li>本期不支持跨店铺、跨站点共享同一套活动配置。</li>
+            <li>本期不支持用户自行选择折扣类型；折扣类型仅由后台运营配置。</li>
+            <li>本期不支持 B 区换购商品与其他自动折扣叠加，叠加策略沿用现有营销插件优先级。</li>
+          </ul>
+        </div>
+
+        <div class="sub-block">
+          <h3>主流程</h3>
+          <table class="flow-table">
+            <thead>
+              <tr>
+                <th>步骤</th>
+                <th>用户/系统行为</th>
+                <th>结果</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>用户进入活动页，浏览 A 区主商品和 B 区换购商品。</td>
+                <td>页面展示大标题、小标题、场景图、A 区商品、B 区 $14/$44 换购模板。</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>用户点击 A 区商品的 Shop Now。</td>
+                <td>A 区商品加入购物车，并获得 B 区换购资格。</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>用户点击 B 区商品的 Shop Now。</td>
+                <td>B 区商品加入购物车；购物车计算 BOGO 优惠。</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>系统读取后台“按到手价”配置。</td>
+                <td>系统将 B 区商品价格优惠至配置金额，例如 $14 或 $44。</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>用户进入结算。</td>
+                <td>优惠金额、商品价格、活动规则与购物车一致，订单可正常创建。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-block">
+          <h3>分支流程</h3>
+          <details class="fold" open>
+            <summary>分支 1：用户先点击 B 区商品</summary>
+            <div class="fold-body">
+              <p class="body-text">若购物车未命中任何 A 区商品，前台提示“请先选择 A 区商品后再换购”；若店铺配置允许常规加购，则 B 区商品以原价加购，但不享受换购优惠。</p>
+            </div>
+          </details>
+          <details class="fold">
+            <summary>分支 2：B 区存在多个价档</summary>
+            <div class="fold-body">
+              <p class="body-text">系统按商品所属 B 区模板读取到手价。商品归属 $14 模板则优惠至 $14，归属 $44 模板则优惠至 $44。单个商品同一时间只允许归属一个生效价档。</p>
+            </div>
+          </details>
+          <details class="fold">
+            <summary>分支 3：A 区与 B 区商品重复</summary>
+            <div class="fold-body">
+              <p class="body-text">若后台开启排除重复商品，同一 SKU 已作为 A 区资格商品时，不再作为 B 区换购商品命中；若未开启，则按现有 BOGO 匹配规则执行，但需要在后台配置说明中提示运营谨慎使用。</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="sub-block">
+          <h3>异常流程</h3>
+          <table class="flow-table">
+            <thead>
+              <tr>
+                <th>异常场景</th>
+                <th>处理规则</th>
+                <th>提示文案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A 区商品售罄</td>
+                <td>商品卡片置灰，不可加购；若 A 区全部售罄，B 区换购资格不可触发。</td>
+                <td>该商品暂时售罄</td>
+              </tr>
+              <tr>
+                <td>B 区商品售罄</td>
+                <td>对应商品卡片置灰；其他 B 区商品不受影响。</td>
+                <td>换购商品已售罄</td>
+              </tr>
+              <tr>
+                <td>到手价大于等于商品售价</td>
+                <td>后台保存时拦截，避免生成 0 或负向折扣。</td>
+                <td>到手价需小于商品当前售价</td>
+              </tr>
+              <tr>
+                <td>购物车同时命中多个自动折扣</td>
+                <td>沿用现有营销插件优先级；若互斥，则展示最终生效优惠。</td>
+                <td>已为你应用最佳可用优惠</td>
+              </tr>
+              <tr>
+                <td>货币精度或四舍五入异常</td>
+                <td>按店铺币种最小货币单位计算；展示金额与结算金额保持一致。</td>
+                <td>无前台异常提示，后台记录计算日志</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" id="section-test" tabindex="-1">
+        <h2>测试用例场景</h2>
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>测试功能点标题</th>
+              <th>前置条件</th>
+              <th>测试步骤</th>
+              <th>预期结果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>前台组件完整展示</td>
+              <td>活动已发布，A 区和 B 区均配置商品。</td>
+              <td>访问活动页，查看标题、场景图、A 区、B 区两个换购价档。</td>
+              <td>页面结构与原型一致；移动端不横向溢出，商品卡片、价格、按钮展示完整。</td>
+            </tr>
+            <tr>
+              <td>购买 A 区后换购 $14 商品</td>
+              <td>A 区商品售价 $59，B 区商品原价 $29，到手价配置为 $14。</td>
+              <td>加购 A 区商品，再加购 B 区 $14 商品，进入购物车。</td>
+              <td>B 区商品优惠 $15，最终成交价 $14；优惠文案和订单金额一致。</td>
+            </tr>
+            <tr>
+              <td>购买 A 区后换购 $44 商品</td>
+              <td>B 区第二模板商品原价 $79，到手价配置为 $44。</td>
+              <td>加购 A 区商品，再加购 B 区 $44 商品，进入购物车。</td>
+              <td>B 区商品优惠 $35，最终成交价 $44。</td>
+            </tr>
+            <tr>
+              <td>未购买 A 区直接点击 B 区</td>
+              <td>购物车为空。</td>
+              <td>直接点击 B 区商品 Shop Now。</td>
+              <td>系统提示先选择 A 区商品，或按店铺配置以原价加购但不触发换购优惠。</td>
+            </tr>
+            <tr>
+              <td>后台折扣额选择按到手价</td>
+              <td>进入 BOGO 活动配置页。</td>
+              <td>在折扣额下拉中选择“按到手价”，输入 14 并保存。</td>
+              <td>配置保存成功；系统后续按商品售价减 14 计算固定金额折扣。</td>
+            </tr>
+            <tr>
+              <td>后台非法到手价拦截</td>
+              <td>B 区商品售价 $29。</td>
+              <td>选择“按到手价”，输入 29 或 30 后保存。</td>
+              <td>保存失败并提示“到手价需小于商品当前售价”。</td>
+            </tr>
+            <tr>
+              <td>排除 A+B 重复商品</td>
+              <td>后台已勾选“是否排除 A+A 重复商品”，A 区和 B 区存在同一 SKU。</td>
+              <td>加购该 SKU 作为 A 区商品，再尝试作为 B 区换购商品命中。</td>
+              <td>该 SKU 不触发 B 区换购优惠，系统可推荐其他可换购商品。</td>
+            </tr>
+            <tr>
+              <td>商品售罄态</td>
+              <td>某 B 区商品库存为 0。</td>
+              <td>访问活动页查看该商品，并点击按钮。</td>
+              <td>商品卡片置灰，不可加购；其他商品可正常换购。</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" id="section-risk" tabindex="-1">
+        <h2>风险评估</h2>
+        <div class="sub-block">
+          <h3>依赖项</h3>
+          <ul>
+            <li>依赖营销插件 BOGO 规则引擎支持新增折扣类型 <code>final_price</code> 或等价枚举。</li>
+            <li>依赖商品集合服务提供 A 区、B 区商品列表、库存、售价、原价与 SKU 信息。</li>
+            <li>依赖购物车/结算服务支持将“按到手价”转换为固定金额折扣并稳定展示。</li>
+            <li>依赖活动页装修系统支持新增加价换购组件及其配置项。</li>
+          </ul>
+        </div>
+        <div class="sub-block">
+          <h3>风险点</h3>
+          <table class="flow-table">
+            <thead>
+              <tr>
+                <th>风险</th>
+                <th>影响</th>
+                <th>应对预案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>到手价与商品售价动态变化不同步</td>
+                <td>可能导致折扣金额为负或优惠不符合运营预期。</td>
+                <td>保存配置和运行时均校验到手价小于当前售价；异常时活动不命中并记录日志。</td>
+              </tr>
+              <tr>
+                <td>多币种价格换算误差</td>
+                <td>用户看到的到手价与结算价可能存在小额差异。</td>
+                <td>以店铺当前币种最小单位计算并展示，后台提示运营按站点币种配置。</td>
+              </tr>
+              <tr>
+                <td>自动折扣互斥规则复杂</td>
+                <td>用户可能无法同时享受其他优惠，引发客诉。</td>
+                <td>在活动规则中明确“优惠以购物车实际生效为准”，并在后台展示互斥说明。</td>
+              </tr>
+              <tr>
+                <td>A 区和 B 区商品重叠</td>
+                <td>优惠命中可能不符合“购买主商品再换购附加商品”的业务目标。</td>
+                <td>默认建议开启重复商品排除；配置页增加提示文案。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var nav = document.getElementById("side-nav");
+      var links = nav.querySelectorAll("a[href^='#']");
+      var ids = Array.prototype.map.call(links, function (a) {
+        return a.getAttribute("href").slice(1);
+      });
+      var sections = ids
+        .map(function (id) {
+          return document.getElementById(id);
+        })
+        .filter(Boolean);
+      var mainEl = document.getElementById("main-content");
+
+      function setActive(hash) {
+        var id = (hash && hash.replace("#", "")) || "section-overview";
+        links.forEach(function (link) {
+          var href = link.getAttribute("href").slice(1);
+          link.classList.toggle("active", href === id);
+        });
+      }
+
+      links.forEach(function (link) {
+        link.addEventListener("click", function (e) {
+          var id = link.getAttribute("href").slice(1);
+          var target = document.getElementById(id);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (history.replaceState) {
+            history.replaceState(null, "", "#" + id);
+          } else {
+            location.hash = id;
+          }
+          setActive(id);
+        });
+      });
+
+      if ("IntersectionObserver" in window && sections.length) {
+        var obs = new IntersectionObserver(
+          function (entries) {
+            var visible = entries
+              .filter(function (e) {
+                return e.isIntersecting;
+              })
+              .sort(function (a, b) {
+                return b.intersectionRatio - a.intersectionRatio;
+              })[0];
+            if (visible && visible.target.id) setActive(visible.target.id);
+          },
+          {
+            root: mainEl,
+            rootMargin: "-10% 0px -55% 0px",
+            threshold: [0, 0.25, 0.5, 1],
+          }
+        );
+        sections.forEach(function (sec) {
+          obs.observe(sec);
+        });
+      }
+
+      window.addEventListener("hashchange", function () {
+        setActive(location.hash || "#section-overview");
+      });
+
+      if (location.hash) {
+        setActive(location.hash);
+      } else {
+        setActive("#section-overview");
+      }
+
+      var discountType = document.getElementById("discountType");
+      var discountValue = document.getElementById("discountValue");
+      var discountHint = document.getElementById("discountHint");
+      var discountPreview = document.getElementById("discountPreview");
+
+      function updateDiscountCopy() {
+        var type = discountType.value;
+        var value = Number(discountValue.value || 0).toFixed(2).replace(".00", "");
+        if (type === "final") {
+          discountHint.textContent = "选择“按到手价”时，输入框录入 B 区商品最终到手价，例如 14 表示 B 区商品成交价为 $14。";
+          discountPreview.textContent = "B 区商品原价 $29，录入到手价 $" + value + "，系统计算折扣金额为 $" + Math.max(0, 29 - Number(value || 0)).toFixed(2).replace(".00", "") + "，并在购物车中以固定金额折扣执行。";
+        } else if (type === "fixed") {
+          discountHint.textContent = "选择“固定金额”时，输入框录入直接减免金额。";
+          discountPreview.textContent = "B 区商品原价 $29，固定减免 $" + value + "，用户预计支付 $" + Math.max(0, 29 - Number(value || 0)).toFixed(2).replace(".00", "") + "。";
+        } else {
+          discountHint.textContent = "选择“百分比”时，输入框录入折扣百分比。";
+          discountPreview.textContent = "B 区商品原价 $29，折扣比例 " + value + "%，用户预计支付 $" + (29 * (1 - Number(value || 0) / 100)).toFixed(2) + "。";
+        }
+      }
+
+      discountType.addEventListener("change", updateDiscountCopy);
+      discountValue.addEventListener("input", updateDiscountCopy);
+      updateDiscountCopy();
+
+      var modalCopy = document.getElementById("modalCopy");
+      document.querySelectorAll("[data-modal]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var type = btn.getAttribute("data-modal");
+          modalCopy.textContent =
+            type === "addon"
+              ? "已选择换购商品。若购物车存在 A 区商品，结算时将按配置到手价生效。"
+              : "已将 A 区商品加入购物车，可继续选择 B 区 $14 或 $44 换购商品。";
+        });
+      });
+
+      document.querySelectorAll(".tabs button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var tab = btn.getAttribute("data-tab");
+          document.querySelectorAll(".tabs button").forEach(function (item) {
+            item.classList.toggle("active", item === btn);
+          });
+          document.querySelectorAll(".tab-panel").forEach(function (panel) {
+            panel.classList.toggle("active", panel.id === "tab-" + tab);
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
