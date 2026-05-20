@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>互动解锁宝箱营销游戏 产品需求文档 PRD</title>
+  <style>
+    :root {
+      --header-height: 56px;
+      --header-bg: #3f3f3f;
+      --sidebar-bg: #4a4a4a;
+      --sidebar-text: #ffffff;
+      --sidebar-active-bg: #ffffff;
+      --sidebar-active-text: #111111;
+      --page-bg: #f4f4f4;
+      --card-bg: #ffffff;
+      --card-border: #e0e0e0;
+      --table-header-bg: #eef2f7;
+      --accent-border: #c5d4e8;
+      --accent-bg: #f6f9fd;
+      --tag-blue: #1677ff;
+      --tag-green: #28a745;
+      --tag-orange: #ff7a45;
+      --tag-red: #e02020;
+      --text-main: #222222;
+      --text-sub: #666666;
+      --proto-bg: #bfbfbf;
+      --chest-yellow: #ffc400;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding-top: var(--header-height);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-main);
+      background: var(--page-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      min-height: var(--header-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--header-bg);
+      color: #ffffff;
+      padding: 12px 24px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .top-bar__title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .top-bar__meta {
+      font-size: 12px;
+      color: #e6e6e6;
+      white-space: nowrap;
+    }
+
+    .layout {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    .sidebar {
+      flex: 0 0 20%;
+      min-width: 190px;
+      max-width: 280px;
+      background: var(--sidebar-bg);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .toc {
+      position: sticky;
+      top: var(--header-height);
+      align-self: flex-start;
+      max-height: calc(100vh - var(--header-height));
+      overflow-y: auto;
+      width: 100%;
+      padding: 16px 0;
+    }
+
+    .toc a {
+      display: block;
+      padding: 11px 20px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      font-size: 14px;
+    }
+
+    .toc a:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .toc a.active {
+      background: var(--sidebar-active-bg);
+      color: var(--sidebar-active-text);
+      border-left-color: #4a90d9;
+      font-weight: 600;
+    }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px 48px;
+      scroll-padding-top: calc(var(--header-height) + 16px);
+    }
+
+    .card[id] {
+      scroll-margin-top: calc(var(--header-height) + 16px);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 20px 24px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #111111;
+    }
+
+    .sub-block {
+      margin-bottom: 18px;
+    }
+
+    .sub-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .sub-block h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #333333;
+    }
+
+    .body-text {
+      margin: 0;
+    }
+
+    .muted {
+      color: var(--text-sub);
+    }
+
+    .highlight {
+      margin: 12px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--accent-border);
+      border-left: 4px solid #4a90d9;
+      border-radius: 6px;
+      background: var(--accent-bg);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f0f0f0;
+      color: #333333;
+    }
+
+    .tag-blue {
+      background: #eaf3ff;
+      color: var(--tag-blue);
+    }
+
+    .tag-green {
+      background: #eaf7ee;
+      color: var(--tag-green);
+    }
+
+    .tag-orange {
+      background: #fff2e8;
+      color: var(--tag-orange);
+    }
+
+    .tag-red {
+      background: #fff1f0;
+      color: var(--tag-red);
+    }
+
+    .meta-table,
+    .test-table,
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 10px 0 0;
+    }
+
+    .meta-table th,
+    .meta-table td,
+    .test-table th,
+    .test-table td,
+    .data-table th,
+    .data-table td {
+      border: 1px solid #d8d8d8;
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .meta-table th,
+    .test-table th,
+    .data-table th {
+      background: var(--table-header-bg);
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mini-card {
+      border: 1px solid #dddddd;
+      border-radius: 6px;
+      padding: 12px;
+      background: #fafafa;
+    }
+
+    .mini-card h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+    }
+
+    .mini-card p,
+    .mini-card ul,
+    .mini-card ol {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-left: 18px;
+      font-size: 13px;
+    }
+
+    .mini-card p {
+      padding-left: 0;
+    }
+
+    .fold {
+      margin: 10px 0;
+      border: 1px solid #d8d8d8;
+      border-radius: 6px;
+      background: #ffffff;
+    }
+
+    .fold summary {
+      padding: 10px 12px;
+      font-weight: 700;
+      background: #fafafa;
+    }
+
+    .fold-content {
+      padding: 12px 14px;
+      border-top: 1px solid #e6e6e6;
+    }
+
+    .flow-list {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .flow-list li {
+      margin-bottom: 8px;
+    }
+
+    .prototype-zone {
+      margin: 12px 0 20px;
+      padding: 18px;
+      border: 1px dashed #c8c8c8;
+      border-radius: 6px;
+      background: #ececec;
+    }
+
+    .prototype-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .proto-page {
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .proto-page__title {
+      margin: 0;
+      padding: 8px 10px;
+      background: #f7f7f7;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 12px;
+      font-weight: 700;
+      color: #555555;
+    }
+
+    .game-wireframe {
+      min-height: 300px;
+      padding: 22px;
+      background: var(--proto-bg);
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 20px;
+      align-items: center;
+      font-size: 12px;
+      color: #111111;
+    }
+
+    .chest-track {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding-top: 34px;
+      text-align: center;
+    }
+
+    .chest-track::before {
+      content: "";
+      position: absolute;
+      top: 72px;
+      left: 16%;
+      right: 16%;
+      height: 8px;
+      background: #ffffff;
+      border-radius: 20px;
+    }
+
+    .chest-step {
+      position: relative;
+      z-index: 1;
+    }
+
+    .chest {
+      width: 64px;
+      height: 48px;
+      margin: 0 auto 8px;
+      background: var(--chest-yellow);
+      border-radius: 2px 2px 4px 4px;
+      position: relative;
+    }
+
+    .chest::before {
+      content: "";
+      position: absolute;
+      top: 18px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #f0a400;
+    }
+
+    .chest::after {
+      content: "";
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: #ffffff;
+    }
+
+    .chest.locked {
+      opacity: 0.62;
+      filter: grayscale(0.25);
+    }
+
+    .wire-btn {
+      display: inline-block;
+      min-width: 70px;
+      padding: 4px 8px;
+      border: 1px solid #6f9dff;
+      border-radius: 3px;
+      background: #ffffff;
+      color: #1677ff;
+      font-size: 11px;
+    }
+
+    .wire-btn.dark {
+      border-color: #777777;
+      color: #333333;
+    }
+
+    .subscribe-form {
+      max-width: 145px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .wire-input {
+      padding: 4px 6px;
+      background: #ffffff;
+      border: 1px solid #d6d6d6;
+      color: #888888;
+      font-size: 11px;
+    }
+
+    .wire-check {
+      margin: 4px 0;
+      font-size: 10px;
+    }
+
+    .wire-cta {
+      display: block;
+      padding: 5px 8px;
+      border-radius: 14px;
+      text-align: center;
+      background: #565656;
+      color: #ffffff;
+    }
+
+    .wire-info h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+    }
+
+    .wire-info p {
+      margin: 0 0 8px;
+      line-height: 1.45;
+    }
+
+    .wire-url {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .wire-url span:first-child {
+      flex: 1;
+      padding: 5px;
+      background: #ffffff;
+      border: 1px solid #d6d6d6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .wire-prizes {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .wire-prize {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #d8d8d8;
+      border-radius: 3px;
+      background: #ffffff;
+      color: #333333;
+    }
+
+    .modal-wireframe {
+      min-height: 300px;
+      padding: 22px;
+      background: #ededed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-card {
+      width: min(360px, 100%);
+      background: #ffffff;
+      border: 1px solid #bfbfbf;
+      border-radius: 4px;
+      padding-bottom: 14px;
+    }
+
+    .modal-head {
+      position: relative;
+      padding: 14px 34px 10px;
+      border-bottom: 1px solid #e8e8e8;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      color: #666666;
+    }
+
+    .modal-body {
+      padding: 14px 16px 0;
+      font-size: 12px;
+    }
+
+    .coupon-card {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #bfbfbf;
+    }
+
+    .coupon-thumb {
+      width: 60px;
+      height: 60px;
+      flex: 0 0 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #b8b8b8;
+      color: #ffffff;
+      font-weight: 800;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .coupon-main {
+      flex: 1;
+    }
+
+    .coupon-main p {
+      margin: 0 0 8px;
+    }
+
+    .code {
+      color: var(--tag-orange);
+      font-weight: 700;
+    }
+
+    code {
+      padding: 2px 4px;
+      border-radius: 3px;
+      background: #f0f0f0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    @media (max-width: 980px) {
+      .two-col,
+      .three-col,
+      .prototype-grid,
+      .game-wireframe {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 0;
+      }
+
+      .top-bar {
+        position: static;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        flex: none;
+        max-width: none;
+        width: 100%;
+      }
+
+      .toc {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 12px;
+      }
+
+      .toc a {
+        flex: 1 1 auto;
+        min-width: 120px;
+        text-align: center;
+        border-left: none;
+        border-radius: 6px;
+      }
+
+      .toc a.active {
+        border-left: none;
+      }
+
+      .main {
+        padding: 16px;
+      }
+
+      .card {
+        padding: 18px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="top-bar__title">互动解锁宝箱营销游戏 产品需求文档 PRD</div>
+    <div class="top-bar__meta">版本 V1.0 · 适用端：电商官网促销页 · 日期：2026-05-20</div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="toc" id="side-nav" aria-label="文档章节">
+        <a href="#section-overview" class="active">需求概述</a>
+        <a href="#section-background">项目背景</a>
+        <a href="#section-current">当前逻辑说明</a>
+        <a href="#section-requirement">需求逻辑说明</a>
+        <a href="#section-rules">业务规则</a>
+        <a href="#section-flow">流程说明</a>
+        <a href="#section-test">测试用例场景</a>
+        <a href="#section-risk">风险评估</a>
+      </nav>
+    </aside>
+
+    <main class="main" id="main-content">
+      <section class="card" id="section-overview" tabindex="-1">
+        <h2>需求概述</h2>
+        <table class="meta-table">
+          <thead>
+            <tr>
+              <th>需求名称</th>
+              <th>所属模块</th>
+              <th>需求提出人</th>
+              <th>上线时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>互动解锁宝箱营销游戏</td>
+              <td>官网促销页 / 营销游戏活动组件 / 用户增长</td>
+              <td>市场运营 / 增长产品</td>
+              <td>待排期，建议配合大促活动上线</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="highlight">
+          本需求通过“订阅解锁首箱 + 邀请解锁后续宝箱 + 登录领取优惠券”的玩法，完成邮箱订阅、好友裂变、账号登录和优惠券转化的串联。组件需支持未订阅、待验证、已解锁、已开奖、已领取、邀请达标等状态展示。
+        </div>
+        <div class="tag-row">
+          <span class="tag tag-blue">订阅二步确认</span>
+          <span class="tag tag-green">邀请裂变</span>
+          <span class="tag tag-orange">优惠券折扣码</span>
+          <span class="tag tag-red">登录后领取</span>
+        </div>
+      </section>
+
+      <section class="card" id="section-background" tabindex="-1">
+        <h2>项目背景</h2>
+        <div class="two-col">
+          <div class="sub-block">
+            <h3>为什么做</h3>
+            <p class="body-text">
+              促销页通常具备较高流量但用户留资与复访链路不足。通过游戏化宝箱组件，将订阅、确认邮件、分享邀请、登录和领取奖励包装为连续任务，提升用户参与意愿，并为后续 EDM 触达、会员转化和优惠券使用创造条件。
+            </p>
+          </div>
+          <div class="sub-block">
+            <h3>解决什么问题</h3>
+            <p class="body-text">
+              当前促销活动多以静态优惠露出为主，缺少可驱动用户完成订阅确认和主动分享的机制。本需求希望解决订阅有效性低、邀请来源不可追踪、中奖奖励与账号绑定弱、优惠券发放后用户难以找回等问题。
+            </p>
+          </div>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>目标</th>
+              <th>衡量指标</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>提升有效订阅</td>
+              <td>订阅提交率、二步确认完成率</td>
+              <td>只有完成邮箱确认后才解锁第一个宝箱，减少无效订阅。</td>
+            </tr>
+            <tr>
+              <td>提升邀请传播</td>
+              <td>邀请链接复制率、分享点击率、有效邀请人数</td>
+              <td>第二、第三宝箱通过邀请人数门槛驱动用户分享。</td>
+            </tr>
+            <tr>
+              <td>提升奖励转化</td>
+              <td>登录领取率、折扣码复制率、优惠券核销率</td>
+              <td>领奖要求登录，领取成功后展示折扣码与有效期。</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" id="section-current" tabindex="-1">
+        <h2>当前逻辑说明</h2>
+        <div class="sub-block">
+          <h3>现有活动承接方式</h3>
+          <p class="body-text">
+            假设当前促销页已有活动区块、邮箱订阅能力、用户登录能力、优惠券发放能力和基础分享入口，但尚未形成宝箱式任务进度与邀请门槛联动。当前奖励一般直接展示或通过普通弹窗发放，缺少“确认订阅后解锁”和“邀请达标后解锁”的状态控制。
+          </p>
+        </div>
+        <div class="sub-block">
+          <h3>本期新增逻辑</h3>
+          <ul class="flow-list">
+            <li>新增营销游戏活动组件，展示三个宝箱、奖池图片、订阅区、邀请进度和活动说明。</li>
+            <li>新增订阅确认状态：未订阅、已提交待验证、已确认并解锁首箱。</li>
+            <li>新增邀请计数与门槛判断：第二个宝箱 15 人、第三个宝箱 30 人。</li>
+            <li>新增中奖、登录提示、领取成功、My prize、Rules 等弹窗状态。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card" id="section-requirement" tabindex="-1">
+        <h2>需求逻辑说明</h2>
+        <div class="sub-block">
+          <h3>需求原型设计</h3>
+          <div class="prototype-zone" role="region" aria-label="互动解锁宝箱原型区域">
+            <div class="prototype-grid">
+              <div class="proto-page">
+                <p class="proto-page__title">页面状态 1：未订阅 / 待引导订阅</p>
+                <div class="game-wireframe">
+                  <div>
+                    <div class="chest-track">
+                      <div class="chest-step">
+                        <div class="chest" aria-hidden="true"></div>
+                        <div class="subscribe-form">
+                          <div class="wire-input">Enter Email</div>
+                          <div class="wire-check">✓ 同意订阅店铺邮件</div>
+                          <span class="wire-cta">订阅</span>
+                        </div>
+                      </div>
+                      <div class="chest-step">
+                        <div class="chest locked" aria-hidden="true"></div>
+                        <span class="wire-btn">解锁宝箱</span>
+                        <div>邀请 0/15</div>
+                      </div>
+                      <div class="chest-step">
+                        <div class="chest locked" aria-hidden="true"></div>
+                        <span class="wire-btn">解锁宝箱</span>
+                        <div>邀请 0/30</div>
+                      </div>
+                    </div>
+                    <div class="wire-prizes">
+                      <div class="wire-prize">奖池图片</div>
+                      <div class="wire-prize">奖池图片</div>
+                      <div class="wire-prize">奖池图片</div>
+                    </div>
+                  </div>
+                  <div class="wire-info">
+                    <h4>请解锁第一个宝箱</h4>
+                    <p>完成邮箱订阅并在邮件中进行二步确认，即可解锁第一个宝箱。</p>
+                    <p>首个宝箱可直接打开，中奖后需要登录账号再领取奖励。</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="proto-page">
+                <p class="proto-page__title">页面状态 2：订阅成功 / 邀请解锁中</p>
+                <div class="game-wireframe">
+                  <div>
+                    <div class="chest-track">
+                      <div class="chest-step">
+                        <div class="chest" aria-hidden="true"></div>
+                        <span class="wire-btn dark">你已打开</span>
+                      </div>
+                      <div class="chest-step">
+                        <div class="chest" aria-hidden="true"></div>
+                        <span class="wire-btn">打开宝箱</span>
+                        <div>邀请 15/15</div>
+                      </div>
+                      <div class="chest-step">
+                        <div class="chest locked" aria-hidden="true"></div>
+                        <span class="wire-btn">解锁宝箱</span>
+                        <div>邀请 15/30</div>
+                      </div>
+                    </div>
+                    <div class="wire-prizes">
+                      <div class="wire-prize">奖池图片</div>
+                      <div class="wire-prize">奖池图片</div>
+                      <div class="wire-prize">奖池图片</div>
+                    </div>
+                  </div>
+                  <div class="wire-info">
+                    <h4>继续邀请好友，解锁第三个宝箱</h4>
+                    <p>好友完成订阅确认并解锁宝箱后，邀请人数 +1。</p>
+                    <p>My invitation link</p>
+                    <div class="wire-url">
+                      <span>https://us.govee.com/XXXXXX</span>
+                      <span class="wire-btn">Copy</span>
+                    </div>
+                    <p>Social to invitation：f / X / pin / red</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="proto-page">
+                <p class="proto-page__title">弹窗状态 1：中奖后待登录领取</p>
+                <div class="modal-wireframe">
+                  <div class="modal-card">
+                    <div class="modal-head">
+                      <span class="modal-close">×</span>
+                      恭喜中奖
+                    </div>
+                    <div class="modal-body">
+                      <p>你已打开宝箱，获得 50% OFF 优惠券。</p>
+                      <div class="coupon-card">
+                        <div class="coupon-thumb">50%<br />OFF</div>
+                        <div class="coupon-main">
+                          <p>50% OFF Coupon · 领取后显示折扣码</p>
+                          <span class="wire-btn">立即领取</span>
+                        </div>
+                      </div>
+                      <p class="muted">领取奖品前需要登录账号。</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="proto-page">
+                <p class="proto-page__title">弹窗状态 2：领取成功 / 显示折扣码</p>
+                <div class="modal-wireframe">
+                  <div class="modal-card">
+                    <div class="modal-head">
+                      <span class="modal-close">×</span>
+                      领取成功
+                    </div>
+                    <div class="modal-body">
+                      <p>优惠券已放入你的奖励列表，请在有效期内使用。</p>
+                      <div class="coupon-card">
+                        <div class="coupon-thumb">50%<br />OFF</div>
+                        <div class="coupon-main">
+                          <p>50% OFF Coupon</p>
+                          <p class="muted">Ends in 3d 3h 45m 12s</p>
+                          <p class="code">CODE: CHEST50 <span class="wire-btn">Copy</span></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-block">
+          <h3>核心功能</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>功能</th>
+                <th>需求说明</th>
+                <th>验收标准</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>邮箱订阅</td>
+                <td>用户输入邮箱并勾选订阅授权后提交订阅。提交成功后进入“已提交，待验证”状态。</td>
+                <td>邮箱格式校验、授权勾选校验、提交成功提示均可正常展示。</td>
+              </tr>
+              <tr>
+                <td>二步确认解锁</td>
+                <td>用户完成邮件二步确认后，第一个宝箱由锁定状态变为可打开状态。</td>
+                <td>未确认前不可打开；确认后可打开并弹出中奖弹窗。</td>
+              </tr>
+              <tr>
+                <td>宝箱开奖</td>
+                <td>用户打开已解锁宝箱后，系统根据奖池发放奖励并展示中奖弹窗。</td>
+                <td>同一宝箱仅可开奖一次；开奖后主组件显示“你已打开”。</td>
+              </tr>
+              <tr>
+                <td>登录领取</td>
+                <td>未登录用户点击“立即领取”时展示登录提示；登录后继续领取当前奖励。</td>
+                <td>登录前不可完成领取；登录成功后奖励绑定到账号。</td>
+              </tr>
+              <tr>
+                <td>折扣码展示</td>
+                <td>优惠券领取完成后，在领取成功弹窗和 My prize 中展示折扣码、Copy 按钮和有效期。</td>
+                <td>未领取状态不展示完整折扣码；已领取状态可查看与复制。</td>
+              </tr>
+              <tr>
+                <td>邀请解锁</td>
+                <td>用户获得专属邀请链接。被邀请用户完成订阅确认并解锁首箱后，邀请人数 +1。</td>
+                <td>达到 15 人解锁第二宝箱，达到 30 人解锁第三宝箱。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-block">
+          <h3>非核心功能</h3>
+          <div class="three-col">
+            <div class="mini-card">
+              <h4>分享入口</h4>
+              <p>展示复制链接、Facebook、X、Pinterest、Reddit 等入口；具体渠道可按投放地区配置。</p>
+            </div>
+            <div class="mini-card">
+              <h4>规则弹窗</h4>
+              <p>展示订阅、邀请、领奖、有效期、限制条件等活动条款，支持活动运营配置文案。</p>
+            </div>
+            <div class="mini-card">
+              <h4>奖池展示</h4>
+              <p>主组件底部展示三个奖池图片占位，用于表达不同宝箱可能获得的奖励范围。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-block">
+          <h3>不做的功能</h3>
+          <ul class="flow-list">
+            <li>本期不支持用户自定义邀请文案，仅提供固定分享文案和链接。</li>
+            <li>本期不做复杂小游戏交互动画，宝箱开启以按钮状态和弹窗反馈为主。</li>
+            <li>本期不支持用户手动选择奖品，奖励由活动奖池规则决定。</li>
+            <li>本期不支持跨活动累计邀请人数，每个活动独立统计。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card" id="section-rules" tabindex="-1">
+        <h2>业务规则</h2>
+        <details class="fold" open>
+          <summary>宝箱状态规则</summary>
+          <div class="fold-content">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>宝箱</th>
+                  <th>解锁条件</th>
+                  <th>打开条件</th>
+                  <th>状态文案</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>第一个宝箱</td>
+                  <td>用户完成邮箱订阅二步确认</td>
+                  <td>订阅确认成功且未打开</td>
+                  <td>未订阅：订阅；待确认：Check your email；已解锁：打开宝箱；已打开：你已打开</td>
+                </tr>
+                <tr>
+                  <td>第二个宝箱</td>
+                  <td>有效邀请人数达到 15 人</td>
+                  <td>邀请人数 ≥ 15 且未打开</td>
+                  <td>未达标：解锁宝箱 + 邀请 N/15；已达标：打开宝箱；已打开：你已打开</td>
+                </tr>
+                <tr>
+                  <td>第三个宝箱</td>
+                  <td>有效邀请人数达到 30 人</td>
+                  <td>邀请人数 ≥ 30 且未打开</td>
+                  <td>未达标：解锁宝箱 + 邀请 N/30；已达标：打开宝箱；已打开：你已打开</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="fold" open>
+          <summary>有效邀请计数规则</summary>
+          <div class="fold-content">
+            <ul class="flow-list">
+              <li>邀请链接需带活动 ID、邀请人用户 ID 或匿名订阅 ID、渠道参数和防篡改签名。</li>
+              <li>被邀请用户通过链接进入活动页后，完成邮箱订阅二步确认并解锁第一个宝箱，才计为有效邀请。</li>
+              <li>同一被邀请用户、同一邮箱、同一账号在同一活动内只计数一次。</li>
+              <li>邀请人数达到门槛后，系统需实时或准实时刷新宝箱状态；若无法实时刷新，页面刷新后必须正确展示。</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="fold" open>
+          <summary>奖品与优惠券规则</summary>
+          <div class="fold-content">
+            <ul class="flow-list">
+              <li>奖励类型包括优惠券和实物奖品；优惠券需支持未领取、已领取、已过期状态。</li>
+              <li>未领取优惠券不展示完整折扣码，领取成功后展示折扣码、Copy 按钮和有效期倒计时。</li>
+              <li>实物奖品领取后需进入后续兑奖或收货信息流程；本期原型仅展示领取入口和状态。</li>
+              <li>优惠券库存不足、活动结束或用户不满足资格时，应展示明确异常提示，不得扣减用户宝箱开启机会。</li>
+            </ul>
+          </div>
+        </details>
+      </section>
+
+      <section class="card" id="section-flow" tabindex="-1">
+        <h2>流程说明</h2>
+        <div class="sub-block">
+          <h3>主流程</h3>
+          <ol class="flow-list">
+            <li>用户进入促销页，看到互动解锁宝箱组件，默认展示未订阅状态。</li>
+            <li>用户输入邮箱，勾选订阅授权，点击订阅。</li>
+            <li>系统提交订阅请求并提示用户前往邮箱完成确认。</li>
+            <li>用户完成邮件二步确认后回到页面，第一个宝箱解锁。</li>
+            <li>用户点击打开第一个宝箱，系统展示中奖弹窗。</li>
+            <li>用户点击立即领取；若未登录，先展示登录提示，登录后继续领取。</li>
+            <li>领取完成后，弹窗和 My prize 展示优惠券折扣码、Copy 按钮和有效期。</li>
+            <li>用户复制邀请链接或通过社媒分享。被邀请用户完成有效动作后，邀请人数增加。</li>
+            <li>邀请人数达到 15/30 时，第二/第三宝箱解锁，用户可继续打开并领奖。</li>
+          </ol>
+        </div>
+
+        <div class="two-col">
+          <div class="sub-block">
+            <h3>分支流程</h3>
+            <ul class="flow-list">
+              <li>已订阅且已确认用户进入页面：直接展示首箱已解锁或已打开状态。</li>
+              <li>已登录用户领取奖励：跳过登录提示，直接完成领取并展示折扣码。</li>
+              <li>用户重复进入活动页：根据服务端记录恢复宝箱、邀请人数和奖励状态。</li>
+              <li>邀请人数超过门槛：按最高达成门槛展示，例如 30/30 时第二和第三宝箱均可解锁。</li>
+            </ul>
+          </div>
+          <div class="sub-block">
+            <h3>异常流程</h3>
+            <ul class="flow-list">
+              <li>邮箱格式错误：订阅按钮下方展示格式错误提示，不能提交。</li>
+              <li>未勾选授权：提示用户同意订阅与活动规则后再提交。</li>
+              <li>订阅接口失败：保留用户输入并提示稍后重试。</li>
+              <li>登录失败或取消：保持奖励未领取状态，可从 My prize 再次领取。</li>
+              <li>优惠券发放失败：提示领取失败并允许重试，不改变宝箱已中奖记录。</li>
+              <li>邀请数据延迟：展示最近更新时间或刷新提示，避免用户误解。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="section-test" tabindex="-1">
+        <h2>测试用例场景</h2>
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>测试功能点标题</th>
+              <th>前置条件</th>
+              <th>测试步骤</th>
+              <th>预期结果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>未订阅用户提交订阅</td>
+              <td>用户未订阅、未登录，活动进行中</td>
+              <td>进入活动页，输入合法邮箱，勾选授权，点击订阅</td>
+              <td>订阅提交成功，页面进入“已提交，待验证”状态，并提示检查邮箱确认邮件</td>
+            </tr>
+            <tr>
+              <td>邮箱二步确认解锁首箱</td>
+              <td>用户已提交订阅但未确认</td>
+              <td>完成邮件确认后回到活动页或刷新页面</td>
+              <td>第一个宝箱展示“打开宝箱”，第二和第三宝箱保持邀请进度锁定</td>
+            </tr>
+            <tr>
+              <td>打开第一个宝箱中奖</td>
+              <td>首箱已解锁且未打开</td>
+              <td>点击打开第一个宝箱</td>
+              <td>展示中奖弹窗；关闭后主组件首箱状态变为“你已打开”</td>
+            </tr>
+            <tr>
+              <td>未登录领取奖励</td>
+              <td>用户未登录，已中奖未领取</td>
+              <td>在中奖弹窗点击立即领取</td>
+              <td>展示登录提示弹窗；未登录时奖励仍为未领取状态</td>
+            </tr>
+            <tr>
+              <td>登录后领取优惠券</td>
+              <td>用户已登录，存在未领取优惠券</td>
+              <td>点击立即领取并等待发券成功</td>
+              <td>展示领取成功弹窗，出现折扣码、Copy 按钮和有效期；My prize 状态为已领取</td>
+            </tr>
+            <tr>
+              <td>邀请人数未达标</td>
+              <td>有效邀请人数小于 15</td>
+              <td>查看第二、第三宝箱状态</td>
+              <td>第二宝箱展示“解锁宝箱”和邀请 N/15；第三宝箱展示邀请 N/30，均不可打开</td>
+            </tr>
+            <tr>
+              <td>邀请 15 人解锁第二宝箱</td>
+              <td>有效邀请人数从 14 增至 15</td>
+              <td>刷新活动页或等待状态同步</td>
+              <td>第二宝箱展示“打开宝箱”，第三宝箱展示邀请 15/30</td>
+            </tr>
+            <tr>
+              <td>邀请 30 人解锁第三宝箱</td>
+              <td>有效邀请人数达到 30</td>
+              <td>查看宝箱状态并点击第三宝箱</td>
+              <td>第三宝箱可打开并展示中奖弹窗；邀请进度显示 30/30</td>
+            </tr>
+            <tr>
+              <td>My prize 列表查看</td>
+              <td>用户存在未领取、已领取、已过期奖励</td>
+              <td>点击 My prize 入口</td>
+              <td>弹窗展示不同奖励卡片与状态标签；已领取优惠券展示折扣码，未领取不展示完整码</td>
+            </tr>
+            <tr>
+              <td>活动规则查看</td>
+              <td>活动页正常加载</td>
+              <td>点击 Rules 入口</td>
+              <td>展示规则弹窗，包含订阅确认、邀请计数、领取登录、有效期和门槛说明</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" id="section-risk" tabindex="-1">
+        <h2>风险评估</h2>
+        <div class="sub-block">
+          <h3>依赖项</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>依赖模块</th>
+                <th>依赖内容</th>
+                <th>责任方</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>订阅系统</td>
+                <td>邮箱订阅提交、二步确认状态回传、重复订阅识别</td>
+                <td>会员/CRM/EDM 团队</td>
+              </tr>
+              <tr>
+                <td>账号系统</td>
+                <td>登录态识别、登录弹窗或跳转、登录后回到领奖流程</td>
+                <td>账号团队</td>
+              </tr>
+              <tr>
+                <td>优惠券系统</td>
+                <td>发券、库存校验、折扣码生成、有效期、核销限制</td>
+                <td>交易/营销工具团队</td>
+              </tr>
+              <tr>
+                <td>邀请归因</td>
+                <td>邀请链接生成、防作弊、被邀请人有效动作识别、计数同步</td>
+                <td>增长/数据平台团队</td>
+              </tr>
+              <tr>
+                <td>活动配置后台</td>
+                <td>活动时间、奖池、门槛、规则文案、渠道配置</td>
+                <td>运营后台团队</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-block">
+          <h3>风险点与应对预案</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>风险点</th>
+                <th>影响</th>
+                <th>应对预案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>订阅确认状态延迟</td>
+                <td>用户完成邮箱确认后无法立即打开首箱，影响体验</td>
+                <td>提供刷新提示；服务端确认状态需支持准实时查询；前端定时短轮询可作为备选</td>
+              </tr>
+              <tr>
+                <td>邀请作弊或重复计数</td>
+                <td>奖励成本失控，数据失真</td>
+                <td>基于邮箱、账号、设备、IP、活动 ID 去重；异常邀请进入风控审核或延迟生效</td>
+              </tr>
+              <tr>
+                <td>优惠券库存不足</td>
+                <td>用户中奖后无法领取，产生投诉</td>
+                <td>开奖前校验奖池库存；发券失败时保留中奖资格并提示重试；运营后台设置库存预警</td>
+              </tr>
+              <tr>
+                <td>登录流程打断领取</td>
+                <td>用户登录后丢失上下文，无法继续领取</td>
+                <td>登录前记录活动 ID、宝箱 ID、奖品 ID；登录成功后恢复弹窗或进入 My prize 待领取状态</td>
+              </tr>
+              <tr>
+                <td>活动规则合规风险</td>
+                <td>不同地区对抽奖、订阅授权、隐私政策要求不同</td>
+                <td>规则弹窗补充资格、地区、有效期、隐私和退订说明；上线前法务审核</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var nav = document.getElementById("side-nav");
+      var links = nav.querySelectorAll("a[href^='#']");
+      var ids = Array.prototype.map.call(links, function (a) {
+        return a.getAttribute("href").slice(1);
+      });
+      var sections = ids
+        .map(function (id) {
+          return document.getElementById(id);
+        })
+        .filter(Boolean);
+
+      function setActive(hash) {
+        var id = (hash && hash.replace("#", "")) || "section-overview";
+        links.forEach(function (link) {
+          var href = link.getAttribute("href").slice(1);
+          link.classList.toggle("active", href === id);
+        });
+      }
+
+      var mainEl = document.getElementById("main-content");
+
+      links.forEach(function (link) {
+        link.addEventListener("click", function (e) {
+          var id = link.getAttribute("href").slice(1);
+          var target = document.getElementById(id);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (history.replaceState) {
+            history.replaceState(null, "", "#" + id);
+          } else {
+            location.hash = id;
+          }
+          setActive(id);
+        });
+      });
+
+      function currentHashId() {
+        return (location.hash || "").replace(/^#/, "");
+      }
+
+      if ("IntersectionObserver" in window && sections.length && mainEl) {
+        var obs = new IntersectionObserver(
+          function (entries) {
+            if (!currentHashId() && mainEl.scrollTop < 32) {
+              setActive("#section-overview");
+              return;
+            }
+            var visible = entries
+              .filter(function (e) {
+                return e.isIntersecting;
+              })
+              .sort(function (a, b) {
+                return b.intersectionRatio - a.intersectionRatio;
+              })[0];
+            if (visible && visible.target.id) {
+              setActive(visible.target.id);
+            }
+          },
+          {
+            root: mainEl,
+            rootMargin: "-10% 0px -55% 0px",
+            threshold: [0, 0.25, 0.5, 1],
+          }
+        );
+        sections.forEach(function (sec) {
+          obs.observe(sec);
+        });
+      }
+
+      window.addEventListener("hashchange", function () {
+        var hid = (location.hash || "").replace("#", "");
+        if (hid) {
+          var ht = document.getElementById(hid);
+          if (ht) ht.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        setActive(location.hash || "#section-overview");
+      });
+
+      if (location.hash) {
+        var firstId = location.hash.replace("#", "");
+        var firstEl = document.getElementById(firstId);
+        if (firstEl) firstEl.scrollIntoView({ block: "start" });
+        setActive(location.hash);
+      } else {
+        setActive("#section-overview");
+        if (mainEl) mainEl.scrollTop = 0;
+      }
+    })();
+  </script>
+</body>
+</html>
