@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRD：首页画廊组件展示框架调整</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #2563eb;
+      --primary-soft: #eff6ff;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+    header {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: #fff;
+      padding: 48px 24px;
+    }
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.2;
+    }
+    .hero p {
+      margin: 0;
+      color: rgba(255, 255, 255, .86);
+      font-size: 16px;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .tag-blue { color: #1d4ed8; background: #dbeafe; }
+    .tag-green { color: #166534; background: #dcfce7; }
+    .tag-orange { color: #9a3412; background: #ffedd5; }
+    .tag-gray { color: #374151; background: #f3f4f6; }
+    nav.toc {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    nav.toc .wrap {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 16px;
+    }
+    nav.toc a {
+      flex: 0 0 auto;
+      color: #374151;
+      text-decoration: none;
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    nav.toc a:hover {
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+    main { padding: 28px 0 56px; }
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin: 20px 0;
+    }
+    h2 {
+      margin: 0 0 16px;
+      font-size: 24px;
+      line-height: 1.3;
+    }
+    h3 {
+      margin: 22px 0 10px;
+      font-size: 18px;
+    }
+    p { margin: 8px 0; }
+    ul, ol { margin: 8px 0 8px 22px; padding: 0; }
+    li { margin: 6px 0; }
+    .highlight {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-soft);
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin: 14px 0;
+    }
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .info-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fff;
+    }
+    .info-card strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 12px;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: #f9fafb;
+      font-weight: 800;
+    }
+    details.fold {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    details.fold summary {
+      cursor: pointer;
+      padding: 13px 15px;
+      font-weight: 800;
+      background: #f9fafb;
+    }
+    details.fold .fold-body {
+      padding: 14px 15px;
+      border-top: 1px solid var(--line);
+    }
+    .prototype-area {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+    .mock {
+      background: #111827;
+      padding: 14px;
+      border-radius: 20px;
+      box-shadow: 0 14px 30px rgba(17, 24, 39, .18);
+    }
+    .screen {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 560px;
+      border: 1px solid #d1d5db;
+    }
+    .mock-head {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .hero-placeholder {
+      margin: 18px;
+      height: 116px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1d4ed8;
+      font-weight: 800;
+    }
+    .content-placeholder {
+      margin: 18px;
+      height: 72px;
+      border-radius: 12px;
+      background: #f3f4f6;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+    .gallery-module {
+      margin: 18px;
+      padding: 18px;
+      border: 2px solid #2563eb;
+      border-radius: 16px;
+      background: #f8fbff;
+    }
+    .gallery-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .gallery-title strong { font-size: 18px; }
+    .gallery-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .gallery-grid {
+      column-count: 2;
+      column-gap: 12px;
+    }
+    .gallery-item {
+      display: inline-block;
+      width: 100%;
+      margin: 0 0 12px;
+      border-radius: 12px;
+      background: #e5e7eb;
+      overflow: hidden;
+      border: 1px solid #d1d5db;
+    }
+    .gallery-item .pic {
+      height: var(--h);
+      background: linear-gradient(135deg, #bfdbfe, #93c5fd);
+    }
+    .gallery-item p {
+      margin: 0;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #374151;
+      background: #fff;
+    }
+    .more-check {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .extra-items { display: none; }
+    .more-check:checked ~ .gallery-grid .extra-items { display: contents; }
+    .view-more {
+      display: block;
+      width: fit-content;
+      margin: 10px auto 0;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: #111827;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+    }
+    .more-check:checked ~ .view-more::after {
+      content: "（已展开）";
+      font-weight: 500;
+      opacity: .8;
+    }
+    .footer-placeholder {
+      margin: 18px;
+      height: 64px;
+      border-radius: 12px;
+      background: #111827;
+      color: #d1d5db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      background: #111827;
+      border-radius: 20px;
+      padding: 14px;
+    }
+    .phone {
+      width: min(320px, 100%);
+      background: #fff;
+      border-radius: 24px;
+      min-height: 620px;
+      overflow: hidden;
+      border: 1px solid #d1d5db;
+    }
+    .phone .mock-head {
+      height: 52px;
+      border-radius: 24px 24px 0 0;
+    }
+    .phone .gallery-module {
+      margin: 14px;
+      padding: 14px;
+    }
+    .phone .gallery-grid {
+      column-count: 2;
+      column-gap: 10px;
+    }
+    .flow {
+      display: grid;
+      gap: 10px;
+    }
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+    code {
+      background: #f3f4f6;
+      padding: 2px 5px;
+      border-radius: 6px;
+      color: #111827;
+    }
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .prototype-area {
+        grid-template-columns: 1fr;
+      }
+      section.card { padding: 18px; }
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <h1>PRD：首页画廊组件展示框架调整</h1>
+      <p>将网站首页画廊组件调整为底部模块展示，默认展示 8 款内容，采用一行 2 个瀑布流布局，并通过 View More / Load More 向下展开查看更多内容。</p>
+      <div class="meta">
+        <span class="tag tag-blue">所属模块：首页 / Gallery</span>
+        <span class="tag tag-green">上线时间：2026-06-08</span>
+        <span class="tag tag-orange">优先级：P1</span>
+        <span class="tag tag-gray">交互逻辑：除展示框架外保持不变</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="wrap">
+      <a href="#overview">需求概述</a>
+      <a href="#background">项目背景</a>
+      <a href="#current">当前逻辑</a>
+      <a href="#logic">需求逻辑</a>
+      <a href="#prototype">原型设计</a>
+      <a href="#flow">流程说明</a>
+      <a href="#test">测试用例</a>
+      <a href="#risk">风险评估</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section id="overview" class="card">
+      <h2>1. 需求概述</h2>
+      <div class="grid grid-2">
+        <div class="info-card"><strong>需求名称</strong>首页画廊组件展示框架调整</div>
+        <div class="info-card"><strong>所属模块</strong>网站首页 / 画廊组件 / Gallery Feed</div>
+        <div class="info-card"><strong>需求提出人</strong>业务侧 / 首页运营</div>
+        <div class="info-card"><strong>计划上线时间</strong>2026 年 6 月 8 日</div>
+      </div>
+      <div class="highlight">本次需求仅调整首页画廊组件的展示位置、默认展示数量、排列样式与查看更多入口。图片点击、跳转、埋点、加载数据源、排序规则、权限与异常处理等原有交互逻辑保持不变。</div>
+      <table>
+        <thead>
+          <tr><th>需求项</th><th>目标规则</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>展示位置</td><td>放置在首页底部区域</td><td>位于首页主体内容之后、Footer 之前，向下展开不影响上方内容结构。</td></tr>
+          <tr><td>默认展示</td><td>默认展示 8 款</td><td>进入首页后首屏展示该模块时，最多直接露出 8 个画廊内容项。</td></tr>
+          <tr><td>排列方式</td><td>一行 2 个，瀑布流</td><td>按两列展示，图片高度允许不同，内容自上而下填充。</td></tr>
+          <tr><td>查看更多</td><td>View More / Load More</td><td>按钮居中展示，点击后沿页面向下加载或展开更多内容。</td></tr>
+          <tr><td>保留逻辑</td><td>其他交互逻辑保持不变</td><td>包括跳转、hover、收藏、曝光、点击埋点、数据接口和排序规则等现有能力。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="background" class="card">
+      <h2>2. 项目背景</h2>
+      <p>当前首页画廊组件需要优化信息呈现密度与用户浏览路径。业务侧希望在首页底部增加更明确的内容承接区域，让用户在完成首页主要信息浏览后，可以继续查看更多画廊内容，从而提升内容曝光、点击深度与页面停留时间。</p>
+      <p>本次调整参考手绘框架：外层为首页底部模块容器，内部默认展示 4 组双列内容卡片，即 8 款内容，下方提供居中的 View More 入口。用户点击后继续向下展开更多内容。</p>
+      <div class="grid grid-3">
+        <div class="info-card"><strong>用户价值</strong>降低用户寻找更多内容的成本，默认露出更多画廊内容。</div>
+        <div class="info-card"><strong>业务价值</strong>提升首页底部区域利用率、画廊内容曝光与点击转化。</div>
+        <div class="info-card"><strong>研发价值</strong>在保留既有交互和数据逻辑基础上完成展示层调整，控制改动范围。</div>
+      </div>
+    </section>
+
+    <section id="current" class="card">
+      <h2>3. 当前逻辑说明</h2>
+      <table>
+        <thead>
+          <tr><th>模块</th><th>当前逻辑</th><th>本次是否调整</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>数据来源</td><td>沿用现有画廊组件数据源与接口返回字段。</td><td><span class="tag tag-gray">不调整</span></td></tr>
+          <tr><td>排序规则</td><td>沿用现有排序规则，如运营配置、接口排序或默认发布时间排序。</td><td><span class="tag tag-gray">不调整</span></td></tr>
+          <tr><td>图片点击</td><td>点击图片或内容卡片后进入原有详情页、专题页或目标链接。</td><td><span class="tag tag-gray">不调整</span></td></tr>
+          <tr><td>埋点统计</td><td>保留原有曝光、点击、加载更多等埋点事件。</td><td><span class="tag tag-orange">仅需校验参数</span></td></tr>
+          <tr><td>展示框架</td><td>当前展示数量、位置和排列方式不满足新框架要求。</td><td><span class="tag tag-blue">本次调整</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="logic" class="card">
+      <h2>4. 需求逻辑说明</h2>
+      <h3>4.1 核心功能</h3>
+      <table>
+        <thead>
+          <tr><th>功能点</th><th>需求描述</th><th>验收标准</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>首页底部展示</td><td>画廊组件放置在首页底部，位于 Footer 之前。</td><td>访问首页时，用户向下浏览可在底部看到完整画廊模块。</td></tr>
+          <tr><td>默认展示 8 款</td><td>模块初始化时最多展示 8 个画廊内容项。</td><td>数据量大于等于 8 时展示 8 个；少于 8 时展示实际数量。</td></tr>
+          <tr><td>双列瀑布流</td><td>内容卡片采用 2 列瀑布流布局，图片高度可不同。</td><td>桌面端和移动端均保持一行 2 个内容项，卡片间距一致，不重叠。</td></tr>
+          <tr><td>查看更多入口</td><td>默认内容下方展示 View More / Load More 按钮。</td><td>当存在超过 8 个内容项时展示按钮；无更多内容时隐藏按钮。</td></tr>
+          <tr><td>向下展开</td><td>点击 View More 后，在当前模块下方继续加载更多内容。</td><td>新内容追加到原列表下方，不跳页、不打断当前页面浏览状态。</td></tr>
+        </tbody>
+      </table>
+      <h3>4.2 非核心功能</h3>
+      <ul>
+        <li>模块标题、按钮文案可沿用现有多语言配置；英文环境建议使用 <code>View More</code>，如当前站点已使用 <code>Load More</code>，则保持现有文案。</li>
+        <li>内容卡片标题、标签、价格、描述等字段展示规则保持现有配置，不因本次需求新增字段。</li>
+        <li>图片懒加载、占位图、加载失败兜底图沿用现有全站或组件策略。</li>
+      </ul>
+      <h3>4.3 不做的功能</h3>
+      <ul>
+        <li>不新增画廊内容详情页。</li>
+        <li>不调整画廊内容的数据筛选、排序、推荐算法。</li>
+        <li>不新增收藏、分享、评论等交互。</li>
+        <li>不改变首页其他模块的位置、样式和业务逻辑。</li>
+        <li>不改变 Footer 展示和站点导航结构。</li>
+      </ul>
+      <h3>4.4 规则细节</h3>
+      <table>
+        <thead>
+          <tr><th>场景</th><th>规则</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>数据量为 0</td><td>画廊模块不展示，避免首页底部出现空白容器。</td></tr>
+          <tr><td>数据量 1-7</td><td>展示实际数量，不展示 View More / Load More 按钮。</td></tr>
+          <tr><td>数据量等于 8</td><td>展示 8 个内容项，不展示 View More / Load More 按钮。</td></tr>
+          <tr><td>数据量大于 8</td><td>默认展示前 8 个内容项，并展示 View More / Load More 按钮。</td></tr>
+          <tr><td>点击查看更多</td><td>按现有分页或加载更多规则继续追加内容；若加载完成后无更多内容，则隐藏或置灰按钮。</td></tr>
+          <tr><td>加载失败</td><td>保留当前已展示内容，按钮恢复可点击状态，并按现有错误提示策略提示用户。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="prototype" class="card">
+      <h2>5. 需求原型设计</h2>
+      <p>以下为首页底部画廊组件调整后的展示框架示意。原型内 View More 使用纯 CSS 模拟展开，用于表达默认 8 款与向下展开的目标效果。</p>
+      <div class="prototype-area">
+        <div class="mock">
+          <div class="screen">
+            <div class="mock-head"><span>Desktop Home</span><span>Header / Nav</span></div>
+            <div class="hero-placeholder">首页首屏 Banner / 主内容</div>
+            <div class="content-placeholder">首页其他运营模块</div>
+            <div class="content-placeholder">首页中部内容区</div>
+            <div class="gallery-module">
+              <div class="gallery-title"><strong>Gallery</strong><span>首页底部 / Footer 之前</span></div>
+              <input id="desktopMore" class="more-check" type="checkbox" />
+              <div class="gallery-grid">
+                <div class="gallery-item"><div class="pic" style="--h:118px"></div><p>Gallery Item 01</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:154px"></div><p>Gallery Item 02</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:140px"></div><p>Gallery Item 03</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:108px"></div><p>Gallery Item 04</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:128px"></div><p>Gallery Item 05</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:150px"></div><p>Gallery Item 06</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:112px"></div><p>Gallery Item 07</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:136px"></div><p>Gallery Item 08</p></div>
+                <div class="extra-items">
+                  <div class="gallery-item"><div class="pic" style="--h:146px"></div><p>Gallery Item 09</p></div>
+                  <div class="gallery-item"><div class="pic" style="--h:116px"></div><p>Gallery Item 10</p></div>
+                  <div class="gallery-item"><div class="pic" style="--h:132px"></div><p>Gallery Item 11</p></div>
+                  <div class="gallery-item"><div class="pic" style="--h:158px"></div><p>Gallery Item 12</p></div>
+                </div>
+              </div>
+              <label class="view-more" for="desktopMore">View More</label>
+            </div>
+            <div class="footer-placeholder">Footer</div>
+          </div>
+        </div>
+        <div class="phone-wrap">
+          <div class="phone">
+            <div class="mock-head"><span>Mobile Home</span><span>Menu</span></div>
+            <div class="hero-placeholder">首页 Banner</div>
+            <div class="content-placeholder">其他模块</div>
+            <div class="gallery-module">
+              <div class="gallery-title"><strong>Gallery</strong><span>2 columns</span></div>
+              <input id="mobileMore" class="more-check" type="checkbox" />
+              <div class="gallery-grid">
+                <div class="gallery-item"><div class="pic" style="--h:96px"></div><p>Item 01</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:128px"></div><p>Item 02</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:116px"></div><p>Item 03</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:92px"></div><p>Item 04</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:104px"></div><p>Item 05</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:126px"></div><p>Item 06</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:98px"></div><p>Item 07</p></div>
+                <div class="gallery-item"><div class="pic" style="--h:112px"></div><p>Item 08</p></div>
+                <div class="extra-items">
+                  <div class="gallery-item"><div class="pic" style="--h:122px"></div><p>Item 09</p></div>
+                  <div class="gallery-item"><div class="pic" style="--h:100px"></div><p>Item 10</p></div>
+                </div>
+              </div>
+              <label class="view-more" for="mobileMore">View More</label>
+            </div>
+            <div class="footer-placeholder">Footer</div>
+          </div>
+        </div>
+      </div>
+      <details class="fold" open>
+        <summary>原型关键标注</summary>
+        <div class="fold-body">
+          <ul>
+            <li>画廊组件外层容器放置在首页底部，视觉上与 Footer 保持明确间距。</li>
+            <li>默认仅展示 8 个内容项，形成 2 列瀑布流布局。</li>
+            <li>View More 按钮位于内容列表底部居中位置。</li>
+            <li>点击 View More 后，更多内容在原有 8 个内容项下方继续追加。</li>
+            <li>桌面端与移动端均按“一行 2 个”展示，不改为单列。</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <section id="flow" class="card">
+      <h2>6. 主流程、分支流程、异常流程</h2>
+      <h3>6.1 主流程</h3>
+      <div class="flow">
+        <div class="step">1. 用户进入网站首页。</div>
+        <div class="step">2. 页面按现有逻辑加载首页各模块与画廊组件数据。</div>
+        <div class="step">3. 用户向下浏览至首页底部，在 Footer 前看到画廊组件。</div>
+        <div class="step">4. 画廊组件默认展示前 8 个内容项，布局为一行 2 个瀑布流。</div>
+        <div class="step">5. 若存在更多内容，用户点击 View More / Load More。</div>
+        <div class="step">6. 系统在当前列表下方追加更多画廊内容，其他交互逻辑保持不变。</div>
+      </div>
+      <h3>6.2 分支流程</h3>
+      <table>
+        <thead>
+          <tr><th>分支</th><th>处理逻辑</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>内容不足 8 个</td><td>展示实际内容数量，不补空卡片，不展示查看更多按钮。</td></tr>
+          <tr><td>无更多内容</td><td>默认展示内容后不出现查看更多按钮，或加载到最后一页后隐藏按钮。</td></tr>
+          <tr><td>多语言环境</td><td>按钮文案按现有站点多语言配置展示，英文优先使用 View More。</td></tr>
+          <tr><td>点击内容卡片</td><td>按现有逻辑跳转到详情页、专题页或目标链接。</td></tr>
+        </tbody>
+      </table>
+      <h3>6.3 异常流程</h3>
+      <table>
+        <thead>
+          <tr><th>异常场景</th><th>系统处理</th><th>用户感知</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>画廊接口失败</td><td>不渲染空模块或按现有组件兜底策略展示。</td><td>首页其他模块正常可用。</td></tr>
+          <tr><td>加载更多失败</td><td>保留已展示内容，按钮恢复可点击，保留原有错误提示策略。</td><td>用户可重新点击加载。</td></tr>
+          <tr><td>图片加载失败</td><td>使用现有默认占位图或错误图。</td><td>卡片结构不塌陷，仍可点击。</td></tr>
+          <tr><td>接口返回重复数据</td><td>按现有数据去重或展示策略处理，本需求不新增去重规则。</td><td>与当前线上行为一致。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="test" class="card">
+      <h2>7. 测试用例场景</h2>
+      <table>
+        <thead>
+          <tr><th>测试功能点</th><th>前置条件</th><th>测试步骤</th><th>预期结果</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>首页底部展示</td><td>首页画廊数据正常返回</td><td>打开首页并滚动至底部</td><td>Footer 前展示画廊组件，上方首页模块不受影响。</td></tr>
+          <tr><td>默认展示 8 款</td><td>接口返回大于等于 8 条数据</td><td>进入首页查看画廊模块初始状态</td><td>默认展示 8 个内容项。</td></tr>
+          <tr><td>双列瀑布流</td><td>内容图片高度不同</td><td>查看桌面端、平板端、移动端布局</td><td>均保持一行 2 个瀑布流展示，卡片无重叠、无异常空隙。</td></tr>
+          <tr><td>查看更多按钮展示</td><td>接口返回大于 8 条数据</td><td>查看默认列表底部</td><td>展示 View More / Load More 按钮。</td></tr>
+          <tr><td>查看更多按钮隐藏</td><td>接口返回小于等于 8 条数据</td><td>查看默认列表底部</td><td>不展示 View More / Load More 按钮。</td></tr>
+          <tr><td>点击加载更多</td><td>存在下一页数据</td><td>点击 View More / Load More</td><td>新内容追加在当前列表下方，页面不跳转，按钮状态符合现有逻辑。</td></tr>
+          <tr><td>点击卡片</td><td>任一内容卡片存在有效链接</td><td>点击图片或卡片区域</td><td>按原有逻辑跳转，跳转目标与上线前一致。</td></tr>
+          <tr><td>埋点校验</td><td>埋点环境可验证</td><td>触发曝光、点击、加载更多</td><td>事件正常上报，事件名与关键参数不丢失。</td></tr>
+          <tr><td>加载失败</td><td>模拟加载更多接口失败</td><td>点击 View More / Load More</td><td>已展示内容不消失，用户可重试，错误提示符合现有策略。</td></tr>
+          <tr><td>无数据场景</td><td>接口返回空数组</td><td>打开首页并查看底部</td><td>不展示空画廊模块，不影响 Footer 和其他首页模块。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="risk" class="card">
+      <h2>8. 风险评估</h2>
+      <h3>8.1 依赖项</h3>
+      <table>
+        <thead>
+          <tr><th>依赖对象</th><th>依赖内容</th><th>完成要求</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>前端研发</td><td>调整首页底部挂载位置、默认数量、双列瀑布流样式、查看更多状态。</td><td>6 月 8 日前完成开发、联调、验收。</td></tr>
+          <tr><td>后端 / CMS</td><td>确认画廊数据源可支持超过 8 条内容与分页加载。</td><td>若现有接口已支持，则无需新增接口。</td></tr>
+          <tr><td>设计</td><td>确认模块间距、按钮样式、卡片边距与视觉细节。</td><td>按现有首页视觉规范落地。</td></tr>
+          <tr><td>数据 / 埋点</td><td>校验曝光、点击、加载更多事件。</td><td>上线前完成关键事件验收。</td></tr>
+        </tbody>
+      </table>
+      <h3>8.2 风险点与预案</h3>
+      <table>
+        <thead>
+          <tr><th>风险点</th><th>影响</th><th>应对预案</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>瀑布流高度计算异常</td><td>可能出现布局错位、重叠或大面积空白。</td><td>优先使用成熟 CSS columns 或现有 Masonry 组件；覆盖多图高差测试。</td></tr>
+          <tr><td>首页底部加载内容过多</td><td>影响页面性能和首屏之后滚动体验。</td><td>默认仅展示 8 个，更多内容按现有分页懒加载策略追加。</td></tr>
+          <tr><td>移动端一行 2 个过窄</td><td>可能影响图片和文案可读性。</td><td>移动端保留 2 列但压缩文案展示，图片优先，文案超出截断。</td></tr>
+          <tr><td>按钮文案不一致</td><td>不同语言或页面出现 View More / Load More 混用。</td><td>上线前确认当前站点语言包；若已有统一文案，沿用现有配置。</td></tr>
+          <tr><td>上线时间紧</td><td>6 月 8 日上线窗口较近，联调和回归时间有限。</td><td>严格控制范围，仅调整展示框架；不引入新接口、新字段和新复杂交互。</td></tr>
+        </tbody>
+      </table>
+      <details class="fold" open>
+        <summary>上线验收清单</summary>
+        <div class="fold-body">
+          <ul>
+            <li>首页底部 Footer 前展示画廊组件。</li>
+            <li>默认展示 8 款内容。</li>
+            <li>布局为一行 2 个瀑布流。</li>
+            <li>存在更多内容时展示 View More / Load More。</li>
+            <li>点击后向下追加更多内容。</li>
+            <li>原有卡片点击、跳转、曝光、加载更多埋点保持可用。</li>
+            <li>桌面端、平板端、移动端展示正常。</li>
+            <li>无数据、少于 8 条、等于 8 条、大于 8 条均符合规则。</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+  </main>
+</body>
+</html>
