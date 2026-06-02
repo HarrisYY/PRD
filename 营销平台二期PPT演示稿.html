@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>营销平台二期 - PPT演示稿</title>
+  <style>
+    :root {
+      --blue: #2563eb;
+      --blue-dark: #1e40af;
+      --cyan: #14b8a6;
+      --purple: #7c3aed;
+      --orange: #f97316;
+      --red: #ef4444;
+      --slate: #0f172a;
+      --muted: #64748b;
+      --line: #dbe3ef;
+      --card: rgba(255, 255, 255, 0.9);
+      --bg: #eef2f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      padding: 28px 0;
+      display: grid;
+      gap: 28px;
+      justify-content: center;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: var(--slate);
+      background: var(--bg);
+    }
+
+    .slide {
+      position: relative;
+      width: 1280px;
+      height: 720px;
+      overflow: hidden;
+      padding: 48px 64px 44px;
+      background:
+        radial-gradient(circle at 88% 12%, rgba(37, 99, 235, 0.12), transparent 30%),
+        radial-gradient(circle at 10% 92%, rgba(20, 184, 166, 0.1), transparent 30%),
+        linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: 0 28px 80px rgba(15, 23, 42, 0.18);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 8px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan), var(--orange));
+    }
+
+    .cover {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      gap: 54px;
+      padding: 72px 76px 58px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--blue);
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 18px;
+      font-size: 56px;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+    }
+
+    .cover-subtitle {
+      margin-bottom: 36px;
+      max-width: 570px;
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1.7;
+    }
+
+    .cover-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .cover-tag {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: var(--blue-dark);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .hero-card {
+      position: relative;
+      padding: 34px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: var(--card);
+      box-shadow: 0 22px 46px rgba(15, 23, 42, 0.1);
+    }
+
+    .hero-card h2 {
+      margin-bottom: 24px;
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .metric {
+      min-height: 118px;
+      padding: 20px;
+      border-radius: 22px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 34px;
+      line-height: 1;
+      color: var(--blue);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 36px;
+      margin-bottom: 28px;
+    }
+
+    .slide-title {
+      margin-bottom: 8px;
+      font-size: 36px;
+      line-height: 1.16;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .slide-desc {
+      margin: 0;
+      max-width: 470px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      text-align: right;
+    }
+
+    .section-label {
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .pillar {
+      min-height: 500px;
+      padding: 24px 22px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--card);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+    }
+
+    .pillar-icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      margin-bottom: 18px;
+      border-radius: 16px;
+      background: var(--tone, #eff6ff);
+      color: var(--accent, var(--blue));
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .pillar h3 {
+      margin-bottom: 12px;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .pillar p {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .chip-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .chip {
+      padding: 11px 13px;
+      border: 1px solid #d7dee9;
+      border-radius: 12px;
+      background: #f8fafc;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .panel {
+      min-height: 500px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--card);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .panel-title::before {
+      content: "";
+      width: 10px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--accent, var(--blue));
+    }
+
+    .level-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .level-card {
+      position: relative;
+      padding: 18px 20px 18px 74px;
+      border: 1px solid #d7dee9;
+      border-radius: 18px;
+      background: #f8fafc;
+    }
+
+    .level-no {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: var(--accent, var(--blue));
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .level-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    .level-card span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .rule-flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .rule-step {
+      padding: 13px 10px;
+      border-radius: 14px;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .tag-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid #d7dee9;
+    }
+
+    .tag-card + .tag-card {
+      margin-top: 14px;
+    }
+
+    .tag-card strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag-token {
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .activity-card {
+      min-height: 178px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--card);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.07);
+    }
+
+    .activity-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent, var(--blue));
+      box-shadow: 0 0 0 6px var(--tone, #eff6ff);
+    }
+
+    .activity-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .scenario-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 22px;
+    }
+
+    .screen-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .screen-card {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      min-height: 112px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.07);
+    }
+
+    .screen-name {
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: var(--accent, var(--blue));
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .screen-card p {
+      display: grid;
+      align-content: center;
+      margin: 0;
+      padding: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .journey {
+      min-height: 490px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--card);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+    }
+
+    .journey-line {
+      display: grid;
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .journey-step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .journey-index {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: #eff6ff;
+      color: var(--blue-dark);
+      font-weight: 900;
+    }
+
+    .journey-step strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 17px;
+    }
+
+    .journey-step span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .risk-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .risk-item {
+      min-height: 178px;
+      padding: 22px;
+      border: 1px solid rgba(249, 115, 22, 0.34);
+      border-radius: 22px;
+      background: #fff7ed;
+    }
+
+    .risk-item strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #c2410c;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .risk-item p {
+      margin: 0;
+      color: #7c2d12;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .value-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .value {
+      padding: 18px;
+      border-radius: 18px;
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .value strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .value span {
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .footer {
+      position: absolute;
+      left: 64px;
+      right: 64px;
+      bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        gap: 0;
+        background: #ffffff;
+      }
+
+      .slide {
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="slide cover" aria-label="营销平台二期封面">
+    <div>
+      <p class="eyebrow">Marketing Platform Phase II</p>
+      <h1>营销平台二期<br />能力升级方案</h1>
+      <p class="cover-subtitle">围绕折扣叠加治理、活动配置中台、前台转化场景与商品折扣风控，搭建可配置、可复用、可监控的营销平台能力体系。</p>
+      <div class="cover-tags">
+        <span class="cover-tag">折扣叠加体系</span>
+        <span class="cover-tag">Tag 自动化</span>
+        <span class="cover-tag">营销活动管理</span>
+        <span class="cover-tag">前台转化场景</span>
+        <span class="cover-tag">商品折扣风控</span>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <h2>二期建设范围</h2>
+      <div class="metric-grid">
+        <div class="metric">
+          <strong>3</strong>
+          <span>店铺 / 集合 / 单品三层折扣治理</span>
+        </div>
+        <div class="metric">
+          <strong>5</strong>
+          <span>大促、推荐、抽奖、竞赛、弹窗活动管理</span>
+        </div>
+        <div class="metric">
+          <strong>4</strong>
+          <span>Bundle、商品详情页、购物车、个人中心转化场景</span>
+        </div>
+        <div class="metric">
+          <strong>1</strong>
+          <span>商品折扣风控与利润保护体系</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>Marketing Platform Phase II</span>
+      <span>01</span>
+    </div>
+  </section>
+
+  <section class="slide" aria-label="二期能力总览">
+    <header class="slide-header">
+      <div>
+        <p class="section-label">Capability Map</p>
+        <h2 class="slide-title">二期能力总览</h2>
+      </div>
+      <p class="slide-desc">将 11 项建设内容收敛为四个能力域：规则治理、活动运营、场景转化、风控与资产沉淀。</p>
+    </header>
+
+    <div class="overview-grid">
+      <article class="pillar" style="--accent: #2563eb; --tone: #eff6ff;">
+        <div class="pillar-icon">1</div>
+        <h3>规则治理</h3>
+        <p>建立折扣层级、叠加规则、互斥规则与 Shopify 折扣码 Tag 自动化能力。</p>
+        <div class="chip-list">
+          <div class="chip">折扣叠加体系</div>
+          <div class="chip">店铺 / 集合 / 单品三层管理</div>
+          <div class="chip">层级 Tag 与规则 Tag</div>
+        </div>
+      </article>
+
+      <article class="pillar" style="--accent: #7c3aed; --tone: #f3e8ff;">
+        <div class="pillar-icon">2</div>
+        <h3>活动运营</h3>
+        <p>将活动从单点配置升级为可复用的运营管理后台，覆盖大促与互动玩法。</p>
+        <div class="chip-list">
+          <div class="chip">大促活动总控</div>
+          <div class="chip">推荐 / 抽奖 / 竞赛活动</div>
+          <div class="chip">弹窗营销活动</div>
+        </div>
+      </article>
+
+      <article class="pillar" style="--accent: #14b8a6; --tone: #ccfbf1;">
+        <div class="pillar-icon">3</div>
+        <h3>场景转化</h3>
+        <p>在用户浏览、组合、加购、结算、领奖链路中承接营销活动与权益展示。</p>
+        <div class="chip-list">
+          <div class="chip">Bundle 页</div>
+          <div class="chip">商品详情页积分兑换券</div>
+          <div class="chip">购物车进度提醒</div>
+          <div class="chip">个人中心我的获奖</div>
+        </div>
+      </article>
+
+      <article class="pillar" style="--accent: #f97316; --tone: #ffedd5;">
+        <div class="pillar-icon">4</div>
+        <h3>风控治理</h3>
+        <p>围绕 baseline、利润率、价格异常、白名单进行折扣风险前置校验。</p>
+        <div class="chip-list">
+          <div class="chip">日常 / 大促 baseline</div>
+          <div class="chip">利润率保护</div>
+          <div class="chip">价格异常监控</div>
+          <div class="chip">白名单管理</div>
+        </div>
+      </article>
+    </div>
+
+    <div class="footer">
+      <span>从“玩法堆叠”升级为“规则、活动、场景、风控”一体化平台</span>
+      <span>02</span>
+    </div>
+  </section>
+
+  <section class="slide" aria-label="折扣叠加体系与Tag管理">
+    <header class="slide-header">
+      <div>
+        <p class="section-label">Rule Governance</p>
+        <h2 class="slide-title">折扣叠加体系与 Tag 管理</h2>
+      </div>
+      <p class="slide-desc">以三层折扣模型作为规则底座，自动生成 Shopify 折扣码 Tag，让活动配置、叠加互斥和风控校验具备统一识别口径。</p>
+    </header>
+
+    <div class="two-col">
+      <div class="panel" style="--accent: #2563eb;">
+        <div class="panel-title">三层折扣叠加体系</div>
+        <div class="level-stack">
+          <div class="level-card" style="--accent: #2563eb;">
+            <div class="level-no">L1</div>
+            <strong>店铺层折扣</strong>
+            <span>面向全店或指定渠道生效，适合大促、会员日、站点级促销等活动。</span>
+          </div>
+          <div class="level-card" style="--accent: #14b8a6;">
+            <div class="level-no">L2</div>
+            <strong>集合层折扣</strong>
+            <span>面向 collection、专题页、活动页商品范围生效，承接类目与主题活动。</span>
+          </div>
+          <div class="level-card" style="--accent: #f97316;">
+            <div class="level-no">L3</div>
+            <strong>单品层折扣</strong>
+            <span>面向 SKU / SPU 的独立折扣，适合爆品、清仓、组合推荐与精细化补贴。</span>
+          </div>
+        </div>
+        <div class="rule-flow">
+          <div class="rule-step">层级识别</div>
+          <div class="rule-step">叠加判断</div>
+          <div class="rule-step">互斥拦截</div>
+          <div class="rule-step">最终生效</div>
+        </div>
+      </div>
+
+      <div class="panel" style="--accent: #14b8a6;">
+        <div class="panel-title">Shopify 折扣码 Tag 自动化</div>
+        <div class="tag-card">
+          <strong>层级 Tag</strong>
+          <div class="tag-row">
+            <span class="tag-token">LEVEL_STORE</span>
+            <span class="tag-token">LEVEL_COLLECTION</span>
+            <span class="tag-token">LEVEL_PRODUCT</span>
+          </div>
+        </div>
+        <div class="tag-card">
+          <strong>叠加规则 Tag</strong>
+          <div class="tag-row">
+            <span class="tag-token">STACK_ALLOW</span>
+            <span class="tag-token">STACK_EXCLUSIVE</span>
+            <span class="tag-token">STACK_PRIORITY_HIGH</span>
+            <span class="tag-token">STACK_WITH_GIFT</span>
+          </div>
+        </div>
+        <div class="tag-card">
+          <strong>示例规则</strong>
+          <div class="chip-list">
+            <div class="chip">店铺层满减可与单品赠品叠加，但不可与店铺层直降叠加</div>
+            <div class="chip">集合层活动优先级高于单品日常折扣时，单品折扣自动失效</div>
+            <div class="chip">命中风控阈值的商品进入白名单审批后才允许叠加</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>折扣规则标准化后，活动配置与风控判断才能自动化</span>
+      <span>03</span>
+    </div>
+  </section>
+
+  <section class="slide" aria-label="营销活动管理矩阵">
+    <header class="slide-header">
+      <div>
+        <p class="section-label">Campaign Management</p>
+        <h2 class="slide-title">营销活动管理矩阵</h2>
+      </div>
+      <p class="slide-desc">二期活动后台覆盖大促统筹、裂变推荐、抽奖游戏、素材竞赛、弹窗营销五类运营场景。</p>
+    </header>
+
+    <div class="matrix">
+      <article class="activity-card" style="--accent: #2563eb; --tone: #eff6ff;">
+        <h3><span class="dot"></span>大促活动管理</h3>
+        <p>以大促活动维度整体控制活动时间、参与商品范围、活动 baseline、活动期间营销活动总控开关，避免各活动孤立配置。</p>
+      </article>
+
+      <article class="activity-card" style="--accent: #7c3aed; --tone: #f3e8ff;">
+        <h3><span class="dot"></span>推荐活动管理</h3>
+        <p>支持基于页面或产品自定义创建裂变任务，并根据裂变条件为推荐者与受邀者发放双向奖励。</p>
+      </article>
+
+      <article class="activity-card" style="--accent: #f97316; --tone: #ffedd5;">
+        <h3><span class="dot"></span>抽奖活动管理</h3>
+        <p>适配运营规划创建奖池配置，支持梯度奖池、实时开奖、定时开奖、参与门槛、抽奖条件、库存与概率设置。</p>
+      </article>
+
+      <article class="activity-card" style="--accent: #14b8a6; --tone: #ccfbf1;">
+        <h3><span class="dot"></span>竞赛活动管理</h3>
+        <p>面向图片或视频素材征集创建竞赛活动，支持奖池、中奖优先级、奖品库存设置，沉淀 UGC 互动玩法。</p>
+      </article>
+
+      <article class="activity-card" style="--accent: #ef4444; --tone: #fee2e2;">
+        <h3><span class="dot"></span>弹窗营销活动</h3>
+        <p>支持商品详情页与指定页面弹窗，配置奖池、奖品库存、触发时间、延迟时间、弹出频次与停止条件。</p>
+      </article>
+
+      <article class="activity-card" style="--accent: #0f172a; --tone: #e2e8f0;">
+        <h3><span class="dot"></span>统一活动能力</h3>
+        <p>抽象活动时间、对象范围、奖池、库存、触发条件、奖励发放、开关控制等共性能力，降低重复开发成本。</p>
+      </article>
+    </div>
+
+    <div class="footer">
+      <span>活动后台从“单玩法配置”升级为“多玩法活动中台”</span>
+      <span>04</span>
+    </div>
+  </section>
+
+  <section class="slide" aria-label="前台转化场景">
+    <header class="slide-header">
+      <div>
+        <p class="section-label">Customer Touchpoints</p>
+        <h2 class="slide-title">前台转化场景升级</h2>
+      </div>
+      <p class="slide-desc">将营销能力落到用户可感知的关键链路：组合购买、商品详情、购物车进度、个人获奖资产。</p>
+    </header>
+
+    <div class="scenario-layout">
+      <div class="screen-list">
+        <article class="screen-card" style="--accent: #2563eb;">
+          <div class="screen-name">Bundle 页</div>
+          <p>支持运营配置 bundle 推荐，也支持用户自由组合场景 bundle，并快速结算。</p>
+        </article>
+        <article class="screen-card" style="--accent: #14b8a6;">
+          <div class="screen-name">商品详情页</div>
+          <p>支持积分兑换券直接勾选使用，同时展示折扣力度，提升价格感知和转化效率。</p>
+        </article>
+        <article class="screen-card" style="--accent: #7c3aed;">
+          <div class="screen-name">购物车</div>
+          <p>支持活动页购物车、不同营销活动用户参与进度提醒、快捷购物车。</p>
+        </article>
+        <article class="screen-card" style="--accent: #f97316;">
+          <div class="screen-name">个人中心</div>
+          <p>新增“我的获奖”，汇总个人 referral 推荐奖品与活动参与奖品信息。</p>
+        </article>
+      </div>
+
+      <div class="journey">
+        <div class="panel-title" style="--accent: #2563eb;">用户营销转化链路</div>
+        <div class="journey-line">
+          <div class="journey-step">
+            <div class="journey-index">01</div>
+            <div>
+              <strong>发现活动权益</strong>
+              <span>弹窗、活动页、商品详情页展示营销活动与折扣权益。</span>
+            </div>
+          </div>
+          <div class="journey-step">
+            <div class="journey-index">02</div>
+            <div>
+              <strong>组合商品与优惠</strong>
+              <span>在 bundle、商品详情页、购物车中完成商品组合与优惠选择。</span>
+            </div>
+          </div>
+          <div class="journey-step">
+            <div class="journey-index">03</div>
+            <div>
+              <strong>进度提醒促成下单</strong>
+              <span>购物车展示活动参与进度、门槛差额、可用权益，推动补购与结算。</span>
+            </div>
+          </div>
+          <div class="journey-step">
+            <div class="journey-index">04</div>
+            <div>
+              <strong>奖品沉淀与复访</strong>
+              <span>个人中心统一承接获奖信息，形成推荐、抽奖、竞赛活动的复访入口。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>前台场景负责把后台营销规则转化为用户可理解、可行动的权益体验</span>
+      <span>05</span>
+    </div>
+  </section>
+
+  <section class="slide" aria-label="商品折扣风控与建设价值">
+    <header class="slide-header">
+      <div>
+        <p class="section-label">Risk Control & Value</p>
+        <h2 class="slide-title">商品折扣风控与平台价值</h2>
+      </div>
+      <p class="slide-desc">风控能力作为所有折扣与活动生效前的校验层，保障促销增长不突破利润、价格与运营边界。</p>
+    </header>
+
+    <div class="risk-grid">
+      <article class="risk-item">
+        <strong>Baseline 设置</strong>
+        <p>区分商品日常模式与大促模式，分别配置默认 baseline，作为活动折扣与异常监控的判断基准。</p>
+      </article>
+      <article class="risk-item">
+        <strong>利润率保护</strong>
+        <p>配置商品利润率底线，对折扣叠加后的最终价格进行校验，避免超卖、亏损与异常低价。</p>
+      </article>
+      <article class="risk-item">
+        <strong>异常与白名单</strong>
+        <p>持续监控价格异常，对特殊商品、特殊活动、特殊渠道通过白名单进行审批放行。</p>
+      </article>
+    </div>
+
+    <div class="value-strip">
+      <div class="value">
+        <strong>运营效率提升</strong>
+        <span>减少活动重复配置和人工规则校验。</span>
+      </div>
+      <div class="value">
+        <strong>规则口径统一</strong>
+        <span>折扣层级、Tag、互斥与叠加逻辑标准化。</span>
+      </div>
+      <div class="value">
+        <strong>用户转化增强</strong>
+        <span>在关键页面展示进度、权益与奖励资产。</span>
+      </div>
+      <div class="value">
+        <strong>经营风险可控</strong>
+        <span>用 baseline、利润率和白名单保护促销边界。</span>
+      </div>
+    </div>
+
+    <div class="hero-card" style="margin-top: 20px; padding: 24px 28px;">
+      <h2 style="margin-bottom: 12px; font-size: 24px;">二期目标</h2>
+      <p style="margin: 0; color: #64748b; font-size: 16px; line-height: 1.65;">构建一套面向 Shopify 促销业务的统一营销平台，让运营可以快速创建活动、系统可以自动识别折扣规则、前台可以清晰承接用户权益、风控可以持续守住价格与利润边界。</p>
+    </div>
+
+    <div class="footer">
+      <span>Phase II Target: 可配置、可复用、可监控、可治理</span>
+      <span>06</span>
+    </div>
+  </section>
+</body>
+</html>
